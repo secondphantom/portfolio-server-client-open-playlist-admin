@@ -1,3 +1,4 @@
+import { AdminEntitySelect } from "@/server/domain/admin.domain";
 import {
   RepoCreateSessionDto,
   SessionEntitySelect,
@@ -14,4 +15,29 @@ export interface ISessionRepo {
         }
       | { [key in keyof SessionEntitySelect]?: boolean }
   ) => Promise<Pick<SessionEntitySelect, T> | undefined>;
+  getByIdWith: <
+    T extends keyof SessionEntitySelect,
+    W1 extends keyof AdminEntitySelect
+  >(
+    where: {
+      id: string;
+    },
+    columns?: {
+      session?:
+        | {
+            [key in T]?: boolean;
+          }
+        | { [key in keyof SessionEntitySelect]?: boolean };
+      admin?:
+        | {
+            [key in W1]?: boolean;
+          }
+        | { [key in keyof AdminEntitySelect]?: boolean };
+    }
+  ) => Promise<
+    | (Pick<SessionEntitySelect, T> & {
+        admin: Pick<AdminEntitySelect, W1>;
+      })
+    | undefined
+  >;
 }

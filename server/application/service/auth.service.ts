@@ -24,6 +24,10 @@ export type ServiceAuthSignOutDto = {
   sessionId: string;
 };
 
+export type ServiceAuthVerify = {
+  sessionId: string;
+};
+
 type ServiceInputs = {
   adminRepo: IAdminRepo;
   sessionRepo: ISessionRepo;
@@ -129,5 +133,22 @@ export class AuthService {
   // POST /auth/sign-out
   signOut = async (dto: ServiceAuthSignOutDto) => {
     await this.sessionRepo.deleteById(dto.sessionId);
+  };
+
+  // verifySession
+  verifySession = async (dto: ServiceAuthVerify) => {
+    const session = await this.sessionRepo.getByIdWith(
+      { id: dto.sessionId },
+      { admin: { id: true, roleId: true }, session: { id: true } }
+    );
+
+    if (!session || !session.admin) {
+      throw new ServerError({
+        message: "Unauthorized",
+        code: 401,
+      });
+    }
+
+    return session;
   };
 }

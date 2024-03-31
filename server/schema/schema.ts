@@ -307,3 +307,18 @@ export const sessions = pgTable(
     };
   }
 );
+
+export const adminRelation = relations(admins, ({ many }) => {
+  return {
+    sessions: many(sessions),
+  };
+});
+
+export const sessionRelation = relations(sessions, ({ one }) => {
+  return {
+    admin: one(admins, {
+      fields: [sessions.adminId],
+      references: [admins.id],
+    }),
+  };
+});
