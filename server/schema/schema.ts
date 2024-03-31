@@ -1,0 +1,281 @@
+import { relations, sql } from "drizzle-orm";
+import {
+  integer,
+  uuid,
+  pgTable,
+  bigint,
+  serial,
+  varchar,
+  smallint,
+  boolean,
+  json,
+  timestamp,
+  index,
+  uniqueIndex,
+  real,
+  primaryKey,
+  jsonb,
+  customType,
+} from "drizzle-orm/pg-core";
+
+function genExpWithWeights(input: string[]) {
+  const columnExpressions = input.map((column, index) => {
+    const weight = String.fromCharCode(index + 65);
+    return `setweight(to_tsvector('simple', coalesce(${column}, '')), '${weight}')`;
+  });
+
+  const tsvectorColumn = `tsvector GENERATED ALWAYS AS (${columnExpressions.join(
+    " || "
+  )}) STORED`;
+
+  return tsvectorColumn;
+}
+
+export const tsvector = customType<{
+  data: string;
+  config: { sources: string[]; weighted: boolean };
+}>({
+  dataType(config) {
+    if (config) {
+      const sources = config.sources.join(" || ' ' || ");
+      return config.weighted
+        ? genExpWithWeights(config.sources)
+        : `tsvector generated always as (to_tsvector('simple', ${sources})) stored`;
+    } else {
+      return `tsvector`;
+    }
+  },
+});
+
+export type UserExtra = {};
+
+export const users = pgTable(
+  "Users",
+  {
+    id: bigint("id", { mode: "number" }).notNull().primaryKey().default(0),
+    uuid: varchar("uuid", { length: 50 }).notNull(),
+    roleId: smallint("role_id").notNull().default(1),
+    email: varchar("email", { length: 320 }).notNull(),
+    hashKey: varchar("hash_key", { length: 200 }).notNull(),
+    isEmailVerified: boolean("is_email_verified").notNull().default(false),
+    profileName: varchar("profile_name", { length: 100 }).notNull(),
+    profileImage: varchar("profile_image", { length: 300 }),
+    extra: jsonb("extra").notNull().$type<UserExtra>(),
+    createdAt: timestamp("created_at")
+      .default(sql`now()`)
+      .notNull(),
+    updatedAt: timestamp("updated_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => {
+    return {
+      idxRole: index("idx_user_role").on(table.roleId),
+      uqEmail: uniqueIndex("uq_user_email").on(table.email),
+      idxCreatedAt: index("idx_user_created_at").on(table.createdAt), // DESC
+    };
+  }
+);
+
+export type ChannelExtra = {};
+
+export const channels = pgTable("Channels", {
+  channelId: varchar("channel_id", { length: 50 }).primaryKey().notNull(),
+  name: varchar("name", { length: 60 }).notNull(), //FULL TEXT
+  handle: varchar("handle", { length: 50 }).notNull().default(""),
+  enrollCount: integer("enroll_count").notNull().default(0),
+  extra: jsonb("extra").notNull().$type<ChannelExtra>(),
+  createdAt: timestamp("created_at")
+    .default(sql`now()`)
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .default(sql`now()`)
+    .notNull(),
+});
+
+export type CourseChapter = { title: string; time: number };
+export type CourseExtra = {};
+
+export const courses = pgTable(
+  "Courses",
+  {
+    id: bigint("id", { mode: "number" }).notNull().primaryKey().default(0),
+    videoId: varchar("video_id", { length: 50 }).notNull(),
+    channelId: varchar("channel_id", { length: 50 }).notNull(),
+    categoryId: integer("category_id").notNull().default(0),
+    language: varchar("language", { length: 10 }).notNull(),
+    title: varchar("title", { length: 110 }).notNull(), //FULL TEXT
+    titleTsvector: tsvector("title_tsvector"),
+    description: varchar("description", { length: 5010 }).notNull(),
+    summary: varchar("summary", { length: 10000 }),
+    chapters: jsonb("chapters").notNull().$type<CourseChapter[]>(),
+    enrollCount: integer("enroll_count").notNull().default(0),
+    generatedAi: boolean("generated_ai").notNull().default(false),
+    duration: integer("duration").notNull(),
+    extra: jsonb("extra").notNull().$type<CourseExtra>(),
+    createdAt: timestamp("created_at")
+      .default(sql`now()`)
+      .notNull(),
+    updatedAt: timestamp("updated_at")
+      .default(sql`now()`)
+      .notNull(),
+    publishedAt: timestamp("published_at").notNull(),
+  },
+  (table) => {
+    return {
+      uqVideoId: uniqueIndex("uq_video_id").on(table.videoId),
+      idxChannelId: index("idx_channel_id").on(table.channelId),
+      idxCategoryId: index("idx_category_id").on(table.categoryId),
+      idxLanguage: index("idx_language").on(table.language),
+      idxEnrollCount: index("idx_enroll_count").on(table.enrollCount), // DESC
+      idxGeneratedAi: index("idx_generated_ai").on(table.generatedAi),
+      idxCreatedAt: index("idx_courses_created_at").on(table.createdAt), // DESC
+      idxPublishedAt: index("idx_published_at").on(table.publishedAt), // DESC
+    };
+  }
+);
+
+export type EnrollChapterProgress = {
+  [key in string]: number;
+};
+
+export type EnrollRecentProgress = {
+  chapterIndex: number;
+};
+
+export const enrolls = pgTable(
+  "Enrolls",
+  {
+    userId: bigint("user_id", { mode: "number" }).notNull(),
+    courseId: bigint("course_id", { mode: "number" }).notNull(),
+    chapterProgress: jsonb("chapter_progress")
+      .notNull()
+      .$type<EnrollChapterProgress>(),
+    totalProgress: real("total_progress").notNull(),
+    recentProgress: jsonb("recent_progress")
+      .notNull()
+      .$type<EnrollRecentProgress>(),
+    createdAt: timestamp("created_at")
+      .default(sql`now()`)
+      .notNull(),
+    updatedAt: timestamp("updated_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => {
+    return {
+      pk: primaryKey({ columns: [table.userId, table.courseId] }),
+      idxCourseId: index("idx_course_id").on(table.courseId),
+      idxUserIdCreatedAt: index("idx_user_id_created_at").on(
+        table.userId,
+        table.createdAt // desc
+      ),
+      idxUserIdUpdatedAt: index("idx_user_id_updated_at").on(
+        table.userId,
+        table.updatedAt // desc
+      ),
+    };
+  }
+);
+
+export const categories = pgTable(
+  "Categories",
+  {
+    id: integer("id").notNull().primaryKey().default(0),
+    name: varchar("name", { length: 100 }).notNull(),
+    parentId: integer("parent_id").notNull(),
+  },
+  (table) => {
+    return {
+      idxParentId: index("idx_parent_id").on(table.parentId),
+    };
+  }
+);
+
+export const roles = pgTable("Roles", {
+  id: integer("id").notNull().primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+});
+
+export const channelsRelations = relations(channels, ({ many }) => {
+  return {
+    courses: many(courses),
+  };
+});
+
+export const coursesRelations = relations(courses, ({ many, one }) => {
+  return {
+    enrolls: many(enrolls),
+    channel: one(channels, {
+      fields: [courses.channelId],
+      references: [channels.channelId],
+    }),
+    category: one(categories, {
+      fields: [courses.categoryId],
+      references: [categories.id],
+    }),
+  };
+});
+
+export const usersRelations = relations(users, ({ many, one }) => {
+  return {
+    enrolls: many(enrolls),
+    role: one(roles, {
+      fields: [users.roleId],
+      references: [roles.id],
+    }),
+  };
+});
+
+export const enrollsRelations = relations(enrolls, ({ one }) => {
+  return {
+    course: one(courses, {
+      fields: [enrolls.courseId],
+      references: [courses.id],
+    }),
+    user: one(users, {
+      fields: [enrolls.userId],
+      references: [users.id],
+    }),
+  };
+});
+
+export const categoriesRelations = relations(categories, ({ many }) => {
+  return {
+    courses: many(courses),
+  };
+});
+
+export const roleRelations = relations(roles, ({ many }) => {
+  return {
+    users: many(users),
+  };
+});
+
+export const admins = pgTable(
+  "Admins",
+  {
+    id: bigint("id", { mode: "number" }).notNull().primaryKey().default(0),
+    email: varchar("email", { length: 320 }).notNull(),
+    roleId: smallint("role_id").notNull().default(0),
+    otpCode: varchar("otp_code", { length: 10 }),
+    otpExpirationAt: timestamp("otp_expiration_at")
+      .default(sql`now()`)
+      .notNull(),
+    profileName: varchar("profile_name", { length: 100 }).notNull(),
+    profileImage: varchar("profile_image", { length: 300 }),
+    createdAt: timestamp("created_at")
+      .default(sql`now()`)
+      .notNull(),
+    updatedAt: timestamp("updated_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => {
+    return {
+      idxRole: index("idx_admin_role").on(table.roleId),
+      uqEmail: uniqueIndex("uq_admin_email").on(table.email),
+      idxCreatedAt: index("idx_admin_created_at").on(table.createdAt),
+    };
+  }
+);
