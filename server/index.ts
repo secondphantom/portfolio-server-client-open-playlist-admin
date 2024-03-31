@@ -12,6 +12,7 @@ import { EmailUtil } from "./infrastructure/email/email.util";
 import { AdminRepo } from "./infrastructure/repo/admin.repo";
 import { Utils } from "./infrastructure/utils/utils";
 import { AuthRequestValidator } from "./infrastructure/validator/auth.request.validator";
+import { SessionRepo } from "./infrastructure/repo/session.repo";
 
 export class RouterIndex {
   static instance: RouterIndex | undefined;
@@ -37,11 +38,13 @@ export class RouterIndex {
     const utils = Utils.getInstance();
 
     const adminRepo = AdminRepo.getInstance(this.dbClient);
+    const sessionRepo = SessionRepo.getInstance(this.dbClient);
 
     const authRequestValidator = AuthRequestValidator.getInstance();
 
     const authService = AuthService.getInstance({
       adminRepo,
+      sessionRepo,
       emailUtil,
       utils,
     });

@@ -1,7 +1,10 @@
 import { AuthService } from "@/server/application/service/auth.service";
 import { IAuthRequestValidator } from "./auth.interface";
 import { ControllerResponse } from "@/server/dto/response";
-import { RequestAuthSignIn } from "@/server/spec/auth/auth.requests";
+import {
+  RequestAuthSignIn,
+  RequestAuthVerifyOtp,
+} from "@/server/spec/auth/auth.requests";
 import { errorResolver } from "@/server/dto/error.resolver";
 
 type ConstructorInputs = {
@@ -36,6 +39,37 @@ export class AuthController {
           success: true,
           message: "Success",
         },
+      });
+    } catch (error) {
+      const { code, message, data } = errorResolver(error);
+      return new ControllerResponse({
+        code,
+        payload: {
+          success: false,
+          message,
+          data,
+        },
+      });
+    }
+  };
+
+  verifyOtp = async (req: RequestAuthVerifyOtp) => {
+    try {
+      const dto = this.authRequestValidator.verifyOtp(req);
+      const data = await this.authService.verifyOtp(dto);
+
+      return new ControllerResponse({
+        code: 200,
+        payload: {
+          success: true,
+          message: "Success Verify",
+        },
+        headers: [
+          {
+            name: "Set-Cookie",
+            value: `sessionId=${data.sessionId}; Path=/; HttpOnly; Secure; SameSite=Strict;`,
+          },
+        ],
       });
     } catch (error) {
       const { code, message, data } = errorResolver(error);
