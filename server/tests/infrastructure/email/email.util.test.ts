@@ -25,6 +25,6 @@ describe("email util", () => {
 
     const { success } = await emailUtil.sendEmail(inputs);
 
-    console.log({ success });
+    expect(success).toEqual(expect.any(Boolean));
   });
 });

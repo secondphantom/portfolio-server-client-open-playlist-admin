@@ -48,11 +48,9 @@ export class AdminDomain {
   verifyOtpCode = (otpCode: string) => {
     if (!this.otpExpirationAt) return false;
     if (this.otpExpirationAt.getTime() <= new Date().getTime()) {
-      console.log("expire");
       return false;
     }
     if (this.otpCode !== otpCode) {
-      console.log("not same");
       return false;
     }
     return true;

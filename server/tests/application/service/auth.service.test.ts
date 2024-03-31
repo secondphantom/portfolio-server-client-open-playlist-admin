@@ -15,7 +15,7 @@ import { ISessionRepo } from "@/server/application/interfaces/session.repo";
 describe("auth service", () => {
   const email = process.env.TEST_EMAIL_DESTINATION!;
   const invalidEmail = "invalid@email.com";
-
+  const TEST_SESSION_ID = "TEST_SESSION_ID";
   let adminRepo: IAdminRepo;
   let sessionRepo: ISessionRepo;
   let emailUtil: IEmailUtil;
@@ -105,6 +105,25 @@ describe("auth service", () => {
       } as any);
 
       expect(sessionId).toEqual(expect.any(String));
+    });
+  });
+
+  describe("verify sessionId", () => {
+    test("fail", async () => {
+      try {
+        await authService.verifySession({ sessionId: "invalid" });
+      } catch (error: any) {
+        expect(error.message).toBe("Unauthorized");
+      }
+    });
+
+    test("success", async () => {
+      const { id, admin } = await authService.verifySession({
+        sessionId: TEST_SESSION_ID,
+      });
+
+      expect(id).toEqual(TEST_SESSION_ID);
+      expect(admin.id).toEqual(0);
     });
   });
 });
