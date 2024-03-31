@@ -34,9 +34,7 @@ export class AuthService {
 
   // POST /auth/sign-in
   signIn = async ({ email }: ServiceAuthSignInDto) => {
-    console.log(email);
     const admin = await this.adminRepo.getByEmail(email);
-    console.log({ admin });
     if (!admin) {
       throw new ServerError({
         message: "Unauthorized",
@@ -73,5 +71,6 @@ export class AuthService {
   };
 
   // POST /auth/sign-in/verify-otp
+
   // POST /auth/sign-out
 }
