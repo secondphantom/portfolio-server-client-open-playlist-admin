@@ -3,13 +3,26 @@ import { IAdminRepo } from "../interfaces/admin.repo";
 import { IUtils } from "../interfaces/utils";
 import { AdminDomain } from "@/server/domain/admin.domain";
 import { IEmailUtil } from "../interfaces/email.util";
+import { ISessionRepo } from "../interfaces/session.repo";
+import { SessionDomain } from "@/server/domain/session.domain";
 
 export type ServiceAuthSignInDto = {
   email: string;
 };
 
+export type ServiceAuthVerifyOtpDto = {
+  email: string;
+  otpCode: string;
+  data: {
+    ip: string;
+    device: any;
+    userAgent: string;
+  };
+};
+
 type ServiceInputs = {
   adminRepo: IAdminRepo;
+  sessionRepo: ISessionRepo;
   emailUtil: IEmailUtil;
   utils: IUtils;
 };
@@ -23,11 +36,13 @@ export class AuthService {
   };
 
   private adminRepo: IAdminRepo;
+  private sessionRepo: ISessionRepo;
   private emailUtil: IEmailUtil;
   private utils: IUtils;
 
-  constructor({ adminRepo, emailUtil, utils }: ServiceInputs) {
+  constructor({ adminRepo, sessionRepo, emailUtil, utils }: ServiceInputs) {
     this.adminRepo = adminRepo;
+    this.sessionRepo = sessionRepo;
     this.emailUtil = emailUtil;
     this.utils = utils;
   }
@@ -71,6 +86,41 @@ export class AuthService {
   };
 
   // POST /auth/sign-in/verify-otp
+  verifyOtp = async ({ email, otpCode, data }: ServiceAuthVerifyOtpDto) => {
+    const admin = await this.adminRepo.getByEmail(email);
+    if (!admin) {
+      throw new ServerError({
+        message: "Unauthorized",
+        code: 401,
+      });
+    }
+
+    const adminDomain = new AdminDomain(admin);
+    const isValid = adminDomain.verifyOtpCode(otpCode);
+
+    if (!isValid) {
+      throw new ServerError({
+        message: "Unauthorized",
+        code: 401,
+      });
+    }
+
+    const sessionDomain = new SessionDomain({
+      adminId: admin.id,
+      data: data,
+    });
+
+    const session = await this.sessionRepo.create(sessionDomain.getCreateDto());
+
+    if (!session) {
+      throw new ServerError({
+        message: "Fail to create session",
+        code: 504,
+      });
+    }
+
+    return { sessionId: session.id };
+  };
 
   // POST /auth/sign-out
 }

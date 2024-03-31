@@ -9,12 +9,15 @@ import { DrizzleClient } from "@/server/infrastructure/db/drizzle.client";
 import { AdminRepo } from "@/server/infrastructure/repo/admin.repo";
 import { EmailUtil } from "@/server/infrastructure/email/email.util";
 import { Utils } from "@/server/infrastructure/utils/utils";
+import { SessionRepo } from "@/server/infrastructure/repo/session.repo";
+import { ISessionRepo } from "@/server/application/interfaces/session.repo";
 
 describe("auth service", () => {
-  const email = "test@email.com";
+  const email = process.env.TEST_EMAIL_DESTINATION!;
   const invalidEmail = "invalid@email.com";
 
   let adminRepo: IAdminRepo;
+  let sessionRepo: ISessionRepo;
   let emailUtil: IEmailUtil;
   let utils: IUtils;
 
@@ -26,17 +29,20 @@ describe("auth service", () => {
       LOG_LEVEL: "dev",
     });
     adminRepo = AdminRepo.getInstance(dbClient);
+    sessionRepo = SessionRepo.getInstance(dbClient);
     emailUtil = EmailUtil.getInstance();
+    emailUtil.sendEmail = async () => ({ success: true });
     utils = Utils.getInstance();
     authService = new AuthService({
       adminRepo,
+      sessionRepo,
       emailUtil,
       utils,
     });
   });
 
   describe("signIn", () => {
-    test.only("invalid email", async () => {
+    test("invalid email", async () => {
       try {
         await authService.signIn({ email: invalidEmail });
       } catch (error: any) {
@@ -62,6 +68,43 @@ describe("auth service", () => {
           updatedAdmin?.otpExpirationAt.getTime() > new Date().getTime()
         ).toEqual(true);
       }
+    });
+  });
+
+  describe("verify otp code", () => {
+    test("not found email", async () => {
+      try {
+        await authService.verifyOtp({ email: invalidEmail } as any);
+      } catch (error: any) {
+        expect(error.message).toBe("Unauthorized");
+      }
+    });
+
+    test("not valid otp code", async () => {
+      try {
+        await authService.verifyOtp({
+          email: invalidEmail,
+          otpCode: "invalid",
+        } as any);
+      } catch (error: any) {
+        expect(error.message).toBe("Unauthorized");
+      }
+    });
+
+    test("success", async () => {
+      await authService.signIn({ email });
+      const admin = await adminRepo.getByEmail(email, {
+        otpCode: true,
+        otpExpirationAt: true,
+      });
+
+      const { sessionId } = await authService.verifyOtp({
+        email: email,
+        otpCode: admin?.otpCode,
+        data: {},
+      } as any);
+
+      expect(sessionId).toEqual(expect.any(String));
     });
   });
 });

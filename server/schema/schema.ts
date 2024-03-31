@@ -279,3 +279,31 @@ export const admins = pgTable(
     };
   }
 );
+
+export type SessionsData = {
+  device: any;
+  ip: string;
+  userAgent: string;
+};
+
+export const sessions = pgTable(
+  "AdminSessions",
+  {
+    id: varchar("id", { length: 50 }).notNull().primaryKey(),
+    adminId: bigint("admin_id", { mode: "number" }).notNull(),
+    data: jsonb("data").notNull().$type<SessionsData>(),
+    createdAt: timestamp("created_at")
+      .default(sql`now()`)
+      .notNull(),
+    updatedAt: timestamp("updated_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => {
+    return {
+      idxAdminId: index("idx_sessions_admin_id").on(table.adminId),
+      idxCreatedAt: index("idx_sessions_created_at").on(table.createdAt), // DESC
+      idxUpdatedAt: index("idx_sessions_published_at").on(table.updatedAt), // DESC
+    };
+  }
+);
