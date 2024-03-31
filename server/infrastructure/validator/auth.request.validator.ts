@@ -3,6 +3,7 @@ import z from "zod";
 import { IAuthRequestValidator } from "@/server/controller/auth/auth.interface";
 import {
   RequestAuthSignIn,
+  RequestAuthSignOut,
   RequestAuthVerifyOtp,
 } from "@/server/spec/auth/auth.requests";
 import { ServerError } from "@/server/dto/error";
@@ -58,6 +59,24 @@ export class AuthRequestValidator implements IAuthRequestValidator {
   verifyOtp = (req: RequestAuthVerifyOtp) => {
     try {
       const dto = this.requestAuthVerifyOtp.parse(req);
+      return dto as any;
+    } catch (error) {
+      throw new ServerError({
+        code: 400,
+        message: "Invalid Input",
+      });
+    }
+  };
+
+  private requestAuthSignOut = z
+    .object({
+      sessionId: z.string().length(36),
+    })
+    .strict();
+
+  signOut = (req: RequestAuthSignOut) => {
+    try {
+      const dto = this.requestAuthSignOut.parse(req);
       return dto as any;
     } catch (error) {
       throw new ServerError({

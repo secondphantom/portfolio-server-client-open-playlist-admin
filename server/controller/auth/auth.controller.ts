@@ -3,6 +3,7 @@ import { IAuthRequestValidator } from "./auth.interface";
 import { ControllerResponse } from "@/server/dto/response";
 import {
   RequestAuthSignIn,
+  RequestAuthSignOut,
   RequestAuthVerifyOtp,
 } from "@/server/spec/auth/auth.requests";
 import { errorResolver } from "@/server/dto/error.resolver";
@@ -68,6 +69,36 @@ export class AuthController {
           {
             name: "Set-Cookie",
             value: `sessionId=${data.sessionId}; Path=/; HttpOnly; Secure; SameSite=Strict;`,
+          },
+        ],
+      });
+    } catch (error) {
+      const { code, message, data } = errorResolver(error);
+      return new ControllerResponse({
+        code,
+        payload: {
+          success: false,
+          message,
+          data,
+        },
+      });
+    }
+  };
+
+  signOut = async (req: RequestAuthSignOut) => {
+    try {
+      const dto = this.authRequestValidator.signOut(req);
+      await this.authService.signOut(dto);
+      return new ControllerResponse({
+        code: 200,
+        payload: {
+          success: true,
+          message: "Success Sign Out",
+        },
+        headers: [
+          {
+            name: "Set-Cookie",
+            value: `sessionId=; Path=/; HttpOnly; Secure; SameSite=Strict; expires=Thu, 01 Jan 1970 00:00:01 GMT;`,
           },
         ],
       });

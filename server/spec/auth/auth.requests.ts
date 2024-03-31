@@ -11,3 +11,7 @@ export type RequestAuthVerifyOtp = {
     userAgent: string;
   };
 };
+
+export type RequestAuthSignOut = {
+  sessionId: string;
+};

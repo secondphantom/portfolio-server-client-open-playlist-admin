@@ -20,6 +20,10 @@ export type ServiceAuthVerifyOtpDto = {
   };
 };
 
+export type ServiceAuthSignOutDto = {
+  sessionId: string;
+};
+
 type ServiceInputs = {
   adminRepo: IAdminRepo;
   sessionRepo: ISessionRepo;
@@ -123,4 +127,7 @@ export class AuthService {
   };
 
   // POST /auth/sign-out
+  signOut = async (dto: ServiceAuthSignOutDto) => {
+    await this.sessionRepo.deleteById(dto.sessionId);
+  };
 }
