@@ -1,6 +1,6 @@
-export type ENV = typeof env;
-
-export const env = {
-  DATABASE_URL: process.env.DATABASE_URL!,
-  LOG_LEVEL: "verbose",
+export type ENV = {
+  DATABASE_URL: string;
+  LOG_LEVEL: string;
+  API_BASE_URL: string;
+  YOUTUBE_DATA_API_KEY: string;
 };

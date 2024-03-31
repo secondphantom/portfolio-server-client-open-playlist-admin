@@ -1,8 +1,9 @@
+import { eq } from "drizzle-orm";
+
 import { IAdminRepo } from "@/server/application/interfaces/admin.repo";
 import { Db, DrizzleClient } from "../db/drizzle.client";
 import { AdminEntitySelect } from "@/server/domain/admin.domain";
 import * as schema from "../../schema/schema";
-import { eq } from "drizzle-orm";
 
 export class AdminRepo implements IAdminRepo {
   static instance: AdminRepo | undefined;

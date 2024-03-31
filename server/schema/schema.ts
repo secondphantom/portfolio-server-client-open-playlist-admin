@@ -322,3 +322,30 @@ export const sessionRelation = relations(sessions, ({ one }) => {
     }),
   };
 });
+
+export type HealthData = {
+  apis: {
+    method: string;
+    path: string;
+    status: number;
+    responseTime: number;
+  }[];
+};
+
+export const healths = pgTable(
+  "Healths",
+  {
+    id: bigint("id", { mode: "number" }).notNull().primaryKey().default(0),
+    version: bigint("version", { mode: "number" }).notNull(),
+    data: jsonb("data").notNull().$type<HealthData>(),
+    createdAt: timestamp("created_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => {
+    return {
+      idxVersion: index("idx_healths_version").on(table.version),
+      idxCreatedAt: index("idx_healths_created_at").on(table.createdAt), // DESC
+    };
+  }
+);

@@ -31,6 +31,8 @@ export class RouterIndex {
     this.env = {
       DATABASE_URL: process.env.DATABASE_URL!,
       LOG_LEVEL: "verbose",
+      API_BASE_URL: process.env.API_BASE_URL!,
+      YOUTUBE_DATA_API_KEY: process.env.YOUTUBE_DATA_API_KEY!,
     } satisfies ENV;
     this.dbClient = DrizzleClient.getInstance(this.env);
 
