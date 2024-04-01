@@ -5,6 +5,7 @@ import {
   RequestAuthSignIn,
   RequestAuthSignOut,
   RequestAuthVerifyOtp,
+  RequestVerifySession,
 } from "@/server/spec/auth/auth.requests";
 import { ServerError } from "@/server/dto/error";
 
@@ -78,6 +79,24 @@ export class AuthRequestValidator implements IAuthRequestValidator {
     try {
       const dto = this.requestAuthSignOut.parse(req);
       return dto as any;
+    } catch (error) {
+      throw new ServerError({
+        code: 400,
+        message: "Invalid Input",
+      });
+    }
+  };
+
+  private requestVerifySession = z
+    .object({
+      sessionId: z.string().length(36),
+    })
+    .strict();
+
+  verifySession = (req: RequestVerifySession) => {
+    try {
+      const dto = this.requestVerifySession.parse(req);
+      return dto;
     } catch (error) {
       throw new ServerError({
         code: 400,

@@ -24,7 +24,7 @@ export type ServiceAuthSignOutDto = {
   sessionId: string;
 };
 
-export type ServiceAuthVerify = {
+export type ServiceAuthVerifySession = {
   sessionId: string;
 };
 
@@ -136,7 +136,7 @@ export class AuthService {
   };
 
   // verifySession
-  verifySession = async (dto: ServiceAuthVerify) => {
+  verifySession = async (dto: ServiceAuthVerifySession) => {
     const session = await this.sessionRepo.getByIdWith(
       { id: dto.sessionId },
       { admin: { id: true, roleId: true }, session: { id: true } }

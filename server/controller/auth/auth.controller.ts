@@ -5,6 +5,7 @@ import {
   RequestAuthSignIn,
   RequestAuthSignOut,
   RequestAuthVerifyOtp,
+  RequestVerifySession,
 } from "@/server/spec/auth/auth.requests";
 import { errorResolver } from "@/server/dto/error.resolver";
 
@@ -101,6 +102,30 @@ export class AuthController {
             value: `sessionId=; Path=/; HttpOnly; Secure; SameSite=Strict; expires=Thu, 01 Jan 1970 00:00:01 GMT;`,
           },
         ],
+      });
+    } catch (error) {
+      const { code, message, data } = errorResolver(error);
+      return new ControllerResponse({
+        code,
+        payload: {
+          success: false,
+          message,
+          data,
+        },
+      });
+    }
+  };
+
+  verifySession = async (req: RequestVerifySession) => {
+    try {
+      const dto = this.authRequestValidator.verifySession(req);
+      const data = await this.authService.verifySession(dto);
+      return new ControllerResponse({
+        code: 200,
+        payload: {
+          success: true,
+          data,
+        },
       });
     } catch (error) {
       const { code, message, data } = errorResolver(error);

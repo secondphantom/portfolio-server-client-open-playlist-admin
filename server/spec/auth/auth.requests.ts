@@ -15,3 +15,7 @@ export type RequestAuthVerifyOtp = {
 export type RequestAuthSignOut = {
   sessionId: string;
 };
+
+export type RequestVerifySession = {
+  sessionId: string;
+};
