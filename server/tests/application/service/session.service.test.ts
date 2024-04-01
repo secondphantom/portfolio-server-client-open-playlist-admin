@@ -10,7 +10,7 @@ describe("session service", () => {
   let sessionRepo: ISessionRepo;
   let sessionService: SessionService;
   const TEST_ADMIN_ID = 0;
-  const TEST_SESSION_ID = "TEST_SESSION_ID";
+  const TEST_SESSION_KEY = "TEST_SESSION_KEY";
 
   beforeAll(() => {
     const dbClient = DrizzleClient.getInstance({
@@ -28,7 +28,7 @@ describe("session service", () => {
     test("success", async () => {
       const result = await sessionService.getSessionListByQuery({
         adminId: TEST_ADMIN_ID,
-        sessionId: TEST_SESSION_ID,
+        id: 1,
       });
 
       for (const session of result.sessions) {
@@ -40,8 +40,7 @@ describe("session service", () => {
     test("not found", async () => {
       try {
         await sessionService.getSessionsById({
-          id: "invalid_id",
-          sessionId: TEST_SESSION_ID,
+          id: -1,
         });
       } catch (error: any) {
         expect(error.message).toBe("Not Found");
@@ -49,8 +48,7 @@ describe("session service", () => {
     });
     test("success", async () => {
       const session = await sessionService.getSessionsById({
-        id: TEST_SESSION_ID,
-        sessionId: TEST_SESSION_ID,
+        id: 1,
       });
       expect(session).toEqual(sessionSchemaExpect);
       expect(session.isCurrent).toEqual(true);
@@ -59,7 +57,7 @@ describe("session service", () => {
 });
 
 const sessionSchemaExpect = expect.objectContaining({
-  id: expect.any(String),
+  id: expect.any(Number),
   adminId: expect.any(Number),
   data: expect.any(Object),
   createdAt: expect.any(Date),

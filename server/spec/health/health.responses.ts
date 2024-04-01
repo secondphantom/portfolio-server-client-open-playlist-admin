@@ -10,7 +10,7 @@ export type ResponseHealthGetListByQuery = {
         responseTime: number;
       }[];
     };
-    createdAt: Date;
+    createdAt: string;
   }[];
   pagination: {
     currentPage: number;
@@ -29,5 +29,5 @@ export type ResponseHealthGetById = {
       responseTime: number;
     }[];
   };
-  createdAt: Date;
+  createdAt: string;
 };

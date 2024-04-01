@@ -8,7 +8,7 @@ import {
   SessionEntitySelect,
 } from "@/server/domain/session.domain";
 import * as schema from "../../schema/schema";
-import { asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { AdminEntitySelect } from "@/server/domain/admin.domain";
 
 export class SessionRepo implements ISessionRepo {
@@ -27,17 +27,37 @@ export class SessionRepo implements ISessionRepo {
 
   create = async (dto: RepoCreateSessionDto) => {
     await this.db.insert(schema.sessions).values(dto);
-    const session = await this.getById(dto.id, { id: true });
-
-    return session;
   };
 
-  deleteById = async (id: string) => {
+  deleteById = async (id: number) => {
     await this.db.delete(schema.sessions).where(eq(schema.sessions.id, id));
   };
 
+  deleteBySessionKey = async (sessionKey: string) => {
+    await this.db
+      .delete(schema.sessions)
+      .where(eq(schema.sessions.sessionKey, sessionKey));
+  };
+
+  deleteByIdAndSessionKey = async ({
+    sessionKey,
+    id,
+  }: {
+    sessionKey: string;
+    id: number;
+  }) => {
+    await this.db
+      .delete(schema.sessions)
+      .where(
+        and(
+          eq(schema.sessions.sessionKey, sessionKey),
+          eq(schema.sessions.id, id)
+        )
+      );
+  };
+
   getById = async <T extends keyof AdminEntitySelect>(
-    id: string,
+    id: number,
     columns?:
       | {
           [key in T]?: boolean;
@@ -55,12 +75,31 @@ export class SessionRepo implements ISessionRepo {
     return session;
   };
 
-  getByIdWith = async <
+  getBySessionKey = async <T extends keyof AdminEntitySelect>(
+    sessionKey: string,
+    columns?:
+      | {
+          [key in T]?: boolean;
+        }
+      | { [key in keyof AdminEntitySelect]?: boolean }
+  ) => {
+    const session = await this.db.query.sessions.findFirst({
+      where: (session, { eq }) => {
+        return eq(session.sessionKey, sessionKey);
+      },
+      columns: columns
+        ? (columns as { [key in keyof AdminEntitySelect]: boolean })
+        : undefined,
+    });
+    return session;
+  };
+
+  getBySessionKeyWith = async <
     T extends keyof SessionEntitySelect,
     W1 extends keyof AdminEntitySelect
   >(
     where: {
-      id: string;
+      sessionKey: string;
     },
     columns?: {
       session?:
@@ -77,7 +116,7 @@ export class SessionRepo implements ISessionRepo {
   ) => {
     const session = await this.db.query.sessions.findFirst({
       where: (session, { eq }) => {
-        return eq(session.id, where.id);
+        return eq(session.sessionKey, where.sessionKey);
       },
       columns: columns?.session,
       with: {
@@ -112,6 +151,12 @@ export class SessionRepo implements ISessionRepo {
     const sessions = await this.db.query.sessions.findMany({
       where: (value, { eq }) => {
         return eq(value.adminId, adminId);
+      },
+      columns: {
+        id: true,
+        data: true,
+        createdAt: true,
+        updatedAt: true,
       },
       orderBy: orderBy,
       offset: (page - 1) * pageSize,

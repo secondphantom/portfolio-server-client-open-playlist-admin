@@ -1,13 +1,14 @@
 export type ResponseSessionGetListByQuery = {
   sessions: {
     id: number;
-    version: number;
     data: {
       device: any;
       ip: string;
       userAgent: string;
     };
-    createdAt: Date;
+    createdAt: string;
+    updatedAt: string;
+    isCurrent: boolean;
   }[];
   pagination: {
     currentPage: number;
@@ -17,11 +18,12 @@ export type ResponseSessionGetListByQuery = {
 
 export type ResponseSessionsGetById = {
   id: number;
-  version: number;
   data: {
     device: any;
     ip: string;
     userAgent: string;
   };
-  createdAt: Date;
+  createdAt: string;
+  updatedAt: string;
+  isCurrent: boolean;
 };

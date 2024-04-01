@@ -21,11 +21,11 @@ export type ServiceAuthVerifyOtpDto = {
 };
 
 export type ServiceAuthSignOutDto = {
-  sessionId: string;
+  sessionKey: string;
 };
 
 export type ServiceAuthVerifySession = {
-  sessionId: string;
+  sessionKey: string;
 };
 
 type ServiceInputs = {
@@ -113,33 +113,29 @@ export class AuthService {
       });
     }
 
-    const sessionDomain = new SessionDomain({
+    const createDto = new SessionDomain({
       adminId: admin.id,
       data: data,
-    });
+    }).getCreateDto();
 
-    const session = await this.sessionRepo.create(sessionDomain.getCreateDto());
+    await this.sessionRepo.create(createDto);
 
-    if (!session) {
-      throw new ServerError({
-        message: "Fail to create session",
-        code: 504,
-      });
-    }
-
-    return { sessionId: session.id };
+    return { sessionKey: createDto.sessionKey };
   };
 
   // POST /auth/sign-out
   signOut = async (dto: ServiceAuthSignOutDto) => {
-    await this.sessionRepo.deleteById(dto.sessionId);
+    await this.sessionRepo.deleteBySessionKey(dto.sessionKey);
   };
 
   // verifySession
   verifySession = async (dto: ServiceAuthVerifySession) => {
-    const session = await this.sessionRepo.getByIdWith(
-      { id: dto.sessionId },
-      { admin: { id: true, roleId: true }, session: { id: true } }
+    const session = await this.sessionRepo.getBySessionKeyWith(
+      { sessionKey: dto.sessionKey },
+      {
+        admin: { id: true, roleId: true },
+        session: { id: true, sessionKey: true },
+      }
     );
 
     if (!session || !session.admin) {

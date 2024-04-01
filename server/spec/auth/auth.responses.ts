@@ -1,5 +1,6 @@
 export type ResponseAuthVerifySession = {
-  id: string;
+  id: number;
+  sessionKey: string;
   admin: {
     id: number;
     roleId: number;

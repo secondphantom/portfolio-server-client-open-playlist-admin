@@ -69,7 +69,7 @@ export class AuthController {
         headers: [
           {
             name: "Set-Cookie",
-            value: `sessionId=${data.sessionId}; Path=/; HttpOnly; Secure; SameSite=Strict;`,
+            value: `sessionKey=${data.sessionKey}; Path=/; HttpOnly; Secure; SameSite=Strict;`,
           },
         ],
       });
@@ -99,7 +99,7 @@ export class AuthController {
         headers: [
           {
             name: "Set-Cookie",
-            value: `sessionId=; Path=/; HttpOnly; Secure; SameSite=Strict; expires=Thu, 01 Jan 1970 00:00:01 GMT;`,
+            value: `sessionKey=; Path=/; HttpOnly; Secure; SameSite=Strict; expires=Thu, 01 Jan 1970 00:00:01 GMT;`,
           },
         ],
       });

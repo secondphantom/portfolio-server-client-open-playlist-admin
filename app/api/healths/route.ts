@@ -11,7 +11,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
     );
     const cookieStore = cookies();
     const session = await router.authController.verifySession({
-      sessionId: cookieStore.get("sessionId")?.value as any,
+      sessionKey: cookieStore.get("sessionKey")?.value as any,
     });
     if (session.getResponse().code !== 200) {
       return NextResponse.json(
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest, context: { params: any }) {
   try {
     const cookieStore = cookies();
     const session = await router.authController.verifySession({
-      sessionId: cookieStore.get("sessionId")?.value as any,
+      sessionKey: cookieStore.get("sessionKey")?.value as any,
     });
     if (session.getResponse().code !== 200) {
       return NextResponse.json(

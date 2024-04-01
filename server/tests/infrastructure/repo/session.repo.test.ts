@@ -15,24 +15,25 @@ describe("session repo", () => {
       LOG_LEVEL: "dev",
     });
     sessionRepo = SessionRepo.getInstance(client);
-    await sessionRepo.deleteById(TEST_SESSION_ID);
+    await sessionRepo.deleteBySessionKey(TEST_SESSION_ID);
   });
 
   test("create", async () => {
     const dto = {
       adminId: 0,
       data: {} as any,
-      id: TEST_SESSION_ID,
+      sessionKey: TEST_SESSION_ID,
     } satisfies RepoCreateSessionDto;
 
-    const session = await sessionRepo.create(dto);
+    await sessionRepo.create(dto);
+    const session = await sessionRepo.getBySessionKey(TEST_SESSION_ID);
 
-    expect(session?.id).toEqual(dto.id);
+    expect(session?.sessionKey).toEqual(dto.sessionKey);
   });
 
-  test("getById", async () => {
-    const session = await sessionRepo.getById(TEST_SESSION_ID);
+  test("getBySessionKey", async () => {
+    const session = await sessionRepo.getBySessionKey(TEST_SESSION_ID);
 
-    expect(session?.id).toEqual(TEST_SESSION_ID);
+    expect(session?.sessionKey).toEqual(TEST_SESSION_ID);
   });
 });

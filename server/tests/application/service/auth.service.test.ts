@@ -15,7 +15,7 @@ import { ISessionRepo } from "@/server/application/interfaces/session.repo";
 describe("auth service", () => {
   const email = process.env.TEST_EMAIL_DESTINATION!;
   const invalidEmail = "invalid@email.com";
-  const TEST_SESSION_ID = "TEST_SESSION_ID";
+  const TEST_SESSION_KEY = "TEST_SESSION_KEY";
   let adminRepo: IAdminRepo;
   let sessionRepo: ISessionRepo;
   let emailUtil: IEmailUtil;
@@ -98,31 +98,31 @@ describe("auth service", () => {
         otpExpirationAt: true,
       });
 
-      const { sessionId } = await authService.verifyOtp({
+      const { sessionKey } = await authService.verifyOtp({
         email: email,
         otpCode: admin?.otpCode,
         data: {},
       } as any);
 
-      expect(sessionId).toEqual(expect.any(String));
+      expect(sessionKey).toEqual(expect.any(String));
     });
   });
 
-  describe("verify sessionId", () => {
+  describe("verify sessionKey", () => {
     test("fail", async () => {
       try {
-        await authService.verifySession({ sessionId: "invalid" });
+        await authService.verifySession({ sessionKey: "invalid" });
       } catch (error: any) {
         expect(error.message).toBe("Unauthorized");
       }
     });
 
     test("success", async () => {
-      const { id, admin } = await authService.verifySession({
-        sessionId: TEST_SESSION_ID,
+      const { admin, sessionKey } = await authService.verifySession({
+        sessionKey: TEST_SESSION_KEY,
       });
 
-      expect(id).toEqual(TEST_SESSION_ID);
+      expect(sessionKey).toEqual(TEST_SESSION_KEY);
       expect(admin.id).toEqual(0);
     });
   });

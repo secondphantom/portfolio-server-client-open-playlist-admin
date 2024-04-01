@@ -24,7 +24,7 @@ export class SessionRequestValidator implements ISessionRequestValidator {
       auth: z
         .object({
           adminId: z.number(),
-          sessionId: z.string().length(36),
+          id: z.number(),
         })
         .strict(),
       query: z
@@ -54,10 +54,10 @@ export class SessionRequestValidator implements ISessionRequestValidator {
   private requestSessionGetById = z
     .object({
       auth: z.object({
-        sessionId: z.string().length(36),
+        id: z.number(),
       }),
       params: z.object({
-        id: z.string().length(36),
+        id: zodIntTransform,
       }),
     })
     .strict();
@@ -79,7 +79,8 @@ export class SessionRequestValidator implements ISessionRequestValidator {
 
   private requestSessionDeleteById = z
     .object({
-      id: z.string().length(36),
+      sessionKey: z.string().length(36),
+      id: z.number(),
     })
     .strict();
 

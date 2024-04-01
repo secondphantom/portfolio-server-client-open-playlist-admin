@@ -289,7 +289,8 @@ export type SessionData = {
 export const sessions = pgTable(
   "AdminSessions",
   {
-    id: varchar("id", { length: 50 }).notNull().primaryKey(),
+    id: bigint("id", { mode: "number" }).notNull().primaryKey().default(0),
+    sessionKey: varchar("session_key", { length: 50 }).notNull(),
     adminId: bigint("admin_id", { mode: "number" }).notNull(),
     data: jsonb("data").notNull().$type<SessionData>(),
     createdAt: timestamp("created_at")
@@ -304,6 +305,7 @@ export const sessions = pgTable(
       idxAdminId: index("idx_sessions_admin_id").on(table.adminId),
       idxCreatedAt: index("idx_sessions_created_at").on(table.createdAt), // DESC
       idxUpdatedAt: index("idx_sessions_published_at").on(table.updatedAt), // DESC
+      uqSessionId: uniqueIndex("uq_sessions_session_id").on(table.sessionKey),
     };
   }
 );

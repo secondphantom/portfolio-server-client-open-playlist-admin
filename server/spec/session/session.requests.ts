@@ -1,7 +1,7 @@
 export type RequestSessionGetListByQuery = {
   auth: {
     adminId: number;
-    sessionId: string;
+    id: number;
   };
   query: {
     page?: number;
@@ -11,7 +11,7 @@ export type RequestSessionGetListByQuery = {
 
 export type RequestSessionGetById = {
   auth: {
-    sessionId: string;
+    id: number;
   };
   params: {
     id: string;
@@ -19,5 +19,6 @@ export type RequestSessionGetById = {
 };
 
 export type RequestSessionDeleteById = {
-  id: string;
+  sessionKey: string;
+  id: number;
 };

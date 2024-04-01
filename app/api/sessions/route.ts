@@ -11,7 +11,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
     );
     const cookieStore = cookies();
     const session = await router.authController.verifySession({
-      sessionId: cookieStore.get("sessionId")?.value as any,
+      sessionKey: cookieStore.get("sessionKey")?.value as any,
     });
 
     if (session.getResponse().code !== 200) {
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest, context: { params: any }) {
     const result = await router.sessionController.getSessionListByQuery({
       auth: {
         adminId: auth?.admin.id,
-        sessionId: auth?.id,
+        id: auth?.id,
       },
       query: {
         ...searchParamsObj,

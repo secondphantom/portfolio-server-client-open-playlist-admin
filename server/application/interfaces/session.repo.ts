@@ -12,22 +12,35 @@ export type QuerySessionListDto = {
 };
 
 export interface ISessionRepo {
-  create: (dto: RepoCreateSessionDto) => Promise<{ id: string } | undefined>;
-  deleteById: (id: string) => Promise<void>;
+  create: (dto: RepoCreateSessionDto) => Promise<void>;
+  deleteById: (id: number) => Promise<void>;
+  deleteBySessionKey: (sessionKey: string) => Promise<void>;
+  deleteByIdAndSessionKey: (dto: {
+    sessionKey: string;
+    id: number;
+  }) => Promise<void>;
   getById: <T extends keyof SessionEntitySelect>(
-    id: string,
+    id: number,
     columns?:
       | {
           [key in T]?: boolean;
         }
       | { [key in keyof SessionEntitySelect]?: boolean }
   ) => Promise<Pick<SessionEntitySelect, T> | undefined>;
-  getByIdWith: <
+  getBySessionKey: <T extends keyof SessionEntitySelect>(
+    sessionKey: string,
+    columns?:
+      | {
+          [key in T]?: boolean;
+        }
+      | { [key in keyof SessionEntitySelect]?: boolean }
+  ) => Promise<Pick<SessionEntitySelect, T> | undefined>;
+  getBySessionKeyWith: <
     T extends keyof SessionEntitySelect,
     W1 extends keyof AdminEntitySelect
   >(
     where: {
-      id: string;
+      sessionKey: string;
     },
     columns?: {
       session?:
@@ -49,5 +62,5 @@ export interface ISessionRepo {
   >;
   getListByQuery: (
     query: QuerySessionListDto
-  ) => Promise<SessionEntitySelect[]>;
+  ) => Promise<Omit<SessionEntitySelect, "sessionKey" | "adminId">[]>;
 }

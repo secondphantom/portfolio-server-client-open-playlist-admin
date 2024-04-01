@@ -8,7 +8,7 @@ export async function POST(request: Request, context: { params: any }) {
   try {
     const cookieStore = cookies();
     const result = await router.authController.signOut({
-      sessionId: cookieStore.get("sessionId")?.value as any,
+      sessionKey: cookieStore.get("sessionKey")?.value as any,
     });
     return RouterIndex.createJsonResponse(result);
   } catch (error: any) {

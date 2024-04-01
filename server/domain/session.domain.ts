@@ -6,7 +6,7 @@ export type SessionEntitySelect = typeof sessions.$inferSelect;
 export type SessionEntityInsert = typeof sessions.$inferInsert;
 
 export type RepoCreateSessionDto = {
-  id: string;
+  sessionKey: string;
   adminId: number;
   data: {
     ip: string;
@@ -16,20 +16,27 @@ export type RepoCreateSessionDto = {
 };
 
 export class SessionDomain {
-  id: string;
+  id: number | undefined;
+  sessionKey: string;
   adminId: number;
   data: SessionData;
   createdAt: Date | undefined;
   updatedAt: Date | undefined;
+
   constructor({
     id,
+    sessionKey,
     adminId,
     data,
     createdAt,
     updatedAt,
-  }: Omit<SessionEntitySelect, "id" | "createdAt" | "updatedAt"> &
+  }: Omit<
+    SessionEntitySelect,
+    "id" | "sessionKey" | "createdAt" | "updatedAt"
+  > &
     Partial<SessionEntitySelect>) {
-    this.id = id ? id : uuidv4();
+    this.id = id;
+    this.sessionKey = sessionKey ? sessionKey : uuidv4();
     this.adminId = adminId;
     this.data = data;
     this.createdAt = createdAt;
@@ -38,7 +45,7 @@ export class SessionDomain {
 
   getCreateDto = (): RepoCreateSessionDto => {
     return {
-      id: this.id,
+      sessionKey: this.sessionKey,
       adminId: this.adminId,
       data: this.data,
     };
