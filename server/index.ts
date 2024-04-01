@@ -13,6 +13,10 @@ import { AdminRepo } from "./infrastructure/repo/admin.repo";
 import { Utils } from "./infrastructure/utils/utils";
 import { AuthRequestValidator } from "./infrastructure/validator/auth.request.validator";
 import { SessionRepo } from "./infrastructure/repo/session.repo";
+import { HealthRepo } from "./infrastructure/repo/health.repo";
+import { HealthRequestValidator } from "./infrastructure/validator/health.request.validator";
+import { HealthService } from "./application/service/health.service";
+import { HealthController } from "./controller/health/health.controller";
 
 export class RouterIndex {
   static instance: RouterIndex | undefined;
@@ -26,11 +30,12 @@ export class RouterIndex {
   private dbClient: DrizzleClient;
 
   authController: AuthController;
+  healthController: HealthController;
 
   constructor() {
     this.env = {
       DATABASE_URL: process.env.DATABASE_URL!,
-      LOG_LEVEL: "verbose",
+      LOG_LEVEL: "dev",
       API_BASE_URL: process.env.API_BASE_URL!,
       YOUTUBE_DATA_API_KEY: process.env.YOUTUBE_DATA_API_KEY!,
     } satisfies ENV;
@@ -41,8 +46,10 @@ export class RouterIndex {
 
     const adminRepo = AdminRepo.getInstance(this.dbClient);
     const sessionRepo = SessionRepo.getInstance(this.dbClient);
+    const healthRepo = HealthRepo.getInstance(this.dbClient);
 
     const authRequestValidator = AuthRequestValidator.getInstance();
+    const healthRequestValidator = HealthRequestValidator.getInstance();
 
     const authService = AuthService.getInstance({
       adminRepo,
@@ -50,10 +57,18 @@ export class RouterIndex {
       emailUtil,
       utils,
     });
+    const healthService = HealthService.getInstance({
+      env: this.env,
+      healthRepo,
+    });
 
     this.authController = AuthController.getInstance({
       authRequestValidator,
       authService,
+    });
+    this.healthController = HealthController.getInstance({
+      healthRequestValidator,
+      healthService,
     });
   }
 
