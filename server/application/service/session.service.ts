@@ -66,7 +66,10 @@ export class SessionService {
       });
     }
 
-    return sessions.map((v) => ({ ...v, isCurrent: v.id === sessionId }));
+    return {
+      sessions: sessions.map((v) => ({ ...v, isCurrent: v.id === sessionId })),
+      pagination,
+    };
   };
 
   // GET /sessions/:id

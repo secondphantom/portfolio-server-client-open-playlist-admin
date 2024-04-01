@@ -26,12 +26,12 @@ describe("session service", () => {
 
   describe("getSessionListByQuery", () => {
     test("success", async () => {
-      const sessions = await sessionService.getSessionListByQuery({
+      const result = await sessionService.getSessionListByQuery({
         adminId: TEST_ADMIN_ID,
         sessionId: TEST_SESSION_ID,
       });
 
-      for (const session of sessions) {
+      for (const session of result.sessions) {
         expect(session).toEqual(sessionSchemaExpect);
       }
     });

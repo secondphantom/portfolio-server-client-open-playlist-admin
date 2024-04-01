@@ -1,10 +1,15 @@
-import { HealthData } from "@/server/schema/schema";
-
 export type ResponseHealthGetListByQuery = {
   healths: {
     id: number;
     version: number;
-    data: HealthData;
+    data: {
+      apis: {
+        method: string;
+        path: string;
+        status: number;
+        responseTime: number;
+      }[];
+    };
     createdAt: Date;
   }[];
   pagination: {
@@ -16,6 +21,13 @@ export type ResponseHealthGetListByQuery = {
 export type ResponseHealthGetById = {
   id: number;
   version: number;
-  data: HealthData;
+  data: {
+    apis: {
+      method: string;
+      path: string;
+      status: number;
+      responseTime: number;
+    }[];
+  };
   createdAt: Date;
 };

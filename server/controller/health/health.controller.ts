@@ -7,14 +7,14 @@ import {
   RequestHealthGetListByQuery,
 } from "@/server/spec/health/health.requests";
 
-type ConstructorInputs = {
+type ControllerInputs = {
   healthService: HealthService;
   healthRequestValidator: IHealthRequestValidator;
 };
 
 export class HealthController {
   static instance: HealthController | undefined;
-  static getInstance = (inputs: ConstructorInputs) => {
+  static getInstance = (inputs: ControllerInputs) => {
     if (this.instance) return this.instance;
     this.instance = new HealthController(inputs);
     return this.instance;
@@ -23,7 +23,7 @@ export class HealthController {
   private healthRequestValidator: IHealthRequestValidator;
   private healthService: HealthService;
 
-  constructor({ healthRequestValidator, healthService }: ConstructorInputs) {
+  constructor({ healthRequestValidator, healthService }: ControllerInputs) {
     this.healthRequestValidator = healthRequestValidator;
     this.healthService = healthService;
   }

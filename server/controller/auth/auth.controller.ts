@@ -9,14 +9,14 @@ import {
 } from "@/server/spec/auth/auth.requests";
 import { errorResolver } from "@/server/dto/error.resolver";
 
-type ConstructorInputs = {
+type ControllerInputs = {
   authService: AuthService;
   authRequestValidator: IAuthRequestValidator;
 };
 
 export class AuthController {
   static instance: AuthController | undefined;
-  static getInstance = (inputs: ConstructorInputs) => {
+  static getInstance = (inputs: ControllerInputs) => {
     if (this.instance) return this.instance;
     this.instance = new AuthController(inputs);
     return this.instance;
@@ -25,7 +25,7 @@ export class AuthController {
   private authRequestValidator: IAuthRequestValidator;
   private authService: AuthService;
 
-  constructor({ authRequestValidator, authService }: ConstructorInputs) {
+  constructor({ authRequestValidator, authService }: ControllerInputs) {
     this.authRequestValidator = authRequestValidator;
     this.authService = authService;
   }
