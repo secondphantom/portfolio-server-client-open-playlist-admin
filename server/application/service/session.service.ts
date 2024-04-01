@@ -14,7 +14,7 @@ export type ServiceSessionGetById = {
 };
 
 export type ServiceSessionDeleById = {
-  sessionKey: string;
+  adminId: number;
   id: number;
 };
 
@@ -98,7 +98,7 @@ export class SessionService {
   };
 
   // DELETE /sessions/:id
-  deleteSessionById = async ({ sessionKey, id }: ServiceSessionDeleById) => {
-    await this.sessionRepo.deleteByIdAndSessionKey({ sessionKey, id });
+  deleteSessionById = async ({ adminId, id }: ServiceSessionDeleById) => {
+    await this.sessionRepo.deleteByIdAndAdminId({ adminId, id });
   };
 }

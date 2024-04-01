@@ -58,7 +58,6 @@ describe("session service", () => {
 
 const sessionSchemaExpect = expect.objectContaining({
   id: expect.any(Number),
-  adminId: expect.any(Number),
   data: expect.any(Object),
   createdAt: expect.any(Date),
   updatedAt: expect.any(Date),

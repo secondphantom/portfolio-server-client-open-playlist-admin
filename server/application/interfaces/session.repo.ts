@@ -15,10 +15,7 @@ export interface ISessionRepo {
   create: (dto: RepoCreateSessionDto) => Promise<void>;
   deleteById: (id: number) => Promise<void>;
   deleteBySessionKey: (sessionKey: string) => Promise<void>;
-  deleteByIdAndSessionKey: (dto: {
-    sessionKey: string;
-    id: number;
-  }) => Promise<void>;
+  deleteByIdAndAdminId: (dto: { adminId: number; id: number }) => Promise<void>;
   getById: <T extends keyof SessionEntitySelect>(
     id: number,
     columns?:

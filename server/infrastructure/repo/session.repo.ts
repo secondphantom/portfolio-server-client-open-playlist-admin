@@ -39,20 +39,17 @@ export class SessionRepo implements ISessionRepo {
       .where(eq(schema.sessions.sessionKey, sessionKey));
   };
 
-  deleteByIdAndSessionKey = async ({
-    sessionKey,
+  deleteByIdAndAdminId = async ({
+    adminId,
     id,
   }: {
-    sessionKey: string;
+    adminId: number;
     id: number;
   }) => {
     await this.db
       .delete(schema.sessions)
       .where(
-        and(
-          eq(schema.sessions.sessionKey, sessionKey),
-          eq(schema.sessions.id, id)
-        )
+        and(eq(schema.sessions.adminId, adminId), eq(schema.sessions.id, id))
       );
   };
 

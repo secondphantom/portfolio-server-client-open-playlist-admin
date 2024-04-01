@@ -53,12 +53,11 @@ export class SessionRequestValidator implements ISessionRequestValidator {
 
   private requestSessionGetById = z
     .object({
-      auth: z.object({
-        id: z.number(),
-      }),
-      params: z.object({
-        id: zodIntTransform,
-      }),
+      params: z
+        .object({
+          id: zodIntTransform,
+        })
+        .strict(),
     })
     .strict();
 
@@ -67,7 +66,6 @@ export class SessionRequestValidator implements ISessionRequestValidator {
       const dto = this.requestSessionGetById.parse(req);
       return {
         ...dto.params,
-        ...dto.auth,
       };
     } catch (error) {
       throw new ServerError({
@@ -79,15 +77,26 @@ export class SessionRequestValidator implements ISessionRequestValidator {
 
   private requestSessionDeleteById = z
     .object({
-      sessionKey: z.string().length(36),
-      id: z.number(),
+      auth: z
+        .object({
+          adminId: z.number(),
+        })
+        .strict(),
+      params: z
+        .object({
+          id: zodIntTransform,
+        })
+        .strict(),
     })
     .strict();
 
   deleteSessionById = (req: RequestSessionDeleteById) => {
     try {
       const dto = this.requestSessionDeleteById.parse(req);
-      return dto;
+      return {
+        ...dto.params,
+        ...dto.auth,
+      };
     } catch (error) {
       throw new ServerError({
         code: 400,

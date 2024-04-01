@@ -10,15 +10,16 @@ export type RequestSessionGetListByQuery = {
 };
 
 export type RequestSessionGetById = {
-  auth: {
-    id: number;
-  };
   params: {
-    id: string;
+    id: number;
   };
 };
 
 export type RequestSessionDeleteById = {
-  sessionKey: string;
-  id: number;
+  auth: {
+    adminId: number;
+  };
+  params: {
+    id: number;
+  };
 };
