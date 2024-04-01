@@ -1,5 +1,5 @@
 import * as schema from "../../schema/schema";
-import { desc } from "drizzle-orm";
+import { asc, desc } from "drizzle-orm";
 
 import {
   IHealthRepo,
@@ -47,6 +47,8 @@ export class HealthRepo implements IHealthRepo {
       switch (order) {
         case "recent":
           return [desc(schema.healths.createdAt)];
+        case "old":
+          return [asc(schema.healths.createdAt)];
         default:
           return [];
       }

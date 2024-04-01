@@ -280,7 +280,7 @@ export const admins = pgTable(
   }
 );
 
-export type SessionsData = {
+export type SessionData = {
   device: any;
   ip: string;
   userAgent: string;
@@ -291,7 +291,7 @@ export const sessions = pgTable(
   {
     id: varchar("id", { length: 50 }).notNull().primaryKey(),
     adminId: bigint("admin_id", { mode: "number" }).notNull(),
-    data: jsonb("data").notNull().$type<SessionsData>(),
+    data: jsonb("data").notNull().$type<SessionData>(),
     createdAt: timestamp("created_at")
       .default(sql`now()`)
       .notNull(),

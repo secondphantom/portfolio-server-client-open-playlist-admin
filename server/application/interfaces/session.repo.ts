@@ -4,6 +4,13 @@ import {
   SessionEntitySelect,
 } from "@/server/domain/session.domain";
 
+export type QuerySessionListDto = {
+  adminId: number;
+  page: number;
+  pageSize: number;
+  order: "recent" | "old";
+};
+
 export interface ISessionRepo {
   create: (dto: RepoCreateSessionDto) => Promise<{ id: string } | undefined>;
   deleteById: (id: string) => Promise<void>;
@@ -40,4 +47,7 @@ export interface ISessionRepo {
       })
     | undefined
   >;
+  getListByQuery: (
+    query: QuerySessionListDto
+  ) => Promise<SessionEntitySelect[]>;
 }

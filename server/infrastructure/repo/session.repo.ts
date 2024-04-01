@@ -1,11 +1,14 @@
-import { ISessionRepo } from "@/server/application/interfaces/session.repo";
+import {
+  ISessionRepo,
+  QuerySessionListDto,
+} from "@/server/application/interfaces/session.repo";
 import { Db, DrizzleClient } from "../db/drizzle.client";
 import {
   RepoCreateSessionDto,
   SessionEntitySelect,
 } from "@/server/domain/session.domain";
 import * as schema from "../../schema/schema";
-import { eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { AdminEntitySelect } from "@/server/domain/admin.domain";
 
 export class SessionRepo implements ISessionRepo {
@@ -87,5 +90,34 @@ export class SessionRepo implements ISessionRepo {
     });
 
     return session as any;
+  };
+
+  getListByQuery = async ({
+    page,
+    pageSize,
+    adminId,
+    order,
+  }: QuerySessionListDto) => {
+    const orderBy = ((order: string) => {
+      switch (order) {
+        case "recent":
+          return [desc(schema.sessions.createdAt)];
+        case "old":
+          return [asc(schema.sessions.createdAt)];
+        default:
+          return [];
+      }
+    })(order);
+
+    const sessions = await this.db.query.sessions.findMany({
+      where: (value, { eq }) => {
+        return eq(value.adminId, adminId);
+      },
+      orderBy: orderBy,
+      offset: (page - 1) * pageSize,
+      limit: pageSize,
+    });
+
+    return sessions;
   };
 }

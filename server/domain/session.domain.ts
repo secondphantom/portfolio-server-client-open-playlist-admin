@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { SessionsData, sessions } from "../schema/schema";
+import { SessionData, sessions } from "../schema/schema";
 
 export type SessionEntitySelect = typeof sessions.$inferSelect;
 export type SessionEntityInsert = typeof sessions.$inferInsert;
@@ -18,7 +18,7 @@ export type RepoCreateSessionDto = {
 export class SessionDomain {
   id: string;
   adminId: number;
-  data: SessionsData;
+  data: SessionData;
   createdAt: Date | undefined;
   updatedAt: Date | undefined;
   constructor({
