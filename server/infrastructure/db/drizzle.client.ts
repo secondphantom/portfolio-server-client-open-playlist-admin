@@ -21,9 +21,6 @@ export class DrizzleClient {
     const pool = new Pool({
       connectionString: this.env.DATABASE_URL,
     });
-    // const client = new Client({
-    //   connectionString: this.env.DATABASE_URL,
-    // });
 
     this.db = drizzle(pool, {
       schema,

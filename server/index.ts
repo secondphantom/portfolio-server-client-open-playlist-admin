@@ -20,6 +20,9 @@ import { HealthController } from "./controller/health/health.controller";
 import { SessionRequestValidator } from "./infrastructure/validator/session.request.validator";
 import { SessionService } from "./application/service/session.service";
 import { SessionController } from "./controller/session/session.controller";
+import { AdminService } from "./application/service/admin.service";
+import { AdminController } from "./controller/admin/admin.controller";
+import { AdminRequestValidator } from "./infrastructure/validator/admin.request.validator";
 
 export class RouterIndex {
   static instance: RouterIndex | undefined;
@@ -35,6 +38,7 @@ export class RouterIndex {
   authController: AuthController;
   healthController: HealthController;
   sessionController: SessionController;
+  adminController: AdminController;
 
   constructor() {
     this.env = {
@@ -55,6 +59,7 @@ export class RouterIndex {
     const authRequestValidator = AuthRequestValidator.getInstance();
     const healthRequestValidator = HealthRequestValidator.getInstance();
     const sessionRequestValidator = SessionRequestValidator.getInstance();
+    const adminRequestValidator = AdminRequestValidator.getInstance();
 
     const authService = AuthService.getInstance({
       adminRepo,
@@ -69,6 +74,9 @@ export class RouterIndex {
     const sessionService = SessionService.getInstance({
       sessionRepo,
     });
+    const adminService = AdminService.getInstance({
+      adminRepo,
+    });
 
     this.authController = AuthController.getInstance({
       authRequestValidator,
@@ -81,6 +89,10 @@ export class RouterIndex {
     this.sessionController = SessionController.getInstance({
       sessionRequestValidator,
       sessionService,
+    });
+    this.adminController = AdminController.getInstance({
+      adminRequestValidator,
+      adminService,
     });
   }
 

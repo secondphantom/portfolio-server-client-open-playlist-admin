@@ -4,7 +4,7 @@ export const errorResolver = (error: any) => {
     message: "Internal Error",
     data: undefined,
   };
-  console.log(error);
+  console.log(error.message);
   if (error instanceof Error) {
     try {
       //@ts-ignore

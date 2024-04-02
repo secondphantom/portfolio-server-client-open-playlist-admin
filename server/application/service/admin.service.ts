@@ -40,7 +40,7 @@ export class AdminService {
   }
 
   // POST /admins?
-  registerAdmin = async (dto: ServiceAdminCreateDto) => {
+  createAdmin = async (dto: ServiceAdminCreateDto) => {
     const admin = await this.adminRepo.getByEmail(dto.email, { id: true });
 
     if (admin) {

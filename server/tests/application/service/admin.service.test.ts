@@ -43,7 +43,7 @@ describe("admin service", () => {
   describe("registerAdmin", () => {
     test("fail conflict", async () => {
       try {
-        await adminService.registerAdmin({
+        await adminService.createAdmin({
           email: CONFLICT_EMAIL,
         });
       } catch (error: any) {
@@ -51,7 +51,7 @@ describe("admin service", () => {
       }
     });
     test("success", async () => {
-      await adminService.registerAdmin({
+      await adminService.createAdmin({
         email: NON_CONFLICT_EMAIL,
       });
     });
