@@ -3,6 +3,11 @@ import { admins } from "../schema/schema";
 export type AdminEntitySelect = typeof admins.$inferSelect;
 export type AdminEntityInsert = typeof admins.$inferInsert;
 
+export type RepoCreateAdminDto = Pick<
+  AdminEntitySelect,
+  "email" | "profileName"
+>;
+
 export class AdminDomain {
   private id: number | undefined;
   private email: string;
@@ -54,6 +59,13 @@ export class AdminDomain {
       return false;
     }
     return true;
+  };
+
+  getCreateDto = () => {
+    return {
+      email: this.email,
+      profileName: this.profileName,
+    };
   };
 
   getEntity = () => {

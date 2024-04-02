@@ -53,39 +53,39 @@ export class SessionRepo implements ISessionRepo {
       );
   };
 
-  getById = async <T extends keyof AdminEntitySelect>(
+  getById = async <T extends keyof SessionEntitySelect>(
     id: number,
     columns?:
       | {
           [key in T]?: boolean;
         }
-      | { [key in keyof AdminEntitySelect]?: boolean }
+      | { [key in keyof SessionEntitySelect]?: boolean }
   ) => {
     const session = await this.db.query.sessions.findFirst({
       where: (session, { eq }) => {
         return eq(session.id, id);
       },
       columns: columns
-        ? (columns as { [key in keyof AdminEntitySelect]: boolean })
+        ? (columns as { [key in keyof SessionEntitySelect]: boolean })
         : undefined,
     });
     return session;
   };
 
-  getBySessionKey = async <T extends keyof AdminEntitySelect>(
+  getBySessionKey = async <T extends keyof SessionEntitySelect>(
     sessionKey: string,
     columns?:
       | {
           [key in T]?: boolean;
         }
-      | { [key in keyof AdminEntitySelect]?: boolean }
+      | { [key in keyof SessionEntitySelect]?: boolean }
   ) => {
     const session = await this.db.query.sessions.findFirst({
       where: (session, { eq }) => {
         return eq(session.sessionKey, sessionKey);
       },
       columns: columns
-        ? (columns as { [key in keyof AdminEntitySelect]: boolean })
+        ? (columns as { [key in keyof SessionEntitySelect]: boolean })
         : undefined,
     });
     return session;

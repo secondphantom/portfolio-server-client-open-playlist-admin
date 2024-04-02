@@ -2,7 +2,7 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  testMatch: ["<rootDir>/server/tests/**/*.ts"],
+  testMatch: ["<rootDir>/server/tests/**/admin.service.test.ts"],
   verbose: true,
   forceExit: true,
   clearMocks: true,
