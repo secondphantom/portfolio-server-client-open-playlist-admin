@@ -56,11 +56,14 @@ export class UserStatRepo implements IUserStatRepo {
     version,
   }: QueryUserStatListDto) => {
     const userStats = await this.db.query.userStats.findMany({
+      orderBy: (value, { desc }) => {
+        return [desc(value.eventAt)];
+      },
       where: (value, { and, eq, gte, lte }) => {
         return and(
           eq(value.version, version),
-          gte(value.createdAt, start),
-          lte(value.createdAt, end)
+          gte(value.eventAt, start),
+          lte(value.eventAt, end)
         );
       },
     });

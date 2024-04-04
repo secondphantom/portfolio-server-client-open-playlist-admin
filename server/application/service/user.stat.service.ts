@@ -17,7 +17,7 @@ export type ServiceUserStatGetListByQueryDto = {
   version: number;
 };
 
-export type ServiceUserStatGetById = {
+export type ServiceUserStatGetByVersionAndEventAt = {
   version: number;
   eventAt: Date;
 };
@@ -149,7 +149,9 @@ export class UserStatService {
   };
 
   //GET /stats/users/version/:versionId/date
-  getUserStatByVersionAndEventAt = async (dto: ServiceUserStatGetById) => {
+  getUserStatByVersionAndEventAt = async (
+    dto: ServiceUserStatGetByVersionAndEventAt
+  ) => {
     const userStat = await this.userStatRepo.getByVersionAndEventAt(dto);
 
     if (!userStat) {

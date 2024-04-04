@@ -23,6 +23,12 @@ import { SessionController } from "./controller/session/session.controller";
 import { AdminService } from "./application/service/admin.service";
 import { AdminController } from "./controller/admin/admin.controller";
 import { AdminRequestValidator } from "./infrastructure/validator/admin.request.validator";
+import { UserRepo } from "./infrastructure/repo/user.repo";
+import { EnrollRepo } from "./infrastructure/repo/enroll.repo";
+import { UserStatRepo } from "./infrastructure/repo/user.stat.repo";
+import { UserStatRequestValidator } from "./infrastructure/validator/user.stat.request.validator";
+import { UserStatService } from "./application/service/user.stat.service";
+import { UserStatController } from "./controller/stat/user/user.stat.controller";
 
 export class RouterIndex {
   static instance: RouterIndex | undefined;
@@ -39,6 +45,7 @@ export class RouterIndex {
   healthController: HealthController;
   sessionController: SessionController;
   adminController: AdminController;
+  userStatController: UserStatController;
 
   constructor() {
     this.env = {
@@ -55,11 +62,15 @@ export class RouterIndex {
     const adminRepo = AdminRepo.getInstance(this.dbClient);
     const sessionRepo = SessionRepo.getInstance(this.dbClient);
     const healthRepo = HealthRepo.getInstance(this.dbClient);
+    const userRepo = UserRepo.getInstance(this.dbClient);
+    const enrollRepo = EnrollRepo.getInstance(this.dbClient);
+    const userStatRepo = UserStatRepo.getInstance(this.dbClient);
 
     const authRequestValidator = AuthRequestValidator.getInstance();
     const healthRequestValidator = HealthRequestValidator.getInstance();
     const sessionRequestValidator = SessionRequestValidator.getInstance();
     const adminRequestValidator = AdminRequestValidator.getInstance();
+    const userStatRequestValidator = UserStatRequestValidator.getInstance();
 
     const authService = AuthService.getInstance({
       adminRepo,
@@ -77,6 +88,11 @@ export class RouterIndex {
     const adminService = AdminService.getInstance({
       adminRepo,
     });
+    const userStatService = UserStatService.getInstance({
+      enrollRepo,
+      userRepo,
+      userStatRepo,
+    });
 
     this.authController = AuthController.getInstance({
       authRequestValidator,
@@ -93,6 +109,10 @@ export class RouterIndex {
     this.adminController = AdminController.getInstance({
       adminRequestValidator,
       adminService,
+    });
+    this.userStatController = UserStatController.getInstance({
+      userStatRequestValidator,
+      userStatService,
     });
   }
 
