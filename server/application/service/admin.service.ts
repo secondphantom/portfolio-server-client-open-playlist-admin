@@ -82,7 +82,7 @@ export class AdminService {
         code: 200,
         message: "Empty",
         data: {
-          healths: [],
+          admins: [],
           pagination,
         },
       });

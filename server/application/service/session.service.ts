@@ -2,18 +2,18 @@ import { SessionData } from "@/server/schema/schema";
 import { ISessionRepo } from "../interfaces/session.repo";
 import { ServerError } from "@/server/dto/error";
 
-export type ServiceSessionGetListByQuery = {
+export type ServiceSessionGetListByQueryDto = {
   adminId: number;
   id: number;
   page?: number;
   order?: "recent" | "old";
 };
 
-export type ServiceSessionGetById = {
+export type ServiceSessionGetByIdDto = {
   id: number;
 };
 
-export type ServiceSessionDeleById = {
+export type ServiceSessionDeleByIdDto = {
   adminId: number;
   id: number;
 };
@@ -42,7 +42,7 @@ export class SessionService {
     id,
     page,
     order,
-  }: ServiceSessionGetListByQuery) => {
+  }: ServiceSessionGetListByQueryDto) => {
     const pagination = {
       currentPage: page === undefined ? 1 : page,
       pageSize: 10,
@@ -60,7 +60,7 @@ export class SessionService {
         code: 200,
         message: "Empty",
         data: {
-          healths: [],
+          sessions: [],
           pagination,
         },
       });
@@ -76,7 +76,7 @@ export class SessionService {
   };
 
   // GET /sessions/:id
-  getSessionsById = async (dto: ServiceSessionGetById) => {
+  getSessionsById = async (dto: ServiceSessionGetByIdDto) => {
     const session = await this.sessionRepo.getById(dto.id, {
       id: true,
       data: true,
@@ -98,7 +98,7 @@ export class SessionService {
   };
 
   // DELETE /sessions/:id
-  deleteSessionById = async ({ adminId, id }: ServiceSessionDeleById) => {
+  deleteSessionById = async ({ adminId, id }: ServiceSessionDeleByIdDto) => {
     await this.sessionRepo.deleteByIdAndAdminId({ adminId, id });
   };
 }

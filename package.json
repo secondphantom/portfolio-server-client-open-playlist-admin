@@ -16,6 +16,7 @@
     "@aws-sdk/credential-providers": "^3.540.0",
     "@types/jest": "^29.5.12",
     "cross-env": "^7.0.3",
+    "date-arithmetic": "^4.1.0",
     "dotenv": "^16.4.5",
     "drizzle-kit": "^0.20.14",
     "drizzle-orm": "^0.30.6",
@@ -26,10 +27,13 @@
     "react": "^18",
     "react-dom": "^18",
     "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
     "uuidv4": "^6.2.13",
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
+    "@types/date-arithmetic": "^4.1.4",
     "@types/node": "^20",
     "@types/otp-generator": "^4.0.2",
     "@types/pg": "^8.11.4",

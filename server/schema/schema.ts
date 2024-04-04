@@ -16,6 +16,7 @@ import {
   primaryKey,
   jsonb,
   customType,
+  date,
 } from "drizzle-orm/pg-core";
 
 function genExpWithWeights(input: string[]) {
@@ -348,6 +349,33 @@ export const healths = pgTable(
     return {
       idxVersion: index("idx_healths_version").on(table.version),
       idxCreatedAt: index("idx_healths_created_at").on(table.createdAt), // DESC
+    };
+  }
+);
+
+export type UserStatData = {
+  total: number;
+  dau: number;
+  wau: number;
+  mau: number;
+};
+
+export const userStats = pgTable(
+  "UserStats",
+  {
+    version: bigint("version", { mode: "number" }).notNull(),
+    eventAt: date("event_at", { mode: "date" }).notNull(),
+    data: jsonb("data").notNull().$type<UserStatData>(),
+    createdAt: timestamp("created_at")
+      .default(sql`now()`)
+      .notNull(),
+    updatedAt: timestamp("updated_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => {
+    return {
+      pk: primaryKey({ columns: [table.version, table.eventAt] }),
     };
   }
 );

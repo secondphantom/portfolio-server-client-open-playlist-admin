@@ -1,7 +1,7 @@
 import {
-  ServiceSessionDeleById,
-  ServiceSessionGetById,
-  ServiceSessionGetListByQuery,
+  ServiceSessionDeleByIdDto,
+  ServiceSessionGetByIdDto,
+  ServiceSessionGetListByQueryDto,
 } from "@/server/application/service/session.service";
 import {
   RequestSessionGetListByQuery,
@@ -12,7 +12,9 @@ import {
 export interface ISessionRequestValidator {
   getSessionListByQuery: (
     req: RequestSessionGetListByQuery
-  ) => ServiceSessionGetListByQuery;
-  getSessionsById: (req: RequestSessionGetById) => ServiceSessionGetById;
-  deleteSessionById: (req: RequestSessionDeleteById) => ServiceSessionDeleById;
+  ) => ServiceSessionGetListByQueryDto;
+  getSessionsById: (req: RequestSessionGetById) => ServiceSessionGetByIdDto;
+  deleteSessionById: (
+    req: RequestSessionDeleteById
+  ) => ServiceSessionDeleByIdDto;
 }
