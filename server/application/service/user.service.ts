@@ -14,7 +14,7 @@ export type ServiceUserUpdateByIdDto = {
 };
 
 export type ServiceUserGetListByQueryDto = {
-  order: "recent" | "old";
+  order?: "recent" | "old";
   page?: number;
   roleId?: number;
   email?: string;

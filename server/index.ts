@@ -29,6 +29,13 @@ import { UserStatRepo } from "./infrastructure/repo/user.stat.repo";
 import { UserStatRequestValidator } from "./infrastructure/validator/user.stat.request.validator";
 import { UserStatService } from "./application/service/user.stat.service";
 import { UserStatController } from "./controller/stat/user/user.stat.controller";
+import { UserCreditRepo } from "./infrastructure/repo/user.credit.repo";
+import { UserRequestValidator } from "./infrastructure/validator/user.request.validator";
+import { UserCreditRequestValidator } from "./infrastructure/validator/user.credit.request.validator";
+import { UserService } from "./application/service/user.service";
+import { UserCreditService } from "./application/service/user.credit.service";
+import { UserController } from "./controller/user/user.controller";
+import { UserCreditController } from "./controller/userCredit/user.credit.controller";
 
 export class RouterIndex {
   static instance: RouterIndex | undefined;
@@ -46,6 +53,8 @@ export class RouterIndex {
   sessionController: SessionController;
   adminController: AdminController;
   userStatController: UserStatController;
+  userController: UserController;
+  userCreditController: UserCreditController;
 
   constructor() {
     this.env = {
@@ -65,12 +74,15 @@ export class RouterIndex {
     const userRepo = UserRepo.getInstance(this.dbClient);
     const enrollRepo = EnrollRepo.getInstance(this.dbClient);
     const userStatRepo = UserStatRepo.getInstance(this.dbClient);
+    const userCreditRepo = UserCreditRepo.getInstance(this.dbClient);
 
     const authRequestValidator = AuthRequestValidator.getInstance();
     const healthRequestValidator = HealthRequestValidator.getInstance();
     const sessionRequestValidator = SessionRequestValidator.getInstance();
     const adminRequestValidator = AdminRequestValidator.getInstance();
     const userStatRequestValidator = UserStatRequestValidator.getInstance();
+    const userRequestValidator = UserRequestValidator.getInstance();
+    const userCreditRequestValidator = UserCreditRequestValidator.getInstance();
 
     const authService = AuthService.getInstance({
       adminRepo,
@@ -93,6 +105,13 @@ export class RouterIndex {
       userRepo,
       userStatRepo,
     });
+    const userService = UserService.getInstance({
+      userRepo,
+    });
+    const userCreditService = UserCreditService.getInstance({
+      userCreditRepo,
+      userRepo,
+    });
 
     this.authController = AuthController.getInstance({
       authRequestValidator,
@@ -114,7 +133,26 @@ export class RouterIndex {
       userStatRequestValidator,
       userStatService,
     });
+    this.userController = UserController.getInstance({
+      userRequestValidator,
+      userService,
+    });
+    this.userCreditController = UserCreditController.getInstance({
+      userCreditRequestValidator,
+      userCreditService,
+    });
   }
+
+  verifyAuth = async (sessionKey: string) => {
+    const session = await this.authController.verifySession({
+      sessionKey,
+    });
+
+    if (session.getResponse().code !== 200) {
+      return undefined;
+    }
+    return session.getResponse().payload.data!;
+  };
 
   static createJsonResponse = async (
     controllerResponse: ControllerResponse
