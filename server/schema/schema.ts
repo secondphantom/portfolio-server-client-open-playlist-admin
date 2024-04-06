@@ -225,6 +225,10 @@ export const usersRelations = relations(users, ({ many, one }) => {
       fields: [users.roleId],
       references: [roles.id],
     }),
+    credit: one(userCredits, {
+      fields: [users.id],
+      references: [userCredits.userId],
+    }),
   };
 });
 
@@ -379,3 +383,33 @@ export const userStats = pgTable(
     };
   }
 );
+
+export const userCredits = pgTable("UserCredits", {
+  userId: bigint("user_id", { mode: "number" })
+    .notNull()
+    .primaryKey()
+    .default(0),
+  freeCredits: integer("free_credits").notNull().default(0),
+  purchasedCredits: integer("purchased_credits").notNull().default(0),
+  freeCreditUpdatedAt: timestamp("free_credit_received_at")
+    .notNull()
+    .default(sql`now()`),
+  purchasedCreditUpdatedAt: timestamp("purchased_credit_received_at")
+    .notNull()
+    .default(sql`now()`),
+  createdAt: timestamp("created_at")
+    .default(sql`now()`)
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .default(sql`now()`)
+    .notNull(),
+});
+
+export const userCreditRelation = relations(userCredits, ({ one }) => {
+  return {
+    admin: one(users, {
+      fields: [userCredits.userId],
+      references: [users.id],
+    }),
+  };
+});

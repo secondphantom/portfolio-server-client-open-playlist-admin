@@ -7,6 +7,7 @@ import { UserRepo } from "@/server/infrastructure/repo/user.repo";
 
 describe("user repo", () => {
   let userRepo: UserRepo;
+  let firstUserId: number;
 
   beforeAll(async () => {
     const client = DrizzleClient.getInstance({
@@ -14,6 +15,8 @@ describe("user repo", () => {
       LOG_LEVEL: "verbose",
     });
     userRepo = UserRepo.getInstance(client);
+    const user = await client.getDb().query.users.findFirst();
+    firstUserId = user!.id;
   });
 
   test("getTotalUserByPeriod", async () => {
