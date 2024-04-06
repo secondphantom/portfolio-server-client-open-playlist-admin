@@ -40,7 +40,7 @@ export class UserService {
 
   //GET /users/:id
   getUserById = async (dto: ServiceUserGetByIdDto) => {
-    const user = await this.userRepo.getUserByIdWith(dto.id, {
+    const user = await this.userRepo.getByIdWith(dto.id, {
       user: {
         id: true,
         email: true,
@@ -71,7 +71,7 @@ export class UserService {
 
   //PATCH /users/:id
   updateUserById = async (dto: ServiceUserUpdateByIdDto) => {
-    const user = await this.userRepo.getUserById(dto.id, {
+    const user = await this.userRepo.getById(dto.id, {
       id: true,
     });
 
@@ -84,7 +84,7 @@ export class UserService {
 
     const { isEmailVerified, profileImage, profileName, roleId } = dto;
 
-    await this.userRepo.updateUserById(dto.id, {
+    await this.userRepo.updateById(dto.id, {
       isEmailVerified,
       profileImage,
       profileName,

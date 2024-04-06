@@ -47,7 +47,7 @@ export class UserRepo implements IUserRepo {
     return totalUser;
   };
 
-  getUserById = async <T extends keyof UserEntitySelect>(
+  getById = async <T extends keyof UserEntitySelect>(
     id: number,
     columns?:
       | {
@@ -66,7 +66,7 @@ export class UserRepo implements IUserRepo {
     return user;
   };
 
-  getUserByIdWith = async <
+  getByIdWith = async <
     T extends keyof UserEntitySelect,
     W1 extends keyof UserCreditEntitySelect
   >(
@@ -101,7 +101,7 @@ export class UserRepo implements IUserRepo {
     return user as any;
   };
 
-  updateUserById = async (id: number, value: Partial<UserEntitySelect>) => {
+  updateById = async (id: number, value: Partial<UserEntitySelect>) => {
     await this.db
       .update(schema.users)
       .set(value)

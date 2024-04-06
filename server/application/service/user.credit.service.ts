@@ -33,7 +33,7 @@ export class UserCreditService {
 
   //PATCH /users/:id/credit
   updateUserCredit = async (dto: ServiceUserCreditUpdateDto) => {
-    const user = await this.userRepo.getUserById(dto.userId, { id: true });
+    const user = await this.userRepo.getById(dto.userId, { id: true });
     if (!user) {
       throw new ServerError({
         code: 404,

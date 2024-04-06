@@ -18,7 +18,7 @@ export interface IUserRepo {
     gt?: Date;
     lt?: Date;
   }) => Promise<number>;
-  getUserById: <T extends keyof UserEntitySelect>(
+  getById: <T extends keyof UserEntitySelect>(
     id: number,
     columns?:
       | {
@@ -26,7 +26,7 @@ export interface IUserRepo {
         }
       | { [key in keyof UserEntitySelect]?: boolean }
   ) => Promise<Pick<UserEntitySelect, T> | undefined>;
-  getUserByIdWith: <
+  getByIdWith: <
     T extends keyof UserEntitySelect,
     W1 extends keyof UserCreditEntitySelect
   >(
@@ -49,10 +49,7 @@ export interface IUserRepo {
       })
     | undefined
   >;
-  updateUserById: (
-    id: number,
-    value: Partial<UserEntitySelect>
-  ) => Promise<void>;
+  updateById: (id: number, value: Partial<UserEntitySelect>) => Promise<void>;
   getListByQuery: (
     query: QueryUserListDto
   ) => Promise<

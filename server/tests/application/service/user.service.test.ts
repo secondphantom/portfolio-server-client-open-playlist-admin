@@ -81,7 +81,7 @@ describe("session service", () => {
 
       await userService.updateUserById(dto);
 
-      const user = await userRepo.getUserById(FIRST_USER_ID)!;
+      const user = await userRepo.getById(FIRST_USER_ID)!;
 
       expect(user?.profileName).toEqual(dto.profileName);
     });
