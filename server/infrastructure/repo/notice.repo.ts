@@ -85,4 +85,8 @@ export class NoticeRepo implements INoticeRepo {
       .set(value)
       .where(eq(schema.notices.id, id));
   };
+
+  deleteById = async (id: number) => {
+    await this.db.delete(schema.notices).where(eq(schema.notices.id, id));
+  };
 }

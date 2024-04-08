@@ -23,11 +23,15 @@ export type RequestNoticeGetById = {
 };
 
 export type RequestNoticeUpdateById = {
-  id: number;
+  id: string;
   adminId?: number;
   title?: string;
   content?: string;
   isDisplayedOn?: boolean;
   displayStartDate?: string;
   displayEndDate?: string;
+};
+
+export type RequestNoticeDeleteById = {
+  id: string;
 };

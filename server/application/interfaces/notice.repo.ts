@@ -23,4 +23,5 @@ export interface INoticeRepo {
       | { [key in keyof NoticeEntitySelect]?: boolean }
   ) => Promise<Pick<NoticeEntitySelect, T> | undefined>;
   updateById: (id: number, value: Partial<NoticeEntitySelect>) => Promise<void>;
+  deleteById: (id: number) => Promise<void>;
 }

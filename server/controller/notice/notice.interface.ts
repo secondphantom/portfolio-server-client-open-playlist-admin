@@ -1,11 +1,13 @@
 import {
   ServiceNoticeCreateDto,
+  ServiceNoticeDeleteByIdDto,
   ServiceNoticeGetByIdDto,
   ServiceNoticeGetListByQueryDto,
   ServiceNoticeUpdateByIdDto,
 } from "@/server/application/service/notice.service";
 import {
   RequestNoticeCrete,
+  RequestNoticeDeleteById,
   RequestNoticeGetById,
   RequestNoticeGetListByQuery,
   RequestNoticeUpdateById,
@@ -20,4 +22,7 @@ export interface INoticeRequestValidator {
   updateNoticeById: (
     req: RequestNoticeUpdateById
   ) => ServiceNoticeUpdateByIdDto;
+  deleteNoticeById: (
+    req: RequestNoticeDeleteById
+  ) => ServiceNoticeDeleteByIdDto;
 }

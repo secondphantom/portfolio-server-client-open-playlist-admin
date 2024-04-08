@@ -12,6 +12,7 @@ import {
   RequestNoticeGetListByQuery,
   RequestNoticeGetById,
   RequestNoticeUpdateById,
+  RequestNoticeDeleteById,
 } from "@/server/spec/notice/notice.requests";
 import { zodDateTransform, zodIntTransform } from "./lib/zod.util";
 import { ServerError } from "@/server/dto/error";
@@ -111,6 +112,23 @@ export class NoticeRequestValidator implements INoticeRequestValidator {
   updateNoticeById = (req: RequestNoticeUpdateById) => {
     try {
       const dto = this.requestNoticeUpdateById.parse(req);
+      return dto;
+    } catch (error) {
+      throw new ServerError({
+        code: 400,
+        message: "Invalid Input",
+      });
+    }
+  };
+
+  private requestNoticeDeleteById = z
+    .object({
+      id: zodIntTransform,
+    })
+    .strict();
+  deleteNoticeById = (req: RequestNoticeDeleteById) => {
+    try {
+      const dto = this.requestNoticeDeleteById.parse(req);
       return dto;
     } catch (error) {
       throw new ServerError({

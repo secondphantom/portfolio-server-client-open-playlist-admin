@@ -31,6 +31,10 @@ export type ServiceNoticeUpdateByIdDto = {
   displayEndDate?: Date;
 };
 
+export type ServiceNoticeDeleteByIdDto = {
+  id: number;
+};
+
 type ServiceInputs = {
   noticeRepo: INoticeRepo;
 };
@@ -119,5 +123,10 @@ export class NoticeService {
     await this.noticeRepo.updateById(dto.id, {
       ...dto,
     });
+  };
+
+  // DELETE /notice/:id
+  deleteNoticeById = async (dto: ServiceNoticeDeleteByIdDto) => {
+    await this.noticeRepo.deleteById(dto.id);
   };
 }
