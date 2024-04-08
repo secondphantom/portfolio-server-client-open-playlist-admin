@@ -195,10 +195,21 @@ export const categories = pgTable(
   }
 );
 
-export const roles = pgTable("Roles", {
-  id: integer("id").notNull().primaryKey(),
-  name: varchar("name", { length: 100 }).notNull(),
-});
+export const roles = pgTable(
+  "Roles",
+  {
+    id: integer("id").notNull().primaryKey(),
+    name: varchar("name", { length: 100 }).notNull(),
+    createdAt: timestamp("created_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => {
+    return {
+      idxCreatedAt: index("idx_roles_created_at").on(table.createdAt),
+    };
+  }
+);
 
 export const channelsRelations = relations(channels, ({ many }) => {
   return {
