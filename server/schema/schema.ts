@@ -101,12 +101,13 @@ export const courses = pgTable(
   "Courses",
   {
     id: bigint("id", { mode: "number" }).notNull().primaryKey().default(0),
+    version: integer("version").notNull().default(1),
     videoId: varchar("video_id", { length: 50 }).notNull(),
     channelId: varchar("channel_id", { length: 50 }).notNull(),
     categoryId: integer("category_id").notNull().default(0),
     language: varchar("language", { length: 10 }).notNull(),
     title: varchar("title", { length: 110 }).notNull(), //FULL TEXT
-    titleTsvector: tsvector("title_tsvector"),
+    titleTsvector: tsvector("title_tsvector").default(""),
     description: varchar("description", { length: 5010 }).notNull(),
     summary: varchar("summary", { length: 10000 }),
     chapters: jsonb("chapters").notNull().$type<CourseChapter[]>(),
@@ -149,6 +150,7 @@ export const enrolls = pgTable(
   {
     userId: bigint("user_id", { mode: "number" }).notNull(),
     courseId: bigint("course_id", { mode: "number" }).notNull(),
+    version: integer("version").notNull(),
     chapterProgress: jsonb("chapter_progress")
       .notNull()
       .$type<EnrollChapterProgress>(),

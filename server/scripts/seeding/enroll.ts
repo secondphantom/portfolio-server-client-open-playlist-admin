@@ -13,6 +13,7 @@ const getData = () => {
     data.push({
       userId: faker.number.int({ min: 1, max: 100000 }),
       courseId: faker.number.int({ min: 1, max: 100000 }),
+      version: 1,
       chapterProgress: {},
       recentProgress: {} as any,
       totalProgress: 0,
