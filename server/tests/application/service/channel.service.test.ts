@@ -6,6 +6,7 @@ import { IChannelRepo } from "@/server/application/interfaces/channel.repo";
 import { ChannelService } from "@/server/application/service/channel.service";
 import { DrizzleClient } from "@/server/infrastructure/db/drizzle.client";
 import { ChannelRepo } from "@/server/infrastructure/repo/channel.repo";
+import { eq } from "drizzle-orm";
 
 describe("channel service", () => {
   let channelRepo: IChannelRepo;
@@ -24,9 +25,13 @@ describe("channel service", () => {
 
     const channel = await dbClient.getDb().query.channels.findFirst();
     FIRST_CHANNEL_ID = channel!.channelId;
-    await dbClient.getDb().update(schema.channels).set({
-      name: "",
-    });
+    await dbClient
+      .getDb()
+      .update(schema.channels)
+      .set({
+        name: "",
+      })
+      .where(eq(schema.channels.channelId, FIRST_CHANNEL_ID));
   });
 
   describe("getChannelListByQuery", () => {

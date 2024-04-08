@@ -415,3 +415,43 @@ export const userCreditRelation = relations(userCredits, ({ one }) => {
     }),
   };
 });
+
+export type NoticeConfig = { showHome: boolean };
+
+export const notices = pgTable(
+  "Notices",
+  {
+    id: bigint("id", { mode: "number" }).notNull().primaryKey().default(0),
+    adminId: bigint("admin_id", { mode: "number" }).notNull(),
+    title: varchar("title", { length: 200 }).notNull(),
+    content: varchar("content", { length: 10000 }).notNull(),
+    isDisplayedOn: boolean("is_displayed_on").default(false).notNull(),
+    displayStartDate: timestamp("display_start_date")
+      .default(sql`now()`)
+      .notNull(),
+    displayEndDate: timestamp("display_end_date")
+      .default(sql`now()`)
+      .notNull(),
+    createdAt: timestamp("created_at")
+      .default(sql`now()`)
+      .notNull(),
+    updatedAt: timestamp("updated_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => {
+    return {
+      idxAdminId: index("idx_notices_admin_id").on(table.adminId),
+      idxIsDisplayedOn: index("idx_notices_is_displayed_on").on(
+        table.isDisplayedOn
+      ),
+      idxDisplayStartDate: index("idx_notices_display_start_date").on(
+        table.displayStartDate
+      ),
+      idxDisplayEndDate: index("idx_notices_display_end_date").on(
+        table.displayEndDate
+      ),
+      idxCreatedAt: index("idx_notices_created_at").on(table.createdAt),
+    };
+  }
+);

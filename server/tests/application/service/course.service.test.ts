@@ -6,6 +6,7 @@ import { ICourseRepo } from "@/server/application/interfaces/course.repo";
 import { CourseService } from "@/server/application/service/course.service";
 import { DrizzleClient } from "@/server/infrastructure/db/drizzle.client";
 import { CourseRepo } from "@/server/infrastructure/repo/course.repo";
+import { eq } from "drizzle-orm";
 
 describe("course service", () => {
   let courseRepo: ICourseRepo;
@@ -24,9 +25,13 @@ describe("course service", () => {
 
     const course = await dbClient.getDb().query.courses.findFirst();
     FIRST_COURSE_ID = course!.id;
-    await dbClient.getDb().update(schema.courses).set({
-      title: "",
-    });
+    await dbClient
+      .getDb()
+      .update(schema.courses)
+      .set({
+        title: "",
+      })
+      .where(eq(schema.courses.id, FIRST_COURSE_ID));
   });
 
   describe("getCourseListByQuery", () => {
