@@ -9,7 +9,7 @@ import { ICourseRequestValidator } from "@/server/controller/course/course.inter
 import {
   RequestCourseGetListByQuery,
   RequestCourseGetById,
-  RequestCourserUpdateById,
+  RequestCourseUpdateById,
 } from "@/server/spec/course/course.requests";
 import { zodIntTransform } from "./lib/zod.util";
 import { ServerError } from "@/server/dto/error";
@@ -63,7 +63,7 @@ export class CourseRequestValidator implements ICourseRequestValidator {
     }
   };
 
-  private requestCourserUpdateById = z
+  private requestCourseUpdateById = z
     .object({
       id: zodIntTransform,
       version: z.number().optional(),
@@ -87,12 +87,11 @@ export class CourseRequestValidator implements ICourseRequestValidator {
     })
     .strict();
 
-  updateCourseById = (req: RequestCourserUpdateById) => {
+  updateCourseById = (req: RequestCourseUpdateById) => {
     try {
-      const dto = this.requestCourserUpdateById.parse(req);
+      const dto = this.requestCourseUpdateById.parse(req);
       return dto;
     } catch (error) {
-      console.log(error);
       throw new ServerError({
         code: 400,
         message: "Invalid Input",

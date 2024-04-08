@@ -6,7 +6,7 @@ import {
 import {
   RequestCourseGetById,
   RequestCourseGetListByQuery,
-  RequestCourserUpdateById,
+  RequestCourseUpdateById,
 } from "@/server/spec/course/course.requests";
 
 export interface ICourseRequestValidator {
@@ -15,6 +15,6 @@ export interface ICourseRequestValidator {
   ) => ServiceCourseGetListByQueryDto;
   getCourseById: (req: RequestCourseGetById) => ServiceCourseGetByIdDto;
   updateCourseById: (
-    req: RequestCourserUpdateById
+    req: RequestCourseUpdateById
   ) => ServiceCourseUpdateByIdDto;
 }

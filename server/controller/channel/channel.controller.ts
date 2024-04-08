@@ -1,38 +1,38 @@
-import { CourseService } from "@/server/application/service/course.service";
-import { ICourseRequestValidator } from "./course.interface";
+import { ChannelService } from "@/server/application/service/channel.service";
+import { IChannelRequestValidator } from "./channel.interface";
 import { ControllerResponse } from "@/server/dto/response";
 import { errorResolver } from "@/server/dto/error.resolver";
 import {
-  RequestCourseGetById,
-  RequestCourseGetListByQuery,
-  RequestCourseUpdateById,
-} from "@/server/spec/course/course.requests";
+  RequestChannelGetById,
+  RequestChannelGetListByQuery,
+  RequestChannelUpdateById,
+} from "@/server/spec/channel/channel.requests";
 
 type ControllerInputs = {
-  courseService: CourseService;
-  courseRequestValidator: ICourseRequestValidator;
+  channelService: ChannelService;
+  channelRequestValidator: IChannelRequestValidator;
 };
 
-export class CourseController {
-  static instance: CourseController | undefined;
+export class ChannelController {
+  static instance: ChannelController | undefined;
   static getInstance = (inputs: ControllerInputs) => {
     if (this.instance) return this.instance;
-    this.instance = new CourseController(inputs);
+    this.instance = new ChannelController(inputs);
     return this.instance;
   };
 
-  private courseRequestValidator: ICourseRequestValidator;
-  private courseService: CourseService;
+  private channelRequestValidator: IChannelRequestValidator;
+  private channelService: ChannelService;
 
-  constructor({ courseRequestValidator, courseService }: ControllerInputs) {
-    this.courseRequestValidator = courseRequestValidator;
-    this.courseService = courseService;
+  constructor({ channelRequestValidator, channelService }: ControllerInputs) {
+    this.channelRequestValidator = channelRequestValidator;
+    this.channelService = channelService;
   }
 
-  getCourseListByQuery = async (req: RequestCourseGetListByQuery) => {
+  getChannelListByQuery = async (req: RequestChannelGetListByQuery) => {
     try {
-      const dto = this.courseRequestValidator.getCourseListByQuery(req);
-      const data = await this.courseService.getCourseListByQuery(dto);
+      const dto = this.channelRequestValidator.getChannelListByQuery(req);
+      const data = await this.channelService.getChannelListByQuery(dto);
 
       return new ControllerResponse({
         code: 200,
@@ -54,10 +54,10 @@ export class CourseController {
     }
   };
 
-  getCourseById = async (req: RequestCourseGetById) => {
+  getChannelById = async (req: RequestChannelGetById) => {
     try {
-      const dto = this.courseRequestValidator.getCourseById(req);
-      const data = await this.courseService.getCourseById(dto);
+      const dto = this.channelRequestValidator.getChannelById(req);
+      const data = await this.channelService.getChannelById(dto);
 
       return new ControllerResponse({
         code: 200,
@@ -79,10 +79,10 @@ export class CourseController {
     }
   };
 
-  updateCourseById = async (req: RequestCourseUpdateById) => {
+  updateChannelById = async (req: RequestChannelUpdateById) => {
     try {
-      const dto = this.courseRequestValidator.updateCourseById(req);
-      await this.courseService.updateCourseById(dto);
+      const dto = this.channelRequestValidator.updateChannelById(req);
+      await this.channelService.updateChannelById(dto);
 
       return new ControllerResponse({
         code: 200,

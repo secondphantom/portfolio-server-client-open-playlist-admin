@@ -10,7 +10,7 @@ export type RequestCourseGetById = {
   id: string;
 };
 
-export type RequestCourserUpdateById = {
+export type RequestCourseUpdateById = {
   id: number;
   version?: number;
   categoryId?: number;
