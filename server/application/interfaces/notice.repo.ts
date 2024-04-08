@@ -8,6 +8,7 @@ export type QueryNoticeListDto = {
   page: number;
   pageSize: number;
   id?: number;
+  adminId?: number;
 };
 
 export interface INoticeRepo {

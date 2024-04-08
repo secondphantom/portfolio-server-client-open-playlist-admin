@@ -44,6 +44,10 @@ import { ChannelRepo } from "./infrastructure/repo/channel.repo";
 import { ChannelRequestValidator } from "./infrastructure/validator/channel.request.validator";
 import { ChannelService } from "./application/service/channel.service";
 import { ChannelController } from "./controller/channel/channel.controller";
+import { NoticeRepo } from "./infrastructure/repo/notice.repo";
+import { NoticeRequestValidator } from "./infrastructure/validator/notice.request.validator";
+import { NoticeService } from "./application/service/notice.service";
+import { NoticeController } from "./controller/notice/notice.controller";
 
 export class RouterIndex {
   static instance: RouterIndex | undefined;
@@ -65,6 +69,7 @@ export class RouterIndex {
   userCreditController: UserCreditController;
   courseController: CourseController;
   channelController: ChannelController;
+  noticeController: NoticeController;
 
   constructor() {
     this.env = {
@@ -87,6 +92,7 @@ export class RouterIndex {
     const userCreditRepo = UserCreditRepo.getInstance(this.dbClient);
     const courseRepo = CourseRepo.getInstance(this.dbClient);
     const channelRepo = ChannelRepo.getInstance(this.dbClient);
+    const noticeRepo = NoticeRepo.getInstance(this.dbClient);
 
     const authRequestValidator = AuthRequestValidator.getInstance();
     const healthRequestValidator = HealthRequestValidator.getInstance();
@@ -97,6 +103,7 @@ export class RouterIndex {
     const userCreditRequestValidator = UserCreditRequestValidator.getInstance();
     const courseRequestValidator = CourseRequestValidator.getInstance();
     const channelRequestValidator = ChannelRequestValidator.getInstance();
+    const noticeRequestValidator = NoticeRequestValidator.getInstance();
 
     const authService = AuthService.getInstance({
       adminRepo,
@@ -131,6 +138,9 @@ export class RouterIndex {
     });
     const channelService = ChannelService.getInstance({
       channelRepo,
+    });
+    const noticeService = NoticeService.getInstance({
+      noticeRepo,
     });
 
     this.authController = AuthController.getInstance({
@@ -168,6 +178,10 @@ export class RouterIndex {
     this.channelController = ChannelController.getInstance({
       channelRequestValidator,
       channelService,
+    });
+    this.noticeController = NoticeController.getInstance({
+      noticeRequestValidator,
+      noticeService,
     });
   }
 

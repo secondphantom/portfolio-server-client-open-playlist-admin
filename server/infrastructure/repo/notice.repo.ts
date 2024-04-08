@@ -31,6 +31,7 @@ export class NoticeRepo implements INoticeRepo {
     page,
     id,
     pageSize,
+    adminId,
   }: QueryNoticeListDto) => {
     const orderBy = ((order: string) => {
       switch (order) {
@@ -44,7 +45,12 @@ export class NoticeRepo implements INoticeRepo {
     })(order);
     const notices = await this.db.query.notices.findMany({
       where: (value, { eq, and }) => {
-        return and(...[id ? eq(value.id, id) : undefined].filter((v) => !!v));
+        return and(
+          ...[
+            id ? eq(value.id, id) : undefined,
+            adminId ? eq(value.adminId, adminId) : undefined,
+          ].filter((v) => !!v)
+        );
       },
       orderBy: orderBy,
       offset: (page - 1) * pageSize,

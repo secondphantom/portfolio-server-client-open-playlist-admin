@@ -11,10 +11,13 @@ import { DrizzleClient } from "../../infrastructure/db/drizzle.client";
 const getData = () => {
   const data: (typeof schema.notices.$inferInsert)[] = [];
   for (const index of Array.from({ length: 1000 }, (_, index) => index)) {
+    const createdAt = faker.date.recent({ days: 100 });
     data.push({
       adminId: 0,
       title: faker.lorem.sentence(5),
       content: faker.lorem.paragraph(),
+      createdAt,
+      updatedAt: createdAt,
     });
   }
   return data;

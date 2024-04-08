@@ -14,6 +14,7 @@ export type ServiceNoticeGetListByQueryDto = {
   order?: "recent" | "old";
   page?: number;
   id?: number;
+  adminId?: number;
 };
 
 export type ServiceNoticeGetByIdDto = {
@@ -58,6 +59,7 @@ export class NoticeService {
     page,
     order,
     id,
+    adminId,
   }: ServiceNoticeGetListByQueryDto) => {
     const pagination = {
       currentPage: page === undefined ? 1 : page,
@@ -68,6 +70,7 @@ export class NoticeService {
       page: pagination.currentPage,
       pageSize: 10,
       id,
+      adminId,
     });
 
     if (notices.length === 0) {
@@ -90,7 +93,6 @@ export class NoticeService {
   // GET /notices/:id
   getNoticeById = async (dto: ServiceNoticeGetByIdDto) => {
     const notice = await this.noticeRepo.getById(dto.id);
-
     if (!notice) {
       throw new ServerError({
         code: 404,
