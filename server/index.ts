@@ -36,6 +36,10 @@ import { UserService } from "./application/service/user.service";
 import { UserCreditService } from "./application/service/user.credit.service";
 import { UserController } from "./controller/user/user.controller";
 import { UserCreditController } from "./controller/userCredit/user.credit.controller";
+import { CourseRepo } from "./infrastructure/repo/course.repo";
+import { CourseRequestValidator } from "./infrastructure/validator/course.request.validator";
+import { CourseService } from "./application/service/course.service";
+import { CourseController } from "./controller/course/course.controller";
 
 export class RouterIndex {
   static instance: RouterIndex | undefined;
@@ -55,11 +59,12 @@ export class RouterIndex {
   userStatController: UserStatController;
   userController: UserController;
   userCreditController: UserCreditController;
+  courseController: CourseController;
 
   constructor() {
     this.env = {
       DATABASE_URL: process.env.DATABASE_URL!,
-      LOG_LEVEL: "verbose",
+      LOG_LEVEL: "dev",
       API_BASE_URL: process.env.API_BASE_URL!,
       YOUTUBE_DATA_API_KEY: process.env.YOUTUBE_DATA_API_KEY!,
     } satisfies ENV;
@@ -75,6 +80,7 @@ export class RouterIndex {
     const enrollRepo = EnrollRepo.getInstance(this.dbClient);
     const userStatRepo = UserStatRepo.getInstance(this.dbClient);
     const userCreditRepo = UserCreditRepo.getInstance(this.dbClient);
+    const courseRepo = CourseRepo.getInstance(this.dbClient);
 
     const authRequestValidator = AuthRequestValidator.getInstance();
     const healthRequestValidator = HealthRequestValidator.getInstance();
@@ -83,6 +89,7 @@ export class RouterIndex {
     const userStatRequestValidator = UserStatRequestValidator.getInstance();
     const userRequestValidator = UserRequestValidator.getInstance();
     const userCreditRequestValidator = UserCreditRequestValidator.getInstance();
+    const courseRequestValidator = CourseRequestValidator.getInstance();
 
     const authService = AuthService.getInstance({
       adminRepo,
@@ -112,6 +119,9 @@ export class RouterIndex {
       userCreditRepo,
       userRepo,
     });
+    const courseService = CourseService.getInstance({
+      courseRepo,
+    });
 
     this.authController = AuthController.getInstance({
       authRequestValidator,
@@ -140,6 +150,10 @@ export class RouterIndex {
     this.userCreditController = UserCreditController.getInstance({
       userCreditRequestValidator,
       userCreditService,
+    });
+    this.courseController = CourseController.getInstance({
+      courseRequestValidator,
+      courseService,
     });
   }
 

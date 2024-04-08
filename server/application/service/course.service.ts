@@ -14,7 +14,7 @@ export type ServiceCourseGetByIdDto = {
   id: number;
 };
 
-export type ServiceCourserUpdateByIdDto = {
+export type ServiceCourseUpdateByIdDto = {
   id: number;
   version?: number;
   categoryId?: number;
@@ -103,7 +103,7 @@ export class CourseService {
   };
 
   // PATCH /courses/:id
-  updateCourseById = async (dto: ServiceCourserUpdateByIdDto) => {
+  updateCourseById = async (dto: ServiceCourseUpdateByIdDto) => {
     const course = await this.courseRepo.getById(dto.id, {
       id: true,
     });
