@@ -45,6 +45,7 @@ export class CourseRepo implements ICourseRepo {
           ...[
             videoId ? eq(value.videoId, videoId) : undefined,
             channelId ? eq(value.channelId, channelId) : undefined,
+            id ? eq(value.id, id) : undefined,
           ].filter((v) => !!v)
         );
       },
