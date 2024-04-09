@@ -1,6 +1,10 @@
+import { RouterIndex } from "@/server";
+import { cookies } from "next/headers";
 import Image from "next/image";
+import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
