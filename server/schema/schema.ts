@@ -187,10 +187,18 @@ export const categories = pgTable(
     id: integer("id").notNull().primaryKey().default(0),
     name: varchar("name", { length: 100 }).notNull(),
     parentId: integer("parent_id").notNull(),
+    createdAt: timestamp("created_at")
+      .default(sql`now()`)
+      .notNull(),
+    updatedAt: timestamp("updated_at")
+      .default(sql`now()`)
+      .notNull(),
   },
   (table) => {
     return {
-      idxParentId: index("idx_parent_id").on(table.parentId),
+      idxParentId: index("idx_categories_parent_id").on(table.parentId),
+      idxCreatedAt: index("idx_categories_created_at").on(table.createdAt),
+      idxUpdatedAt: index("idx_categories_updated_at").on(table.updatedAt),
     };
   }
 );
@@ -203,10 +211,14 @@ export const roles = pgTable(
     createdAt: timestamp("created_at")
       .default(sql`now()`)
       .notNull(),
+    updatedAt: timestamp("updated_at")
+      .default(sql`now()`)
+      .notNull(),
   },
   (table) => {
     return {
       idxCreatedAt: index("idx_roles_created_at").on(table.createdAt),
+      idxUpdatedAt: index("idx_roles_updated_at").on(table.updatedAt),
     };
   }
 );

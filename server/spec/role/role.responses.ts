@@ -3,6 +3,7 @@ export type ResponseRoleGetListByQuery = {
     id: number;
     name: string;
     createdAt: string;
+    updatedAt: string;
   }[];
   pagination: {
     currentPage: number;
@@ -14,4 +15,5 @@ export type ResponseRoleGetById = {
   id: number;
   name: string;
   createdAt: string;
+  updatedAt: string;
 };
