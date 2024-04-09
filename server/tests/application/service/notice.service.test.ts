@@ -42,6 +42,7 @@ describe("notice service", () => {
         expect(notice).toEqual(
           expect.objectContaining({
             ...noticeSchemaExpect,
+            admin: adminSchemaExpect,
           })
         );
       }
@@ -65,6 +66,7 @@ describe("notice service", () => {
       expect(notice).toEqual(
         expect.objectContaining({
           ...noticeSchemaExpect,
+          admin: adminSchemaExpect,
         })
       );
     });
@@ -104,4 +106,9 @@ const noticeSchemaExpect = {
   displayEndDate: expect.any(Date),
   createdAt: expect.any(Date),
   updatedAt: expect.any(Date),
+};
+
+const adminSchemaExpect = {
+  id: expect.any(Number),
+  profileName: expect.any(String),
 };

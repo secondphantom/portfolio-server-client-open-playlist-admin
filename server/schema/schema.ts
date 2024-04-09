@@ -310,6 +310,12 @@ export const admins = pgTable(
   }
 );
 
+export const adminsRelation = relations(admins, ({ many }) => {
+  return {
+    notices: many(notices),
+  };
+});
+
 export type SessionData = {
   device: any;
   ip: string;
@@ -432,7 +438,7 @@ export const userCredits = pgTable("UserCredits", {
 
 export const userCreditRelation = relations(userCredits, ({ one }) => {
   return {
-    admin: one(users, {
+    user: one(users, {
       fields: [userCredits.userId],
       references: [users.id],
     }),
@@ -478,3 +484,12 @@ export const notices = pgTable(
     };
   }
 );
+
+export const noticeRelation = relations(notices, ({ one }) => {
+  return {
+    admin: one(admins, {
+      fields: [notices.adminId],
+      references: [admins.id],
+    }),
+  };
+});

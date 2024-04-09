@@ -7,6 +7,7 @@ import {
 } from "@/server/application/interfaces/notice.repo";
 import { Db, DrizzleClient } from "../db/drizzle.client";
 import { asc, desc, eq } from "drizzle-orm";
+import { AdminEntitySelect } from "@/server/domain/admin.domain";
 
 export class NoticeRepo implements INoticeRepo {
   static instance: NoticeRepo | undefined;
@@ -55,6 +56,14 @@ export class NoticeRepo implements INoticeRepo {
       orderBy: orderBy,
       offset: (page - 1) * pageSize,
       limit: pageSize,
+      with: {
+        admin: {
+          columns: {
+            id: true,
+            profileName: true,
+          },
+        },
+      },
     });
 
     return notices;
@@ -77,6 +86,41 @@ export class NoticeRepo implements INoticeRepo {
         : undefined,
     });
     return notice;
+  };
+
+  getByIdWith = async <
+    T extends keyof NoticeEntitySelect,
+    W1 extends keyof AdminEntitySelect
+  >(
+    id: number,
+    columns?: {
+      notice?:
+        | {
+            [key in T]?: boolean;
+          }
+        | { [key in keyof NoticeEntitySelect]?: boolean };
+      admin?:
+        | {
+            [key in W1]?: boolean;
+          }
+        | { [key in keyof AdminEntitySelect]?: boolean };
+    }
+  ) => {
+    const notice = this.db.query.notices.findFirst({
+      where: (value, { eq }) => {
+        return eq(value.id, id);
+      },
+      columns: columns?.notice,
+      with: {
+        admin: columns?.admin
+          ? {
+              columns: columns?.admin,
+            }
+          : undefined,
+      },
+    });
+
+    return notice as any;
   };
 
   updateById = async (id: number, value: Partial<NoticeEntitySelect>) => {

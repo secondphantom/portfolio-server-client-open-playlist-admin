@@ -96,7 +96,12 @@ export class NoticeService {
 
   // GET /notices/:id
   getNoticeById = async (dto: ServiceNoticeGetByIdDto) => {
-    const notice = await this.noticeRepo.getById(dto.id);
+    const notice = await this.noticeRepo.getByIdWith(dto.id, {
+      admin: {
+        id: true,
+        profileName: true,
+      },
+    });
     if (!notice) {
       throw new ServerError({
         code: 404,

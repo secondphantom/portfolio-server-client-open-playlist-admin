@@ -9,6 +9,10 @@ export type ResponseNoticeGetListByQuery = {
     displayEndDate: string;
     createdAt: string;
     updatedAt: string;
+    admin: {
+      adminId: number;
+      profileName: string;
+    };
   }[];
   pagination: {
     currentPage: number;
@@ -26,4 +30,8 @@ export type ResponseNoticeGetById = {
   displayEndDate: string;
   createdAt: string;
   updatedAt: string;
+  admin: {
+    adminId: number;
+    profileName: string;
+  };
 };
