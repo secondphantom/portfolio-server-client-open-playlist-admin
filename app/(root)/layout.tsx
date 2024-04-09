@@ -1,6 +1,9 @@
-import { RouterIndex } from "@/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { RouterIndex } from "@/server";
+
+import { MobileHeader } from "./(routes)/_components/mobile-header";
+import { Sidebar } from "./(routes)/_components/sidebar";
 
 const router = RouterIndex.getInstance();
 
@@ -16,8 +19,10 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <main className="max-w-6xl mx-auto">
-        <div className="h-full px-5 pt-20">{children}</div>
+      <MobileHeader />
+      <Sidebar className="hidden lg:flex" />
+      <main className="lg:pl-[256px] h-full pt-[50px] lg:pt-0">
+        <div className="max-w-[1056px] mx-auto pt-6 h-full">{children}</div>
       </main>
     </>
   );
