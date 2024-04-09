@@ -52,6 +52,10 @@ import { RoleRepo } from "./infrastructure/repo/role.repo";
 import { RoleRequestValidator } from "./infrastructure/validator/role.request.validator";
 import { RoleService } from "./application/service/role.service";
 import { RoleController } from "./controller/role/role.controller";
+import { CategoryRepo } from "./infrastructure/repo/category.repo";
+import { CategoryRequestValidator } from "./infrastructure/validator/category.request.validator";
+import { CategoryService } from "./application/service/category.service";
+import { CategoryController } from "./controller/category/category.controller";
 
 export class RouterIndex {
   static instance: RouterIndex | undefined;
@@ -75,6 +79,7 @@ export class RouterIndex {
   channelController: ChannelController;
   noticeController: NoticeController;
   roleController: RoleController;
+  categoryController: CategoryController;
 
   constructor() {
     this.env = {
@@ -99,6 +104,7 @@ export class RouterIndex {
     const channelRepo = ChannelRepo.getInstance(this.dbClient);
     const noticeRepo = NoticeRepo.getInstance(this.dbClient);
     const roleRepo = RoleRepo.getInstance(this.dbClient);
+    const categoryRepo = CategoryRepo.getInstance(this.dbClient);
 
     const authRequestValidator = AuthRequestValidator.getInstance();
     const healthRequestValidator = HealthRequestValidator.getInstance();
@@ -111,6 +117,7 @@ export class RouterIndex {
     const channelRequestValidator = ChannelRequestValidator.getInstance();
     const noticeRequestValidator = NoticeRequestValidator.getInstance();
     const roleRequestValidator = RoleRequestValidator.getInstance();
+    const categoryRequestValidator = CategoryRequestValidator.getInstance();
 
     const authService = AuthService.getInstance({
       adminRepo,
@@ -151,6 +158,9 @@ export class RouterIndex {
     });
     const roleService = RoleService.getInstance({
       roleRepo,
+    });
+    const categoryService = CategoryService.getInstance({
+      categoryRepo,
     });
 
     this.authController = AuthController.getInstance({
@@ -196,6 +206,10 @@ export class RouterIndex {
     this.roleController = RoleController.getInstance({
       roleRequestValidator,
       roleService,
+    });
+    this.categoryController = CategoryController.getInstance({
+      categoryRequestValidator,
+      categoryService,
     });
   }
 
