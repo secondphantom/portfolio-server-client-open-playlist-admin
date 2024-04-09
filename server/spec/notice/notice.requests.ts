@@ -1,4 +1,4 @@
-export type RequestNoticeCrete = {
+export type RequestNoticeCreate = {
   auth: {
     adminId: number;
   };

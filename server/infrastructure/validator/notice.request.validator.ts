@@ -8,7 +8,7 @@ import {
   ServiceNoticeUpdateByIdDto,
 } from "@/server/application/service/notice.service";
 import {
-  RequestNoticeCrete,
+  RequestNoticeCreate,
   RequestNoticeGetListByQuery,
   RequestNoticeGetById,
   RequestNoticeUpdateById,
@@ -27,7 +27,7 @@ export class NoticeRequestValidator implements INoticeRequestValidator {
 
   constructor() {}
 
-  private requestNoticeCrete = z
+  private requestNoticeCreate = z
     .object({
       auth: z
         .object({
@@ -46,9 +46,9 @@ export class NoticeRequestValidator implements INoticeRequestValidator {
     })
     .strict();
 
-  createNotice = (req: RequestNoticeCrete) => {
+  createNotice = (req: RequestNoticeCreate) => {
     try {
-      const dto = this.requestNoticeCrete.parse(req);
+      const dto = this.requestNoticeCreate.parse(req);
       return {
         ...dto.content,
         ...dto.auth,

@@ -1,40 +1,40 @@
-import { NoticeService } from "@/server/application/service/notice.service";
-import { INoticeRequestValidator } from "./notice.interface";
+import { RoleService } from "@/server/application/service/role.service";
+import { IRoleRequestValidator } from "./role.interface";
 import { ControllerResponse } from "@/server/dto/response";
 import { errorResolver } from "@/server/dto/error.resolver";
 import {
-  RequestNoticeCreate,
-  RequestNoticeDeleteById,
-  RequestNoticeGetById,
-  RequestNoticeGetListByQuery,
-  RequestNoticeUpdateById,
-} from "@/server/spec/notice/notice.requests";
+  RequestRoleCreate,
+  RequestRoleDeleteById,
+  RequestRoleGetById,
+  RequestRoleGetListByQuery,
+  RequestRoleUpdateById,
+} from "@/server/spec/role/role.requests";
 
 type ControllerInputs = {
-  noticeService: NoticeService;
-  noticeRequestValidator: INoticeRequestValidator;
+  roleService: RoleService;
+  roleRequestValidator: IRoleRequestValidator;
 };
 
-export class NoticeController {
-  static instance: NoticeController | undefined;
+export class RoleController {
+  static instance: RoleController | undefined;
   static getInstance = (inputs: ControllerInputs) => {
     if (this.instance) return this.instance;
-    this.instance = new NoticeController(inputs);
+    this.instance = new RoleController(inputs);
     return this.instance;
   };
 
-  private noticeRequestValidator: INoticeRequestValidator;
-  private noticeService: NoticeService;
+  private roleRequestValidator: IRoleRequestValidator;
+  private roleService: RoleService;
 
-  constructor({ noticeRequestValidator, noticeService }: ControllerInputs) {
-    this.noticeRequestValidator = noticeRequestValidator;
-    this.noticeService = noticeService;
+  constructor({ roleRequestValidator, roleService }: ControllerInputs) {
+    this.roleRequestValidator = roleRequestValidator;
+    this.roleService = roleService;
   }
 
-  createNotice = async (req: RequestNoticeCreate) => {
+  createRole = async (req: RequestRoleCreate) => {
     try {
-      const dto = this.noticeRequestValidator.createNotice(req);
-      await this.noticeService.createNotice(dto);
+      const dto = this.roleRequestValidator.createRole(req);
+      await this.roleService.createRole(dto);
 
       return new ControllerResponse({
         code: 200,
@@ -56,10 +56,10 @@ export class NoticeController {
     }
   };
 
-  getNoticeListByQuery = async (req: RequestNoticeGetListByQuery) => {
+  getRoleListByQuery = async (req: RequestRoleGetListByQuery) => {
     try {
-      const dto = this.noticeRequestValidator.getNoticeListByQuery(req);
-      const data = await this.noticeService.getNoticeListByQuery(dto);
+      const dto = this.roleRequestValidator.getRoleListByQuery(req);
+      const data = await this.roleService.getRoleListByQuery(dto);
 
       return new ControllerResponse({
         code: 200,
@@ -81,10 +81,10 @@ export class NoticeController {
     }
   };
 
-  getNoticeById = async (req: RequestNoticeGetById) => {
+  getRoleById = async (req: RequestRoleGetById) => {
     try {
-      const dto = this.noticeRequestValidator.getNoticeById(req);
-      const data = await this.noticeService.getNoticeById(dto);
+      const dto = this.roleRequestValidator.getRoleById(req);
+      const data = await this.roleService.getRoleById(dto);
 
       return new ControllerResponse({
         code: 200,
@@ -106,10 +106,10 @@ export class NoticeController {
     }
   };
 
-  updateNoticeById = async (req: RequestNoticeUpdateById) => {
+  updateRoleById = async (req: RequestRoleUpdateById) => {
     try {
-      const dto = this.noticeRequestValidator.updateNoticeById(req);
-      await this.noticeService.updateNoticeById(dto);
+      const dto = this.roleRequestValidator.updateRoleById(req);
+      await this.roleService.updateRoleById(dto);
 
       return new ControllerResponse({
         code: 200,
@@ -131,10 +131,10 @@ export class NoticeController {
     }
   };
 
-  deleteNoticeById = async (req: RequestNoticeDeleteById) => {
+  deleteRoleById = async (req: RequestRoleDeleteById) => {
     try {
-      const dto = this.noticeRequestValidator.deleteNoticeById(req);
-      await this.noticeService.deleteNoticeById(dto);
+      const dto = this.roleRequestValidator.deleteRoleById(req);
+      await this.roleService.deleteRoleById(dto);
 
       return new ControllerResponse({
         code: 200,

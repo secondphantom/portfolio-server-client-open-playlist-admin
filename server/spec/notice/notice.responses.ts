@@ -1,23 +1,14 @@
-export type ResponseCourseGetListByQuery = {
-  courses: {
+export type ResponseNoticeGetListByQuery = {
+  notices: {
     id: number;
-    version: number;
-    videoId: string;
-    channelId: string;
-    categoryId: number;
-    language: string;
+    adminId: number;
     title: string;
-    titleTsvector: string;
-    description: string;
-    summary: string | null;
-    chapters: { title: string; time: number }[];
-    enrollCount: number;
-    generatedAi: boolean;
-    duration: number;
-    extra: any;
+    content: string;
+    isDisplayedOn: boolean;
+    displayStartDate: string;
+    displayEndDate: string;
     createdAt: string;
     updatedAt: string;
-    publishedAt: string;
   }[];
   pagination: {
     currentPage: number;
@@ -25,23 +16,14 @@ export type ResponseCourseGetListByQuery = {
   };
 };
 
-export type ResponseCourseGetById = {
+export type ResponseNoticeGetById = {
   id: number;
-  version: number;
-  videoId: string;
-  channelId: string;
-  categoryId: number;
-  language: string;
+  adminId: number;
   title: string;
-  titleTsvector: string;
-  description: string;
-  summary: string | null;
-  chapters: { title: string; time: number }[];
-  enrollCount: number;
-  generatedAi: boolean;
-  duration: number;
-  extra: any;
+  content: string;
+  isDisplayedOn: boolean;
+  displayStartDate: string;
+  displayEndDate: string;
   createdAt: string;
   updatedAt: string;
-  publishedAt: string;
 };

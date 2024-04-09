@@ -48,6 +48,10 @@ import { NoticeRepo } from "./infrastructure/repo/notice.repo";
 import { NoticeRequestValidator } from "./infrastructure/validator/notice.request.validator";
 import { NoticeService } from "./application/service/notice.service";
 import { NoticeController } from "./controller/notice/notice.controller";
+import { RoleRepo } from "./infrastructure/repo/role.repo";
+import { RoleRequestValidator } from "./infrastructure/validator/role.request.validator";
+import { RoleService } from "./application/service/role.service";
+import { RoleController } from "./controller/role/role.controller";
 
 export class RouterIndex {
   static instance: RouterIndex | undefined;
@@ -70,6 +74,7 @@ export class RouterIndex {
   courseController: CourseController;
   channelController: ChannelController;
   noticeController: NoticeController;
+  roleController: RoleController;
 
   constructor() {
     this.env = {
@@ -93,6 +98,7 @@ export class RouterIndex {
     const courseRepo = CourseRepo.getInstance(this.dbClient);
     const channelRepo = ChannelRepo.getInstance(this.dbClient);
     const noticeRepo = NoticeRepo.getInstance(this.dbClient);
+    const roleRepo = RoleRepo.getInstance(this.dbClient);
 
     const authRequestValidator = AuthRequestValidator.getInstance();
     const healthRequestValidator = HealthRequestValidator.getInstance();
@@ -104,6 +110,7 @@ export class RouterIndex {
     const courseRequestValidator = CourseRequestValidator.getInstance();
     const channelRequestValidator = ChannelRequestValidator.getInstance();
     const noticeRequestValidator = NoticeRequestValidator.getInstance();
+    const roleRequestValidator = RoleRequestValidator.getInstance();
 
     const authService = AuthService.getInstance({
       adminRepo,
@@ -141,6 +148,9 @@ export class RouterIndex {
     });
     const noticeService = NoticeService.getInstance({
       noticeRepo,
+    });
+    const roleService = RoleService.getInstance({
+      roleRepo,
     });
 
     this.authController = AuthController.getInstance({
@@ -182,6 +192,10 @@ export class RouterIndex {
     this.noticeController = NoticeController.getInstance({
       noticeRequestValidator,
       noticeService,
+    });
+    this.roleController = RoleController.getInstance({
+      roleRequestValidator,
+      roleService,
     });
   }
 
