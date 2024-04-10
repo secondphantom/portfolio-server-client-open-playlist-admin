@@ -51,3 +51,31 @@ export async function DELETE(request: Request, context: { params: any }) {
     );
   }
 }
+
+export async function PATCH(request: Request, context: { params: any }) {
+  try {
+    const cookieStore = cookies();
+    const auth = await router.verifyAuth(
+      cookieStore.get("sessionKey")?.value as any
+    );
+
+    if (!auth) {
+      return NextResponse.json(
+        { message: "Unauthorized", success: false },
+        { status: 401 }
+      );
+    }
+    const body = await request.json();
+    const params = context.params;
+    const result = await router.adminController.updateAdminById({
+      ...body,
+      id: params.id,
+    });
+    return RouterIndex.createJsonResponse(result);
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Internal Error", success: false },
+      { status: 500 }
+    );
+  }
+}

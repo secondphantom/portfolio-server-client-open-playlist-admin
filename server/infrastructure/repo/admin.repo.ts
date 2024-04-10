@@ -127,4 +127,11 @@ export class AdminRepo implements IAdminRepo {
   deleteByEmail = async (email: string) => {
     await this.db.delete(schema.admins).where(eq(schema.admins.email, email));
   };
+
+  updateById = async (id: number, value: Partial<AdminEntitySelect>) => {
+    await this.db
+      .update(schema.admins)
+      .set(value)
+      .where(eq(schema.admins.id, id));
+  };
 }

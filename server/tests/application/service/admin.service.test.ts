@@ -16,6 +16,7 @@ describe("admin service", () => {
   let NON_CONFLICT_EMAIL = "nonConflict@email.com";
   let DELETE_EMAIL = "delete@email.com";
   let DELETE_ID = 0;
+  let CONFLICT_ID = 0;
 
   beforeAll(async () => {
     const dbClient = DrizzleClient.getInstance({
@@ -30,9 +31,15 @@ describe("admin service", () => {
 
     await adminRepo.create({ email: CONFLICT_EMAIL, profileName: "conflict" });
     await adminRepo.create({ email: DELETE_EMAIL, profileName: "delete" });
-    const admin = await adminRepo.getByEmail(DELETE_EMAIL, { id: true });
+    const adminForDelete = await adminRepo.getByEmail(DELETE_EMAIL, {
+      id: true,
+    });
+    const adminForUpdate = await adminRepo.getByEmail(DELETE_EMAIL, {
+      id: true,
+    });
 
-    DELETE_ID = admin!.id;
+    DELETE_ID = adminForDelete!.id;
+    CONFLICT_ID = adminForUpdate!.id;
   });
 
   afterAll(async () => {
@@ -86,6 +93,25 @@ describe("admin service", () => {
       const admin = await adminService.getAdminById({ id: 0 });
 
       expect(admin).toEqual(adminSchemaExpect);
+    });
+  });
+
+  describe("updateAdminById", () => {
+    test("fail not found", async () => {
+      try {
+        await adminService.updateAdminById({ id: -1 });
+      } catch (error: any) {
+        expect(error.message).toBe("Not Found");
+      }
+    });
+    test("success", async () => {
+      await adminService.updateAdminById({
+        id: CONFLICT_ID,
+        profileName: "updated",
+      });
+      const admin = await adminRepo.getById(CONFLICT_ID);
+
+      expect(admin?.profileName).toEqual("updated");
     });
   });
 

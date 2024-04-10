@@ -25,6 +25,14 @@ export type ServiceAdminDeleteByIdDto = {
   id: number;
 };
 
+export type ServiceAdminUpdateByIdDto = {
+  id: number;
+  email?: string;
+  roleId?: number;
+  profileName?: string;
+  profileImage?: string;
+};
+
 export class AdminService {
   static instance: AdminService | undefined;
   static getInstance = (inputs: ServiceInputs) => {
@@ -50,7 +58,6 @@ export class AdminService {
       });
     }
 
-    // check duplicated
     await this.adminRepo.create({
       email: dto.email,
       profileName: dto.profileName ? dto.profileName : "New Admin",
@@ -119,5 +126,19 @@ export class AdminService {
   // DELETE /admins/:id
   deleteAdminById = async (dto: ServiceAdminDeleteByIdDto) => {
     await this.adminRepo.deleteById(dto.id);
+  };
+
+  // PATCH /admins/:id
+  updateAdminById = async (dto: ServiceAdminUpdateByIdDto) => {
+    const admin = await this.adminRepo.getById(dto.id, { id: true });
+
+    if (!admin) {
+      throw new ServerError({
+        code: 404,
+        message: "Not Found",
+      });
+    }
+
+    await this.adminRepo.updateById(dto.id, { ...dto, id: undefined });
   };
 }

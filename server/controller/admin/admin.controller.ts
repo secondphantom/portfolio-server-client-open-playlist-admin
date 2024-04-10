@@ -5,6 +5,7 @@ import {
   RequestAdminDeleteById,
   RequestAdminGetById,
   RequestAdminGetListByQuery,
+  RequestAdminUpdateById,
 } from "@/server/spec/admin/admin.requests";
 import { ControllerResponse } from "@/server/dto/response";
 import { errorResolver } from "@/server/dto/error.resolver";
@@ -115,6 +116,31 @@ export class AdminController {
         payload: {
           success: true,
           message: "Success Deleted",
+        },
+      });
+    } catch (error) {
+      const { code, message, data } = errorResolver(error);
+      return new ControllerResponse({
+        code,
+        payload: {
+          success: false,
+          message,
+          data,
+        },
+      });
+    }
+  };
+
+  updateAdminById = async (req: RequestAdminUpdateById) => {
+    try {
+      const dto = this.adminRequestValidator.updateAdminById(req);
+      await this.adminService.updateAdminById(dto);
+
+      return new ControllerResponse({
+        code: 200,
+        payload: {
+          success: true,
+          message: "Success Updated",
         },
       });
     } catch (error) {

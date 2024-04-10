@@ -17,3 +17,11 @@ export type RequestAdminGetById = {
 export type RequestAdminDeleteById = {
   id: number;
 };
+
+export type RequestAdminUpdateById = {
+  id: number;
+  email?: string;
+  roleId?: number;
+  profileName?: string;
+  profileImage?: string;
+};

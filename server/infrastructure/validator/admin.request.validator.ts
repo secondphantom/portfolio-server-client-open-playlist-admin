@@ -6,6 +6,7 @@ import {
   RequestAdminDeleteById,
   RequestAdminGetById,
   RequestAdminGetListByQuery,
+  RequestAdminUpdateById,
 } from "@/server/spec/admin/admin.requests";
 import { ServerError } from "@/server/dto/error";
 import { zodIntTransform } from "./lib/zod.util";
@@ -94,6 +95,32 @@ export class AdminRequestValidator implements IAdminRequestValidator {
   deleteAdminById = (req: RequestAdminDeleteById) => {
     try {
       const dto = this.requestAdminDeleteById.parse(req);
+      return dto;
+    } catch (error) {
+      throw new ServerError({
+        code: 400,
+        message: "Invalid Input",
+      });
+    }
+  };
+
+  private requestAdminUpdateById = z
+    .object({
+      id: zodIntTransform,
+      email: z
+        .string()
+        .min(1, { message: "Must have at least 1 character" })
+        .email("This is not a valid email.")
+        .optional(),
+      roleId: z.number().optional(),
+      profileName: z.string().optional(),
+      profileImage: z.string().optional(),
+    })
+    .strict();
+
+  updateAdminById = (req: RequestAdminUpdateById) => {
+    try {
+      const dto = this.requestAdminUpdateById.parse(req);
       return dto;
     } catch (error) {
       throw new ServerError({

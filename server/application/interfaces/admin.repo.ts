@@ -43,4 +43,6 @@ export interface IAdminRepo {
   deleteById: (id: number) => Promise<void>;
 
   deleteByEmail: (email: string) => Promise<void>;
+
+  updateById: (id: number, value: Partial<AdminEntitySelect>) => Promise<void>;
 }
