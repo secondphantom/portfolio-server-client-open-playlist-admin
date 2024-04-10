@@ -33,8 +33,8 @@ const Page = async ({ params }: { params: any }) => {
   }
 
   return (
-    <>
-      <div className="pl-2 pb-4">
+    <div className="space-y-2">
+      <div className="pl-2 pb-2">
         <PageBreadcrumb
           breadcrumbs={[
             { label: "Home", href: "/" },
@@ -44,7 +44,7 @@ const Page = async ({ params }: { params: any }) => {
         />
       </div>
       <HealthIdApiTable healthData={healthData.data} />
-    </>
+    </div>
   );
 };
 

@@ -33,7 +33,7 @@ const orders = [
 ];
 
 const DEFAULT_ORDER = "recent";
-export const HealthHeaderOrderCombobox: React.FC<Props> = () => {
+export const AdminHeaderOrderCombobox: React.FC<Props> = () => {
   const router = useSafeRouter(useRouter);
   const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
@@ -47,7 +47,7 @@ export const HealthHeaderOrderCombobox: React.FC<Props> = () => {
       newSearchParams.delete("order");
     }
 
-    router.safePush(`/healths?${newSearchParams.toString()}`);
+    router.safePush(`/admins?${newSearchParams.toString()}`);
   }, [value]);
   return (
     <Popover open={open} onOpenChange={setOpen}>

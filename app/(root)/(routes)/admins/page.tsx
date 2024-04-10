@@ -4,19 +4,20 @@ import { cookies } from "next/headers";
 import { ResponseBody } from "@/types/response.type";
 import { redirect } from "next/navigation";
 import { ResponseHealthGetListByQuery } from "@/server/spec/health/health.responses";
-import HealthTable from "./_components/health-table";
 import { PageBreadcrumb } from "@/components/page-breadcrum";
-import { HealthHeader } from "./_components/health-header";
+import AdminTable from "./_components/admin-table";
+import { ResponseAdminGetListByQuery } from "@/server/spec/admin/admin.response";
+import { AdminHeader } from "./_components/admin-header";
 
 export const metadata: Metadata = {
-  title: "Health",
+  title: "Admins",
 };
 
 const getPageData = async (searchParams: any) => {
   const urlSearchParams = new URLSearchParams(searchParams);
 
-  const healthListData = await fetch(
-    `${process.env.API_SERVER_HOST}/api/healths?${urlSearchParams.toString()}`,
+  const adminListData = await fetch(
+    `${process.env.API_SERVER_HOST}/api/admins?${urlSearchParams.toString()}`,
     {
       method: "GET",
       headers: {
@@ -27,16 +28,16 @@ const getPageData = async (searchParams: any) => {
     .then(async (res) => {
       if (res.status >= 300) throw new Error();
       const body = await res.json();
-      return body as ResponseBody<ResponseHealthGetListByQuery>;
+      return body as ResponseBody<ResponseAdminGetListByQuery>;
     })
     .catch(() => ({ success: false, data: undefined }));
-  return { healthListData };
+  return { adminListData };
 };
 
 const Page = async ({ searchParams }: { searchParams: any }) => {
-  const { healthListData } = await getPageData(searchParams as any);
+  const { adminListData } = await getPageData(searchParams as any);
 
-  if (!healthListData.data) {
+  if (!adminListData.data) {
     redirect("/");
   }
 
@@ -48,15 +49,15 @@ const Page = async ({ searchParams }: { searchParams: any }) => {
     <div className="space-y-2">
       <div className="pl-2 pb-2">
         <PageBreadcrumb
-          breadcrumbs={[{ label: "Home", href: "/" }, { label: "Healths" }]}
+          breadcrumbs={[{ label: "Home", href: "/" }, { label: "Admins" }]}
         />
       </div>
       <div className="pb-2 flex w-full justify-end">
-        <HealthHeader />
+        <AdminHeader />
       </div>
-      <HealthTable
+      <AdminTable
         searchParams={searchParams}
-        healthListData={healthListData.data}
+        adminListData={adminListData.data}
       />
     </div>
   );

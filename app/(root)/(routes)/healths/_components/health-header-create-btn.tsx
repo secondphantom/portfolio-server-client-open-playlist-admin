@@ -42,12 +42,7 @@ export const HealthHeaderCreateBtn = () => {
   };
 
   return (
-    <Button
-      size="sm"
-      className="h-8 gap-1"
-      onClick={onClick}
-      disabled={isLoading}
-    >
+    <Button size="sm" className="gap-1" onClick={onClick} disabled={isLoading}>
       <PlusCircle className="h-3.5 w-3.5" />
       <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
         Create
