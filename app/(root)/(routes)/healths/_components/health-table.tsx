@@ -78,7 +78,7 @@ const HealthTable = ({
                     <div className="flex items-center">
                       {new Date(createdAt).toLocaleString()}
                       {new Date(createdAt).getTime() >=
-                        new Date().getTime() - 24 * 60 * 1000 && (
+                        new Date().getTime() - 24 * 60 * 60 * 1000 && (
                         <Badge className="ml-2" variant={"new"}>
                           New
                         </Badge>
