@@ -2,18 +2,13 @@ import Link from "next/link";
 import {
   AntennaIcon,
   AreaChartIcon,
-  CircleGauge,
   CircleGaugeIcon,
   HeartPulseIcon,
   Layers3Icon,
-  Loader,
   MegaphoneIcon,
   NotebookPenIcon,
   ShieldIcon,
-  UserCog,
   UserCogIcon,
-  UserIcon,
-  Users,
   UsersIcon,
   WrenchIcon,
 } from "lucide-react";
@@ -36,9 +31,9 @@ export const Sidebar = ({ className }: Props) => {
     >
       <Link href="/learn">
         <div className="pt-8 pl-4 pb-7 flex items-center gap-x-3">
-          <h1 className="text-2xl font-extrabold  tracking-wide">
+          <div className="text-2xl font-extrabold  tracking-wide">
             Open Playlist Admin
-          </h1>
+          </div>
         </div>
       </Link>
       <div className="flex flex-col space-y-1 w-full">
@@ -49,7 +44,7 @@ export const Sidebar = ({ className }: Props) => {
         />
         <SidebarItem
           label="Health"
-          href="/health"
+          href="/healths"
           icon={<HeartPulseIcon className="w-5 h-5 mr-2" />}
         />
         <SidebarItem

@@ -15,7 +15,7 @@ type Props = {
 export const SidebarItem = (props: Props) => {
   const { href, label, icon, children } = props;
   const pathname = usePathname();
-  const active = pathname.startsWith(href);
+  const active = pathname === href;
   const [isOpen, setIsOpen] = useState(false);
   const isParent = !!children;
   return (

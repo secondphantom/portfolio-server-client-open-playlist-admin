@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Open Playlist Admin",
+    template: "%s | Admin",
     default: "Open Playlist Admin",
   },
 };
