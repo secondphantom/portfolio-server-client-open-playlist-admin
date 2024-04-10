@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/spinner";
-import { useToast } from "@/components/ui/use-toast";
 import toast from "react-hot-toast";
 
 const createAdminSchema = z.object({
@@ -48,6 +47,7 @@ export const AdminHeaderCreateBtn = () => {
     resolver: zodResolver(createAdminSchema),
     defaultValues: {
       email: "",
+      profileName: "",
     },
   });
 

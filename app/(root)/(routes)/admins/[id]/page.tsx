@@ -3,12 +3,12 @@ import { redirect } from "next/navigation";
 
 import { ResponseBody } from "@/types/response.type";
 import { PageBreadcrumb } from "@/components/page-breadcrumb";
-import { ResponseHealthGetById } from "@/server/spec/health/health.responses";
-import HealthIdApiTable from "../_components/health-id-api-table";
+import { AdminIdCard } from "../_components/admin-id-card";
+import { ResponseAdminGetById } from "@/server/spec/admin/admin.response";
 
 const getPageData = async (params: any) => {
-  const healthData = await fetch(
-    `${process.env.API_SERVER_HOST}/api/healths/${params.id}`,
+  const adminData = await fetch(
+    `${process.env.API_SERVER_HOST}/api/admins/${params.id}`,
     {
       method: "GET",
       headers: {
@@ -19,16 +19,16 @@ const getPageData = async (params: any) => {
     .then(async (res) => {
       if (res.status >= 300) throw new Error();
       const body = await res.json();
-      return body as ResponseBody<ResponseHealthGetById>;
+      return body as ResponseBody<ResponseAdminGetById>;
     })
     .catch(() => ({ success: false, data: undefined }));
-  return { healthData };
+  return { adminData };
 };
 
 const Page = async ({ params }: { params: any }) => {
-  const { healthData } = await getPageData(params);
+  const { adminData } = await getPageData(params);
 
-  if (!healthData.data) {
+  if (!adminData.data) {
     redirect("/");
   }
 
@@ -38,12 +38,12 @@ const Page = async ({ params }: { params: any }) => {
         <PageBreadcrumb
           breadcrumbs={[
             { label: "Home", href: "/" },
-            { label: "Healths", href: "/healths" },
+            { label: "Admins", href: "/admins" },
             { label: params.id },
           ]}
         />
       </div>
-      <HealthIdApiTable healthData={healthData.data} />
+      <AdminIdCard adminData={adminData.data} />
     </div>
   );
 };

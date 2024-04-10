@@ -5,7 +5,7 @@ import { ResponseBody } from "@/types/response.type";
 import { redirect } from "next/navigation";
 import { ResponseHealthGetListByQuery } from "@/server/spec/health/health.responses";
 import HealthTable from "./_components/health-table";
-import { PageBreadcrumb } from "@/components/page-breadcrum";
+import { PageBreadcrumb } from "@/components/page-breadcrumb";
 import { HealthHeader } from "./_components/health-header";
 
 export const metadata: Metadata = {

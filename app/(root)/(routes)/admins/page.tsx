@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { ResponseBody } from "@/types/response.type";
 import { redirect } from "next/navigation";
 import { ResponseHealthGetListByQuery } from "@/server/spec/health/health.responses";
-import { PageBreadcrumb } from "@/components/page-breadcrum";
+import { PageBreadcrumb } from "@/components/page-breadcrumb";
 import AdminTable from "./_components/admin-table";
 import { ResponseAdminGetListByQuery } from "@/server/spec/admin/admin.response";
 import { AdminHeader } from "./_components/admin-header";
