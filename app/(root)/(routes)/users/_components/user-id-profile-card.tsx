@@ -3,8 +3,6 @@ import * as z from "zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { ResponseAdminGetById } from "@/server/spec/admin/admin.response";
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,35 +16,33 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLoadingModalStore } from "@/hooks/use-loading-modal-store";
 import { Button } from "@/components/ui/button";
-import { getLocalDateTimeInputValue } from "@/lib/utils";
+import { cn, getLocalDateTimeInputValue } from "@/lib/utils";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useSafeRouter } from "@/hooks/use-safe-router";
 import { useRouter } from "next/navigation";
 import { Modal } from "@/components/ui/modal";
+import { ResponseUserGetById } from "@/server/spec/user/user.responses";
 
 const formSchema = z.object({
-  email: z
-    .string()
-    .min(1, { message: "Must have at least 1 character" })
-    .email("This is not a valid email.")
-    .optional(),
-  roleId: z.number().optional(),
+  isEmailVerified: z.boolean().optional(),
   profileName: z.string().optional(),
   profileImage: z.string().optional(),
+  roleId: z.number().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 type Props = {
-  adminData: ResponseAdminGetById;
+  userData: ResponseUserGetById;
 };
 
-export const AdminIdCard: React.FC<Props> = ({
-  adminData: {
+export const UserIdProfileCard: React.FC<Props> = ({
+  userData: {
     id,
     email,
     roleId,
+    isEmailVerified,
     profileName,
     profileImage,
     createdAt,
@@ -65,7 +61,7 @@ export const AdminIdCard: React.FC<Props> = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email,
+      isEmailVerified,
       roleId,
       profileName,
       profileImage: profileImage || "",
@@ -73,11 +69,15 @@ export const AdminIdCard: React.FC<Props> = ({
   });
 
   const onSubmit = async (values: FormValues) => {
+    setIsModalOpen(true);
+  };
+
+  const updateUser = async () => {
     try {
-      const body = { ...values };
+      const body = { ...form.getValues() };
       setIsLoading(true);
       const data = (await axios
-        .patch(`/api/admins/${id}`, body)
+        .patch(`/api/users/${id}`, body)
         .then((res) => res.data)) as { success: boolean; message: string };
       if (data.success) {
         router.refresh();
@@ -96,41 +96,18 @@ export const AdminIdCard: React.FC<Props> = ({
     }
   };
 
-  const deleteAdmin = async () => {
-    try {
-      setIsLoading(true);
-      const data = (await axios
-        .delete(`/api/admins/${id}`)
-        .then((res) => res.data)) as { success: boolean; message: string };
-      if (data.success) {
-        await router.push("/admins");
-      }
-    } catch (error: any) {
-      let message = "Something went wrong";
-      if (axios.isAxiosError(error)) {
-        const data = error.response?.data;
-        if (data && data.message) {
-          message = data.message;
-        }
-      }
-      toast.error(message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <>
       <Modal
-        title={`Are you sure you want to delete this admin?`}
+        title={`Are you sure you want to update this user?`}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       >
         <div className="w-full flex justify-end space-x-2">
           <Button
-            variant={"destructive"}
+            variant={"ghost"}
             onClick={async () => {
-              await deleteAdmin();
+              await updateUser();
               setIsModalOpen(false);
             }}
           >
@@ -141,7 +118,7 @@ export const AdminIdCard: React.FC<Props> = ({
       </Modal>
       <Card>
         <CardHeader>
-          <CardTitle>Admin Profile</CardTitle>
+          <CardTitle>User Profile</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -154,14 +131,39 @@ export const AdminIdCard: React.FC<Props> = ({
                   </FormControl>
                   <FormMessage />
                 </FormItem>
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input disabled={true} type="text" defaultValue={email} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="isEmailVerified"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>Email Verified</FormLabel>
                       <FormControl>
-                        <Input {...field} disabled={isLoading} type="email" />
+                        <Input
+                          className={cn(
+                            "capitalize",
+                            field.value ? "bg-green-200" : "bg-red-200"
+                          )}
+                          onChange={(e) => {}}
+                          onClick={(e) => {
+                            form.setValue(
+                              "isEmailVerified",
+                              e.currentTarget.value.toLocaleLowerCase() ===
+                                "true"
+                                ? false
+                                : true
+                            );
+                          }}
+                          value={`${field.value}`}
+                          disabled={isLoading}
+                          type="button"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -227,20 +229,9 @@ export const AdminIdCard: React.FC<Props> = ({
                   <FormMessage />
                 </FormItem>
               </div>
-              <div className="flex space-x-1">
+              <div className="flex">
                 <Button disabled={isLoading} type="submit" className="w-full">
                   Update
-                </Button>
-                <Button
-                  disabled={isLoading}
-                  className="w-full"
-                  variant={"destructive"}
-                  type="button"
-                  onClick={() => {
-                    setIsModalOpen(true);
-                  }}
-                >
-                  Delete
                 </Button>
               </div>
             </form>

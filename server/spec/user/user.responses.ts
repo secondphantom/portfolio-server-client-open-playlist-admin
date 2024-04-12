@@ -5,8 +5,8 @@ export type ResponseUserGetById = {
   profileName: string;
   profileImage: string;
   roleId: number;
-  updatedAt: string;
   createdAt: string;
+  updatedAt: string;
   credit: {
     freeCredits: number;
     purchasedCredits: number;
@@ -23,8 +23,8 @@ export type ResponseUserGetListByQuery = {
     profileName: string;
     profileImage: string;
     roleId: number;
-    updatedAt: string;
     createdAt: string;
+    updatedAt: string;
   }[];
   pagination: {
     currentPage: number;

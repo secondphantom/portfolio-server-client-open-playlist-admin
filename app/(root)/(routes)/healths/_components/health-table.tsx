@@ -79,7 +79,7 @@ const HealthTable = ({
                       {new Date(createdAt).toLocaleString()}
                       {new Date(createdAt).getTime() >=
                         new Date().getTime() - 24 * 60 * 60 * 1000 && (
-                        <Badge className="ml-2" variant={"new"}>
+                        <Badge className="ml-2" variant={"success"}>
                           New
                         </Badge>
                       )}

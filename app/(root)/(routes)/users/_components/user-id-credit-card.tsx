@@ -3,8 +3,6 @@ import * as z from "zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { ResponseAdminGetById } from "@/server/spec/admin/admin.response";
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,39 +16,35 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLoadingModalStore } from "@/hooks/use-loading-modal-store";
 import { Button } from "@/components/ui/button";
-import { getLocalDateTimeInputValue } from "@/lib/utils";
+import { cn, getLocalDateTimeInputValue } from "@/lib/utils";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useSafeRouter } from "@/hooks/use-safe-router";
 import { useRouter } from "next/navigation";
 import { Modal } from "@/components/ui/modal";
+import { ResponseUserGetById } from "@/server/spec/user/user.responses";
+import { zodIntTransform } from "@/server/infrastructure/validator/lib/zod.util";
 
 const formSchema = z.object({
-  email: z
-    .string()
-    .min(1, { message: "Must have at least 1 character" })
-    .email("This is not a valid email.")
-    .optional(),
-  roleId: z.number().optional(),
-  profileName: z.string().optional(),
-  profileImage: z.string().optional(),
+  freeCredits: z.number().optional(),
+  purchasedCredits: z.number().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 type Props = {
-  adminData: ResponseAdminGetById;
+  userData: ResponseUserGetById;
 };
 
-export const AdminIdCard: React.FC<Props> = ({
-  adminData: {
+export const UserIdCreditCard: React.FC<Props> = ({
+  userData: {
     id,
-    email,
-    roleId,
-    profileName,
-    profileImage,
-    createdAt,
-    updatedAt,
+    credit: {
+      freeCreditUpdatedAt,
+      freeCredits,
+      purchasedCreditUpdatedAt,
+      purchasedCredits,
+    },
   },
 }) => {
   const router = useSafeRouter(useRouter);
@@ -65,19 +59,23 @@ export const AdminIdCard: React.FC<Props> = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email,
-      roleId,
-      profileName,
-      profileImage: profileImage || "",
+      freeCredits,
+      purchasedCredits,
     },
   });
 
   const onSubmit = async (values: FormValues) => {
+    setIsModalOpen(true);
+  };
+
+  const updateCredit = async () => {
     try {
-      const body = { ...values };
+      const body = { credit: { ...form.getValues() } };
       setIsLoading(true);
+      console.log(body);
+
       const data = (await axios
-        .patch(`/api/admins/${id}`, body)
+        .patch(`/api/users/${id}/credits`, body)
         .then((res) => res.data)) as { success: boolean; message: string };
       if (data.success) {
         router.refresh();
@@ -96,41 +94,18 @@ export const AdminIdCard: React.FC<Props> = ({
     }
   };
 
-  const deleteAdmin = async () => {
-    try {
-      setIsLoading(true);
-      const data = (await axios
-        .delete(`/api/admins/${id}`)
-        .then((res) => res.data)) as { success: boolean; message: string };
-      if (data.success) {
-        await router.push("/admins");
-      }
-    } catch (error: any) {
-      let message = "Something went wrong";
-      if (axios.isAxiosError(error)) {
-        const data = error.response?.data;
-        if (data && data.message) {
-          message = data.message;
-        }
-      }
-      toast.error(message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <>
       <Modal
-        title={`Are you sure you want to delete this admin?`}
+        title={`Are you sure you want to update this user?`}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       >
         <div className="w-full flex justify-end space-x-2">
           <Button
-            variant={"destructive"}
+            variant={"ghost"}
             onClick={async () => {
-              await deleteAdmin();
+              await updateCredit();
               setIsModalOpen(false);
             }}
           >
@@ -141,7 +116,7 @@ export const AdminIdCard: React.FC<Props> = ({
       </Modal>
       <Card>
         <CardHeader>
-          <CardTitle>Admin Profile</CardTitle>
+          <CardTitle>User Credit</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -156,29 +131,16 @@ export const AdminIdCard: React.FC<Props> = ({
                 </FormItem>
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="freeCredits"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input {...field} disabled={isLoading} type="email" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="roleId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Role Id</FormLabel>
+                      <FormLabel>Free Credits</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           disabled={isLoading}
                           type="number"
-                          {...form.register("roleId", {
+                          {...form.register("freeCredits", {
                             valueAsNumber: true,
                           })}
                         />
@@ -187,60 +149,56 @@ export const AdminIdCard: React.FC<Props> = ({
                     </FormItem>
                   )}
                 />
+                <FormItem>
+                  <FormLabel>Free Credit Updated At</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={true}
+                      type="datetime-local"
+                      defaultValue={getLocalDateTimeInputValue(
+                        new Date(freeCreditUpdatedAt)
+                      )}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
                 <FormField
                   control={form.control}
-                  name="profileName"
+                  name="purchasedCredits"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Profile Name</FormLabel>
+                      <FormLabel>Purchased Credits</FormLabel>
                       <FormControl>
-                        <Input {...field} disabled={isLoading} />
+                        <Input
+                          {...field}
+                          disabled={isLoading}
+                          type="number"
+                          {...form.register("purchasedCredits", {
+                            valueAsNumber: true,
+                          })}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <FormItem>
-                  <FormLabel>Updated At</FormLabel>
+                  <FormLabel>Purchased Credit Updated At</FormLabel>
                   <FormControl>
                     <Input
                       disabled={true}
                       type="datetime-local"
                       defaultValue={getLocalDateTimeInputValue(
-                        new Date(createdAt)
-                      )}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-                <FormItem>
-                  <FormLabel>Created At</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={true}
-                      type="datetime-local"
-                      defaultValue={getLocalDateTimeInputValue(
-                        new Date(updatedAt)
+                        new Date(purchasedCreditUpdatedAt)
                       )}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               </div>
-              <div className="flex space-x-1">
+              <div className="flex">
                 <Button disabled={isLoading} type="submit" className="w-full">
                   Update
-                </Button>
-                <Button
-                  disabled={isLoading}
-                  className="w-full"
-                  variant={"destructive"}
-                  type="button"
-                  onClick={() => {
-                    setIsModalOpen(true);
-                  }}
-                >
-                  Delete
                 </Button>
               </div>
             </form>
