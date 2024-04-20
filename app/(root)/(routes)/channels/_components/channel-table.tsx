@@ -1,7 +1,6 @@
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,13 +25,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ListPagination } from "@/components/list-pagination";
-import { ResponseCourseGetListByQuery } from "@/server/spec/course/course.responses";
+import { ResponseChannelGetListByQuery } from "@/server/spec/channel/channel.responses";
 
-const CourseTable = ({
-  courseListData,
+const ChannelTable = ({
+  channelListData,
   searchParams,
 }: {
-  courseListData: ResponseCourseGetListByQuery;
+  channelListData: ResponseChannelGetListByQuery;
   searchParams: any;
 }) => {
   return (
@@ -47,40 +46,27 @@ const CourseTable = ({
               <TableHead>
                 <span className="sr-only">Actions</span>
               </TableHead>
-              <TableHead>Id</TableHead>
-              <TableHead>Version</TableHead>
-              <TableHead>Video Id</TableHead>
-              <TableHead>Channel Id</TableHead>
-              <TableHead>Category Id</TableHead>
-              <TableHead>Language</TableHead>
-              <TableHead>Title</TableHead>
+              <TableHead>ChannelId</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Handle</TableHead>
               <TableHead>Enroll Count</TableHead>
-              <TableHead>Generated AI</TableHead>
-              <TableHead>Duration</TableHead>
               <TableHead>Created At</TableHead>
               <TableHead>Updated At</TableHead>
-              <TableHead>Published At</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {courseListData.courses.map(
+            {channelListData.channels.map(
               ({
-                id,
-                version,
-                videoId,
                 channelId,
-                categoryId,
-                language,
-                title,
+                name,
+                handle,
                 enrollCount,
-                generatedAi,
-                duration,
+                extra,
                 createdAt,
                 updatedAt,
-                publishedAt,
               }) => {
                 return (
-                  <TableRow key={id}>
+                  <TableRow key={channelId}>
                     <TableCell className="font-medium">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -96,34 +82,20 @@ const CourseTable = ({
                         <DropdownMenuContent align="start">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuItem asChild>
-                            <Link href={`/courses/${id}`}>Edit</Link>
+                            <Link href={`/channels/${channelId}`}>Edit</Link>
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
-                    <TableCell className="font-medium">{id}</TableCell>
-                    <TableCell>{version}</TableCell>
-                    <TableCell>{videoId}</TableCell>
-                    <TableCell>{channelId}</TableCell>
-                    <TableCell>{categoryId}</TableCell>
-                    <TableCell>{language}</TableCell>
-                    <TableCell>{title}</TableCell>
+                    <TableCell className="font-medium">{channelId}</TableCell>
+                    <TableCell>{name}</TableCell>
+                    <TableCell>{handle}</TableCell>
                     <TableCell>{enrollCount}</TableCell>
-                    <TableCell>
-                      <Badge variant={generatedAi ? "success" : "destructive"}>
-                        {generatedAi ? "True" : "False"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{duration}</TableCell>
-
                     <TableCell className="text-sm">
                       {new Date(createdAt).toLocaleString("en-US")}
                     </TableCell>
                     <TableCell className="text-sm">
                       {new Date(updatedAt).toLocaleString("en-US")}
-                    </TableCell>
-                    <TableCell className="text-sm">
-                      {new Date(publishedAt).toLocaleString("en-US")}
                     </TableCell>
                     <TableCell></TableCell>
                   </TableRow>
@@ -136,15 +108,16 @@ const CourseTable = ({
       <CardFooter>
         <div className="flex flex-col mx-auto space-y-2">
           <div className="text-xs text-muted-foreground mx-auto">
-            Showing <strong>{courseListData.courses.length}</strong> of courses
+            Showing <strong>{channelListData.channels.length}</strong> of
+            channels
           </div>
           <ListPagination
-            pagination={courseListData.pagination}
+            pagination={channelListData.pagination}
             searchParams={searchParams}
-            routePath="/courses"
+            routePath="/channels"
             renderNextPage={
-              courseListData.courses.length ===
-              courseListData.pagination.pageSize
+              channelListData.channels.length ===
+              channelListData.pagination.pageSize
             }
           />
         </div>
@@ -153,4 +126,4 @@ const CourseTable = ({
   );
 };
 
-export default CourseTable;
+export default ChannelTable;

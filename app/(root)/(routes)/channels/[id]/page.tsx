@@ -3,18 +3,17 @@ import { redirect } from "next/navigation";
 
 import { ResponseBody } from "@/types/response.type";
 import { PageBreadcrumb } from "@/components/page-breadcrumb";
-import { UserIdProfileCard } from "../_components/user-id-profile-card";
-import { ResponseUserGetById } from "@/server/spec/user/user.responses";
-import { UserIdCreditCard } from "../_components/user-id-credit-card";
+import { ChannelIdCard } from "../_components/channel-id-card";
+import { ResponseChannelGetById } from "@/server/spec/channel/channel.responses";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "User",
+  title: "Channel",
 };
 
 const getPageData = async (params: any) => {
-  const userData = await fetch(
-    `${process.env.API_SERVER_HOST}/api/users/${params.id}`,
+  const channelData = await fetch(
+    `${process.env.API_SERVER_HOST}/api/channels/${params.id}`,
     {
       method: "GET",
       headers: {
@@ -25,16 +24,17 @@ const getPageData = async (params: any) => {
     .then(async (res) => {
       if (res.status >= 300) throw new Error();
       const body = await res.json();
-      return body as ResponseBody<ResponseUserGetById>;
+      ``;
+      return body as ResponseBody<ResponseChannelGetById>;
     })
     .catch(() => ({ success: false, data: undefined }));
-  return { userData };
+  return { channelData };
 };
 
 const Page = async ({ params }: { params: any }) => {
-  const { userData } = await getPageData(params);
+  const { channelData } = await getPageData(params);
 
-  if (!userData.data) {
+  if (!channelData.data) {
     redirect("/");
   }
 
@@ -44,14 +44,13 @@ const Page = async ({ params }: { params: any }) => {
         <PageBreadcrumb
           breadcrumbs={[
             { label: "Home", href: "/" },
-            { label: "Users", href: "/users" },
+            { label: "Channels", href: "/channels" },
             { label: params.id },
           ]}
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <UserIdProfileCard userData={userData.data} />
-        <UserIdCreditCard userData={userData.data} />
+      <div className="grid grid-cols-1">
+        <ChannelIdCard channelData={channelData.data} />
       </div>
     </div>
   );

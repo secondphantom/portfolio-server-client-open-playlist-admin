@@ -5,6 +5,11 @@ import { ResponseBody } from "@/types/response.type";
 import { PageBreadcrumb } from "@/components/page-breadcrumb";
 import { CourseIdCard } from "../_components/course-id-card";
 import { ResponseCourseGetById } from "@/server/spec/course/course.responses";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Course",
+};
 
 const getPageData = async (params: any) => {
   const courseData = await fetch(

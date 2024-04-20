@@ -58,7 +58,7 @@ export class ChannelService {
         code: 200,
         message: "Empty",
         data: {
-          sessions: [],
+          channels: [],
           pagination,
         },
       });

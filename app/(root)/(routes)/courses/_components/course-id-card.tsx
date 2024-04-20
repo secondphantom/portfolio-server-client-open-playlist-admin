@@ -131,7 +131,7 @@ export const CourseIdCard: React.FC<Props> = ({
   return (
     <>
       <Modal
-        title={`Are you sure you want to update this user?`}
+        title={`Are you sure you want to update this?`}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       >
