@@ -3,8 +3,6 @@ import * as z from "zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { ResponseAdminGetById } from "@/server/spec/admin/admin.response";
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -24,39 +22,26 @@ import toast from "react-hot-toast";
 import { useSafeRouter } from "@/hooks/use-safe-router";
 import { useRouter } from "next/navigation";
 import { Modal } from "@/components/ui/modal";
+import { ResponseRoleGetById } from "@/server/spec/role/role.responses";
 
 const formSchema = z.object({
-  email: z
-    .string()
-    .min(1, { message: "Must have at least 1 character" })
-    .email("This is not a valid email.")
-    .optional(),
-  roleId: z.number().optional(),
-  profileName: z.string().optional(),
-  profileImage: z.string().optional(),
+  name: z.string(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 type Props = {
-  adminData: ResponseAdminGetById;
+  roleData: ResponseRoleGetById;
 };
 
-export const AdminIdCard: React.FC<Props> = ({
-  adminData: {
-    id,
-    email,
-    roleId,
-    profileName,
-    profileImage,
-    createdAt,
-    updatedAt,
-  },
+export const RoleIdCard: React.FC<Props> = ({
+  roleData: { id, name, createdAt, updatedAt },
 }) => {
   const router = useSafeRouter(useRouter);
   const setLoading = useLoadingModalStore((state) => state.setLoading);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => {
     setLoading(isLoading);
@@ -65,19 +50,21 @@ export const AdminIdCard: React.FC<Props> = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email,
-      roleId,
-      profileName,
-      profileImage: profileImage || "",
+      name,
     },
   });
 
   const onSubmit = async (values: FormValues) => {
+    setIsModalOpen(true);
+  };
+
+  const updateUser = async () => {
     try {
-      const body = { ...values };
+      const body = { ...form.getValues() };
       setIsLoading(true);
+
       const data = (await axios
-        .patch(`/api/admins/${id}`, body)
+        .patch(`/api/roles/${id}`, body)
         .then((res) => res.data)) as { success: boolean; message: string };
       if (data.success) {
         router.refresh();
@@ -96,14 +83,14 @@ export const AdminIdCard: React.FC<Props> = ({
     }
   };
 
-  const deleteAdmin = async () => {
+  const deleteUser = async () => {
     try {
       setIsLoading(true);
       const data = (await axios
-        .delete(`/api/admins/${id}`)
+        .delete(`/api/roles/${id}`)
         .then((res) => res.data)) as { success: boolean; message: string };
       if (data.success) {
-        router.push("/admins");
+        router.push("/roles");
       }
     } catch (error: any) {
       let message = "Something went wrong";
@@ -122,15 +109,15 @@ export const AdminIdCard: React.FC<Props> = ({
   return (
     <>
       <Modal
-        title={`Are you sure you want to delete this admin?`}
+        title={`Are you sure you want to update this?`}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       >
         <div className="w-full flex justify-end space-x-2">
           <Button
-            variant={"destructive"}
+            variant={"ghost"}
             onClick={async () => {
-              await deleteAdmin();
+              await updateUser();
               setIsModalOpen(false);
             }}
           >
@@ -139,62 +126,47 @@ export const AdminIdCard: React.FC<Props> = ({
           <Button onClick={() => setIsModalOpen(false)}>Close</Button>
         </div>
       </Modal>
+      <Modal
+        title={`Are you sure you want to delete this?`}
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+      >
+        <div className="w-full flex justify-end space-x-2">
+          <Button
+            variant={"destructive"}
+            onClick={async () => {
+              await deleteUser();
+              setIsDeleteModalOpen(false);
+            }}
+          >
+            Confirm
+          </Button>
+          <Button onClick={() => setIsDeleteModalOpen(false)}>Close</Button>
+        </div>
+      </Modal>
       <Card>
         <CardHeader>
-          <CardTitle>Admin Profile</CardTitle>
+          <CardTitle>Course</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-4">
                 <FormItem>
-                  <FormLabel>Id</FormLabel>
+                  <FormLabel>id</FormLabel>
                   <FormControl>
-                    <Input disabled={true} type="number" defaultValue={id} />
+                    <Input disabled={true} type="text" defaultValue={id} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>Name</FormLabel>
                       <FormControl>
-                        <Input {...field} disabled={isLoading} type="email" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="roleId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Role Id</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          disabled={isLoading}
-                          type="number"
-                          {...form.register("roleId", {
-                            valueAsNumber: true,
-                          })}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="profileName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Profile Name</FormLabel>
-                      <FormControl>
-                        <Input {...field} disabled={isLoading} />
+                        <Input {...field} disabled={isLoading} type="text" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -237,7 +209,7 @@ export const AdminIdCard: React.FC<Props> = ({
                   variant={"destructive"}
                   type="button"
                   onClick={() => {
-                    setIsModalOpen(true);
+                    setIsDeleteModalOpen(true);
                   }}
                 >
                   Delete

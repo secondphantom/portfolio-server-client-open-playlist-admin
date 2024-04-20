@@ -37,7 +37,7 @@ const ChannelTable = ({
   return (
     <Card>
       <CardHeader className="flex">
-        <CardTitle>Users</CardTitle>
+        <CardTitle>Channels</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>

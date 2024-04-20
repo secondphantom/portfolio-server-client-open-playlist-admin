@@ -1,0 +1,63 @@
+import { Metadata } from "next";
+
+import { cookies } from "next/headers";
+import { ResponseBody } from "@/types/response.type";
+import { redirect } from "next/navigation";
+import { PageBreadcrumb } from "@/components/page-breadcrumb";
+import RoleTable from "./_components/role-table";
+
+import { RoleHeader } from "./_components/role-header";
+import { ResponseRoleGetListByQuery } from "@/server/spec/role/role.responses";
+
+export const metadata: Metadata = {
+  title: "Roles",
+};
+
+const getPageData = async (searchParams: any) => {
+  const urlSearchParams = new URLSearchParams(searchParams);
+
+  const roleListData = await fetch(
+    `${process.env.API_SERVER_HOST}/api/roles?${urlSearchParams.toString()}`,
+    {
+      method: "GET",
+      headers: {
+        Cookie: cookies().toString(),
+      },
+    }
+  )
+    .then(async (res) => {
+      if (res.status >= 300) throw new Error();
+      const body = await res.json();
+      return body as ResponseBody<ResponseRoleGetListByQuery>;
+    })
+    .catch(() => ({ success: false, data: undefined }));
+  return { roleListData };
+};
+
+const Page = async ({ searchParams }: { searchParams: any }) => {
+  const { roleListData } = await getPageData(searchParams as any);
+
+  if (!roleListData.data) {
+    redirect("/");
+  }
+
+  // if (!healthListData.success) {
+  //   redirect("/");
+  // }
+
+  return (
+    <div className="space-y-2">
+      <div className="pl-2 pb-2">
+        <PageBreadcrumb
+          breadcrumbs={[{ label: "Home", href: "/" }, { label: "Roles" }]}
+        />
+      </div>
+      <div className="pb-2 flex w-full justify-end">
+        <RoleHeader />
+      </div>
+      <RoleTable searchParams={searchParams} roleListData={roleListData.data} />
+    </div>
+  );
+};
+
+export default Page;

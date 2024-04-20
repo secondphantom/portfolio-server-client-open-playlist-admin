@@ -77,7 +77,7 @@ export class RoleService {
         code: 200,
         message: "Empty",
         data: {
-          sessions: [],
+          roles: [],
           pagination,
         },
       });

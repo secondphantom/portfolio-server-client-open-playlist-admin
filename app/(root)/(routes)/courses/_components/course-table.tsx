@@ -38,7 +38,7 @@ const CourseTable = ({
   return (
     <Card>
       <CardHeader className="flex">
-        <CardTitle>Users</CardTitle>
+        <CardTitle>Courses</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
