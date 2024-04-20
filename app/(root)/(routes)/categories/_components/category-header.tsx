@@ -1,6 +1,7 @@
 import { CategoryHeaderCreateBtn } from "./category-header-create-btn";
 import { CategoryHeaderOrderCombobox } from "./category-header-order-combobox";
 import { CategoryIdSearchBar } from "./category-id-search-bar";
+import { CategoryParentIdSearchBar } from "./category-parentId-search-bar";
 
 export const CategoryHeader: React.FC<{}> = () => {
   return (
@@ -10,6 +11,7 @@ export const CategoryHeader: React.FC<{}> = () => {
       </div>
       <div className="flex space-x-2">
         <CategoryIdSearchBar />
+        <CategoryParentIdSearchBar />
         <CategoryHeaderCreateBtn />
       </div>
     </div>

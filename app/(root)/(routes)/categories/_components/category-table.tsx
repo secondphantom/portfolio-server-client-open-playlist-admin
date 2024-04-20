@@ -25,7 +25,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ListPagination } from "@/components/list-pagination";
-import { ResponseRoleGetListByQuery } from "@/server/spec/role/role.responses";
 import { ResponseCategoryGetListByQuery } from "@/server/spec/category/category.responses";
 
 const CategoryTable = ({

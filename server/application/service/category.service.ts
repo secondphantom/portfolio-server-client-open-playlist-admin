@@ -63,6 +63,7 @@ export class CategoryService {
     page,
     order,
     id,
+    parentId,
   }: ServiceCategoryGetListByQueryDto) => {
     const pagination = {
       currentPage: page === undefined ? 1 : page,
@@ -73,6 +74,7 @@ export class CategoryService {
       page: pagination.currentPage,
       pageSize: 10,
       id,
+      parentId,
     });
 
     if (categories.length === 0) {

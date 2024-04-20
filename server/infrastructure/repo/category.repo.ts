@@ -43,6 +43,7 @@ export class CategoryRepo implements ICategoryRepo {
           return [];
       }
     })(order);
+
     const categories = await this.db.query.categories.findMany({
       where: (value, { eq, and }) => {
         return and(

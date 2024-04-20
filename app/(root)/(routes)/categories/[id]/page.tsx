@@ -5,11 +5,10 @@ import { ResponseBody } from "@/types/response.type";
 import { PageBreadcrumb } from "@/components/page-breadcrumb";
 import { CategoryIdCard } from "../_components/category-id-card";
 import { Metadata } from "next";
-import { ResponseRoleGetById } from "@/server/spec/role/role.responses";
 import { ResponseCategoryGetById } from "@/server/spec/category/category.responses";
 
 export const metadata: Metadata = {
-  title: "Role",
+  title: "Category",
 };
 
 const getPageData = async (params: any) => {

@@ -7,11 +7,10 @@ import { PageBreadcrumb } from "@/components/page-breadcrumb";
 import CategoryTable from "./_components/category-table";
 
 import { CategoryHeader } from "./_components/category-header";
-import { ResponseRoleGetListByQuery } from "@/server/spec/role/role.responses";
 import { ResponseCategoryGetListByQuery } from "@/server/spec/category/category.responses";
 
 export const metadata: Metadata = {
-  title: "Roles",
+  title: "Categories",
 };
 
 const getPageData = async (searchParams: any) => {
