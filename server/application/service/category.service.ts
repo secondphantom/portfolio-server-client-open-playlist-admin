@@ -80,7 +80,7 @@ export class CategoryService {
         code: 200,
         message: "Empty",
         data: {
-          sessions: [],
+          categories: [],
           pagination,
         },
       });

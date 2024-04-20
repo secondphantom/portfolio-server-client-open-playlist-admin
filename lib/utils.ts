@@ -14,3 +14,11 @@ export const getLocalDateTimeInputValue = (date: Date) => {
 
   return `${yearStr}-${monthStr}-${dateStr}T${hourStr}:${minStr}`;
 };
+
+export const delay = (timeout: number) => {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      res(null);
+    }, timeout);
+  });
+};
