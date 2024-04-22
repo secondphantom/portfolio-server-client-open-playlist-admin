@@ -1,4 +1,3 @@
-import { CategoryHeaderCreateBtn } from "./category-header-create-btn";
 import { CategoryHeaderOrderCombobox } from "./notice-header-order-combobox";
 import { NoticeIdSearchBar } from "./notice-id-search-bar";
 import { NoticeAdminIdSearchBar } from "./notice-adminId-search-bar";
