@@ -42,6 +42,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.51.2",
     "react-hot-toast": "^2.4.1",
+    "react-markdown": "^9.0.1",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
     "ts-jest": "^29.1.2",
@@ -52,6 +53,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
+    "@tailwindcss/typography": "^0.5.12",
     "@types/date-arithmetic": "^4.1.4",
     "@types/node": "^20",
     "@types/otp-generator": "^4.0.2",

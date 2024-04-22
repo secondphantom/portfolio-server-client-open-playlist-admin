@@ -82,7 +82,7 @@ export class NoticeService {
         code: 200,
         message: "Empty",
         data: {
-          sessions: [],
+          notices: [],
           pagination,
         },
       });
