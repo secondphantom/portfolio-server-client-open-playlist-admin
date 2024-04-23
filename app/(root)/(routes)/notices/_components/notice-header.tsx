@@ -1,4 +1,4 @@
-import { CategoryHeaderOrderCombobox } from "./notice-header-order-combobox";
+import { NoticeHeaderOrderCombobox } from "./notice-header-order-combobox";
 import { NoticeIdSearchBar } from "./notice-id-search-bar";
 import { NoticeAdminIdSearchBar } from "./notice-adminId-search-bar";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ export const NoticeHeader: React.FC<{}> = () => {
   return (
     <div className="flex items-end w-full flex-row space-x-2 flex-wrap">
       <div className="flex items-center">
-        <CategoryHeaderOrderCombobox />
+        <NoticeHeaderOrderCombobox />
       </div>
       <div className="flex space-x-2">
         <NoticeIdSearchBar />

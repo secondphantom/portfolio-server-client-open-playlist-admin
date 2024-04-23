@@ -94,6 +94,7 @@ export const Sidebar = ({ className }: Props) => {
           href="/account"
           icon={<WrenchIcon className="w-5 h-5 mr-2" />}
         >
+          <SidebarItem label="Profile" href="/account/profile" />
           <SidebarItem label="Sessions" href="/account/sessions" />
         </SidebarItem>
       </div>

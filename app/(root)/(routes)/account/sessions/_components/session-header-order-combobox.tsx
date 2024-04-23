@@ -33,7 +33,7 @@ const orders = [
 ];
 
 const DEFAULT_ORDER = "recent";
-export const NoticeHeaderOrderCombobox: React.FC<Props> = () => {
+export const SessionHeaderOrderCombobox: React.FC<Props> = () => {
   const router = useSafeRouter(useRouter);
   const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
@@ -47,7 +47,7 @@ export const NoticeHeaderOrderCombobox: React.FC<Props> = () => {
       newSearchParams.delete("order");
     }
 
-    router.safePush(`/notices?${newSearchParams.toString()}`);
+    router.safePush(`/account/sessions?${newSearchParams.toString()}`);
   }, [value]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
