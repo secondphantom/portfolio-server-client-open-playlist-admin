@@ -71,7 +71,7 @@ export class AuthRequestValidator implements IAuthRequestValidator {
 
   private requestAuthSignOut = z
     .object({
-      sessionId: z.string().length(36),
+      sessionKey: z.string().length(36),
     })
     .strict();
 

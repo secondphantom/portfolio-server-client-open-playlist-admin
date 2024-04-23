@@ -11,7 +11,12 @@ export class Utils implements IUtils {
   };
 
   generateOtp = () => {
-    const otpCode = otpGenerator.generate(6, { specialChars: false });
+    const otpCode = otpGenerator.generate(6, {
+      digits: true,
+      specialChars: false,
+      lowerCaseAlphabets: false,
+      upperCaseAlphabets: false,
+    });
 
     return otpCode;
   };
