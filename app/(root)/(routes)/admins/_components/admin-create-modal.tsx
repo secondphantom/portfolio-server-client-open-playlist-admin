@@ -6,13 +6,13 @@ import { Modal } from "@/components/ui/modal";
 type Props = {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  completeChapter: () => Promise<void>;
+  complete: () => Promise<void>;
 };
 
 export const AdminCreateModal: React.FC<Props> = ({
   isOpen,
   setIsOpen,
-  completeChapter,
+  complete,
 }) => {
   return (
     <Modal
@@ -25,7 +25,7 @@ export const AdminCreateModal: React.FC<Props> = ({
         <Button
           variant={"ghost"}
           onClick={async () => {
-            await completeChapter();
+            await complete();
             setIsOpen(false);
           }}
         >

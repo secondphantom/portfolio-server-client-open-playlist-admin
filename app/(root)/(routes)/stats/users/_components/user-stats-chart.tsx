@@ -53,6 +53,7 @@ const UserStatsChart: React.FC<Props> = ({
           <ToggleGroupItem value="wau">WAU</ToggleGroupItem>
           <ToggleGroupItem value="dau">DAU</ToggleGroupItem>
         </ToggleGroup>
+
         <LineChart
           width={500}
           height={300}
