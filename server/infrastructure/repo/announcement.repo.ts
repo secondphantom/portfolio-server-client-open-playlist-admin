@@ -1,19 +1,19 @@
 import * as schema from "../../schema/schema";
 import {
-  NoticeEntitySelect,
-  INoticeRepo,
-  QueryNoticeListDto,
-  NoticeEntityInsert,
-} from "@/server/application/interfaces/notice.repo";
+  AnnouncementEntitySelect,
+  IAnnouncementRepo,
+  QueryAnnouncementListDto,
+  AnnouncementEntityInsert,
+} from "@/server/application/interfaces/announcement.repo";
 import { Db, DrizzleClient } from "../db/drizzle.client";
 import { asc, desc, eq } from "drizzle-orm";
 import { AdminEntitySelect } from "@/server/domain/admin.domain";
 
-export class NoticeRepo implements INoticeRepo {
-  static instance: NoticeRepo | undefined;
+export class AnnouncementRepo implements IAnnouncementRepo {
+  static instance: AnnouncementRepo | undefined;
   static getInstance = (drizzleClient: DrizzleClient) => {
     if (this.instance) return this.instance;
-    this.instance = new NoticeRepo(drizzleClient);
+    this.instance = new AnnouncementRepo(drizzleClient);
     return this.instance;
   };
 
@@ -23,8 +23,8 @@ export class NoticeRepo implements INoticeRepo {
     this.db = drizzleClient.getDb();
   }
 
-  create = async (dto: NoticeEntityInsert) => {
-    await this.db.insert(schema.notices).values(dto);
+  create = async (dto: AnnouncementEntityInsert) => {
+    await this.db.insert(schema.announcements).values(dto);
   };
 
   getListByQuery = async ({
@@ -33,7 +33,7 @@ export class NoticeRepo implements INoticeRepo {
     id,
     pageSize,
     adminId,
-  }: QueryNoticeListDto) => {
+  }: QueryAnnouncementListDto) => {
     const orderBy = ((order: string) => {
       switch (order) {
         case "recent":
@@ -44,7 +44,7 @@ export class NoticeRepo implements INoticeRepo {
           return [];
       }
     })(order);
-    const notices = await this.db.query.notices.findMany({
+    const announcements = await this.db.query.announcements.findMany({
       where: (value, { eq, and }) => {
         return and(
           ...[
@@ -66,39 +66,39 @@ export class NoticeRepo implements INoticeRepo {
       },
     });
 
-    return notices;
+    return announcements;
   };
 
-  getById = async <T extends keyof NoticeEntitySelect>(
+  getById = async <T extends keyof AnnouncementEntitySelect>(
     id: number,
     columns?:
       | {
           [key in T]?: boolean;
         }
-      | { [key in keyof NoticeEntitySelect]?: boolean }
+      | { [key in keyof AnnouncementEntitySelect]?: boolean }
   ) => {
-    const notice = this.db.query.notices.findFirst({
+    const announcement = this.db.query.announcements.findFirst({
       where: (value, { eq }) => {
         return eq(value.id, id);
       },
       columns: columns
-        ? (columns as { [key in keyof NoticeEntitySelect]: boolean })
+        ? (columns as { [key in keyof AnnouncementEntitySelect]: boolean })
         : undefined,
     });
-    return notice;
+    return announcement;
   };
 
   getByIdWith = async <
-    T extends keyof NoticeEntitySelect,
+    T extends keyof AnnouncementEntitySelect,
     W1 extends keyof AdminEntitySelect
   >(
     id: number,
     columns?: {
-      notice?:
+      announcement?:
         | {
             [key in T]?: boolean;
           }
-        | { [key in keyof NoticeEntitySelect]?: boolean };
+        | { [key in keyof AnnouncementEntitySelect]?: boolean };
       admin?:
         | {
             [key in W1]?: boolean;
@@ -106,11 +106,11 @@ export class NoticeRepo implements INoticeRepo {
         | { [key in keyof AdminEntitySelect]?: boolean };
     }
   ) => {
-    const notice = this.db.query.notices.findFirst({
+    const announcement = this.db.query.announcements.findFirst({
       where: (value, { eq }) => {
         return eq(value.id, id);
       },
-      columns: columns?.notice,
+      columns: columns?.announcement,
       with: {
         admin: columns?.admin
           ? {
@@ -120,17 +120,19 @@ export class NoticeRepo implements INoticeRepo {
       },
     });
 
-    return notice as any;
+    return announcement as any;
   };
 
-  updateById = async (id: number, value: Partial<NoticeEntitySelect>) => {
+  updateById = async (id: number, value: Partial<AnnouncementEntitySelect>) => {
     await this.db
-      .update(schema.notices)
+      .update(schema.announcements)
       .set(value)
-      .where(eq(schema.notices.id, id));
+      .where(eq(schema.announcements.id, id));
   };
 
   deleteById = async (id: number) => {
-    await this.db.delete(schema.notices).where(eq(schema.notices.id, id));
+    await this.db
+      .delete(schema.announcements)
+      .where(eq(schema.announcements.id, id));
   };
 }

@@ -35,7 +35,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export const NoticeCreateCard: React.FC = () => {
+export const AnnouncementCreateCard: React.FC = () => {
   const router = useSafeRouter(useRouter);
   const setLoading = useLoadingModalStore((state) => state.setLoading);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -68,10 +68,10 @@ export const NoticeCreateCard: React.FC = () => {
       setIsLoading(true);
 
       const data = (await axios
-        .post(`/api/notices`, body)
+        .post(`/api/announcements`, body)
         .then((res) => res.data)) as { success: boolean; message: string };
       if (data.success) {
-        router.push("/notices");
+        router.push("/announcements");
       }
     } catch (error: any) {
       let message = "Something went wrong";

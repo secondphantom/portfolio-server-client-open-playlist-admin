@@ -4,21 +4,23 @@ import { cookies } from "next/headers";
 import { ResponseBody } from "@/types/response.type";
 import { redirect } from "next/navigation";
 import { PageBreadcrumb } from "@/components/page-breadcrumb";
-import NoticeTable from "./_components/notice-table";
+import AnnouncementTable from "./_components/announcement-table";
 
-import { NoticeHeader } from "./_components/notice-header";
+import { AnnouncementHeader } from "./_components/announcement-header";
 import { ResponseCategoryGetListByQuery } from "@/server/spec/category/category.responses";
-import { ResponseNoticeGetListByQuery } from "@/server/spec/notice/notice.responses";
+import { ResponseAnnouncementGetListByQuery } from "@/server/spec/announcement/announcement.responses";
 
 export const metadata: Metadata = {
-  title: "Notices",
+  title: "Announcements",
 };
 
 const getPageData = async (searchParams: any) => {
   const urlSearchParams = new URLSearchParams(searchParams);
 
-  const noticeListData = await fetch(
-    `${process.env.API_SERVER_HOST}/api/notices?${urlSearchParams.toString()}`,
+  const announcementListData = await fetch(
+    `${
+      process.env.API_SERVER_HOST
+    }/api/announcements?${urlSearchParams.toString()}`,
     {
       method: "GET",
       headers: {
@@ -29,16 +31,16 @@ const getPageData = async (searchParams: any) => {
     .then(async (res) => {
       if (res.status >= 300) throw new Error();
       const body = await res.json();
-      return body as ResponseBody<ResponseNoticeGetListByQuery>;
+      return body as ResponseBody<ResponseAnnouncementGetListByQuery>;
     })
     .catch(() => ({ success: false, data: undefined }));
-  return { noticeListData };
+  return { announcementListData };
 };
 
 const Page = async ({ searchParams }: { searchParams: any }) => {
-  const { noticeListData } = await getPageData(searchParams as any);
+  const { announcementListData } = await getPageData(searchParams as any);
 
-  if (!noticeListData.data) {
+  if (!announcementListData.data) {
     redirect("/");
   }
 
@@ -50,15 +52,18 @@ const Page = async ({ searchParams }: { searchParams: any }) => {
     <div className="space-y-2">
       <div className="pl-2 pb-2">
         <PageBreadcrumb
-          breadcrumbs={[{ label: "Home", href: "/" }, { label: "Notices" }]}
+          breadcrumbs={[
+            { label: "Home", href: "/" },
+            { label: "Announcements" },
+          ]}
         />
       </div>
       <div className="pb-2 flex w-full justify-end">
-        <NoticeHeader />
+        <AnnouncementHeader />
       </div>
-      <NoticeTable
+      <AnnouncementTable
         searchParams={searchParams}
-        noticeListData={noticeListData.data}
+        announcementListData={announcementListData.data}
       />
     </div>
   );

@@ -25,20 +25,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ListPagination } from "@/components/list-pagination";
-import { ResponseNoticeGetListByQuery } from "@/server/spec/notice/notice.responses";
+import { ResponseAnnouncementGetListByQuery } from "@/server/spec/announcement/announcement.responses";
 import { Badge } from "@/components/ui/badge";
 
-const NoticeTable = ({
-  noticeListData,
+const AnnouncementTable = ({
+  announcementListData,
   searchParams,
 }: {
-  noticeListData: ResponseNoticeGetListByQuery;
+  announcementListData: ResponseAnnouncementGetListByQuery;
   searchParams: any;
 }) => {
   return (
     <Card>
       <CardHeader className="flex">
-        <CardTitle>Notices</CardTitle>
+        <CardTitle>Announcements</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
@@ -56,7 +56,7 @@ const NoticeTable = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {noticeListData.notices.map(
+            {announcementListData.announcements.map(
               ({ id, adminId, title, isDisplayedOn, createdAt, updatedAt }) => {
                 return (
                   <TableRow key={id}>
@@ -75,7 +75,7 @@ const NoticeTable = ({
                         <DropdownMenuContent align="start">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuItem asChild>
-                            <Link href={`/notices/${id}`}>Edit</Link>
+                            <Link href={`/announcements/${id}`}>Edit</Link>
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -108,15 +108,16 @@ const NoticeTable = ({
       <CardFooter>
         <div className="flex flex-col mx-auto space-y-2">
           <div className="text-xs text-muted-foreground mx-auto">
-            Showing <strong>{noticeListData.notices.length}</strong> of notices
+            Showing <strong>{announcementListData.announcements.length}</strong>{" "}
+            of announcements
           </div>
           <ListPagination
-            pagination={noticeListData.pagination}
+            pagination={announcementListData.pagination}
             searchParams={searchParams}
-            routePath="/notices"
+            routePath="/announcements"
             renderNextPage={
-              noticeListData.notices.length ===
-              noticeListData.pagination.pageSize
+              announcementListData.announcements.length ===
+              announcementListData.pagination.pageSize
             }
           />
         </div>
@@ -125,4 +126,4 @@ const NoticeTable = ({
   );
 };
 
-export default NoticeTable;
+export default AnnouncementTable;

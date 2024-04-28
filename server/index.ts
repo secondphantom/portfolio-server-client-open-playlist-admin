@@ -44,10 +44,10 @@ import { ChannelRepo } from "./infrastructure/repo/channel.repo";
 import { ChannelRequestValidator } from "./infrastructure/validator/channel.request.validator";
 import { ChannelService } from "./application/service/channel.service";
 import { ChannelController } from "./controller/channel/channel.controller";
-import { NoticeRepo } from "./infrastructure/repo/notice.repo";
-import { NoticeRequestValidator } from "./infrastructure/validator/notice.request.validator";
-import { NoticeService } from "./application/service/notice.service";
-import { NoticeController } from "./controller/notice/notice.controller";
+import { AnnouncementRepo } from "./infrastructure/repo/announcement.repo";
+import { AnnouncementRequestValidator } from "./infrastructure/validator/announcement.request.validator";
+import { AnnouncementService } from "./application/service/announcement.service";
+import { AnnouncementController } from "./controller/announcement/announcement.controller";
 import { RoleRepo } from "./infrastructure/repo/role.repo";
 import { RoleRequestValidator } from "./infrastructure/validator/role.request.validator";
 import { RoleService } from "./application/service/role.service";
@@ -77,7 +77,7 @@ export class RouterIndex {
   userCreditController: UserCreditController;
   courseController: CourseController;
   channelController: ChannelController;
-  noticeController: NoticeController;
+  announcementController: AnnouncementController;
   roleController: RoleController;
   categoryController: CategoryController;
 
@@ -102,7 +102,7 @@ export class RouterIndex {
     const userCreditRepo = UserCreditRepo.getInstance(this.dbClient);
     const courseRepo = CourseRepo.getInstance(this.dbClient);
     const channelRepo = ChannelRepo.getInstance(this.dbClient);
-    const noticeRepo = NoticeRepo.getInstance(this.dbClient);
+    const announcementRepo = AnnouncementRepo.getInstance(this.dbClient);
     const roleRepo = RoleRepo.getInstance(this.dbClient);
     const categoryRepo = CategoryRepo.getInstance(this.dbClient);
 
@@ -115,7 +115,8 @@ export class RouterIndex {
     const userCreditRequestValidator = UserCreditRequestValidator.getInstance();
     const courseRequestValidator = CourseRequestValidator.getInstance();
     const channelRequestValidator = ChannelRequestValidator.getInstance();
-    const noticeRequestValidator = NoticeRequestValidator.getInstance();
+    const announcementRequestValidator =
+      AnnouncementRequestValidator.getInstance();
     const roleRequestValidator = RoleRequestValidator.getInstance();
     const categoryRequestValidator = CategoryRequestValidator.getInstance();
 
@@ -153,8 +154,8 @@ export class RouterIndex {
     const channelService = ChannelService.getInstance({
       channelRepo,
     });
-    const noticeService = NoticeService.getInstance({
-      noticeRepo,
+    const announcementService = AnnouncementService.getInstance({
+      announcementRepo,
     });
     const roleService = RoleService.getInstance({
       roleRepo,
@@ -199,9 +200,9 @@ export class RouterIndex {
       channelRequestValidator,
       channelService,
     });
-    this.noticeController = NoticeController.getInstance({
-      noticeRequestValidator,
-      noticeService,
+    this.announcementController = AnnouncementController.getInstance({
+      announcementRequestValidator,
+      announcementService,
     });
     this.roleController = RoleController.getInstance({
       roleRequestValidator,

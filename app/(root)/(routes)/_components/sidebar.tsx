@@ -55,8 +55,8 @@ export const Sidebar = ({ className }: Props) => {
           <SidebarItem label="User" href="/stats/users" />
         </SidebarItem>
         <SidebarItem
-          label="Notice"
-          href="/notices"
+          label="Announcement"
+          href="/announcements"
           icon={<MegaphoneIcon className="w-5 h-5 mr-2" />}
         />
         <SidebarItem

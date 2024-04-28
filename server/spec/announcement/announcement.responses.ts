@@ -1,5 +1,5 @@
-export type ResponseNoticeGetListByQuery = {
-  notices: {
+export type ResponseAnnouncementGetListByQuery = {
+  announcements: {
     id: number;
     adminId: number;
     title: string;
@@ -20,7 +20,7 @@ export type ResponseNoticeGetListByQuery = {
   };
 };
 
-export type ResponseNoticeGetById = {
+export type ResponseAnnouncementGetById = {
   id: number;
   adminId: number;
   title: string;

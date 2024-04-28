@@ -13,12 +13,12 @@ const formSchema = z.object({
   id: z.string(),
 });
 
-export const NoticeIdSearchBar = () => {
+export const AnnouncementIdSearchBar = () => {
   const router = useSafeRouter(useRouter);
 
   const onSubmit = async (input: string) => {
     if (input === "") {
-      router.safePush("/notices");
+      router.safePush("/announcements");
       return;
     }
     try {
@@ -27,7 +27,7 @@ export const NoticeIdSearchBar = () => {
       });
       const newSearchParams = new URLSearchParams();
       newSearchParams.set("id", validInput.id);
-      router.safePush(`/notices?${newSearchParams.toString()}`);
+      router.safePush(`/announcements?${newSearchParams.toString()}`);
     } catch (error: any) {
       console.log(error);
       let message = "Something wrong";

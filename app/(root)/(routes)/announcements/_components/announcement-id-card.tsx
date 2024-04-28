@@ -23,7 +23,7 @@ import toast from "react-hot-toast";
 import { useSafeRouter } from "@/hooks/use-safe-router";
 import { useRouter } from "next-nprogress-bar";
 import { Modal } from "@/components/ui/modal";
-import { ResponseNoticeGetById } from "@/server/spec/notice/notice.responses";
+import { ResponseAnnouncementGetById } from "@/server/spec/announcement/announcement.responses";
 import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
@@ -38,11 +38,11 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 type Props = {
-  noticeData: ResponseNoticeGetById;
+  announcementData: ResponseAnnouncementGetById;
 };
 
-export const NoticeIdCard: React.FC<Props> = ({
-  noticeData: {
+export const AnnouncementIdCard: React.FC<Props> = ({
+  announcementData: {
     id,
     adminId,
     title,
@@ -88,7 +88,7 @@ export const NoticeIdCard: React.FC<Props> = ({
       setIsLoading(true);
 
       const data = (await axios
-        .patch(`/api/notices/${id}`, body)
+        .patch(`/api/announcements/${id}`, body)
         .then((res) => res.data)) as { success: boolean; message: string };
       if (data.success) {
         router.refresh();
@@ -111,10 +111,10 @@ export const NoticeIdCard: React.FC<Props> = ({
     try {
       setIsLoading(true);
       const data = (await axios
-        .delete(`/api/notices/${id}`)
+        .delete(`/api/announcements/${id}`)
         .then((res) => res.data)) as { success: boolean; message: string };
       if (data.success) {
-        router.push("/notices");
+        router.push("/announcements");
       }
     } catch (error: any) {
       let message = "Something went wrong";

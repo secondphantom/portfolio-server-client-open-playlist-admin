@@ -1,40 +1,43 @@
-import { NoticeService } from "@/server/application/service/notice.service";
-import { INoticeRequestValidator } from "./notice.interface";
+import { AnnouncementService } from "@/server/application/service/announcement.service";
+import { IAnnouncementRequestValidator } from "./announcement.interface";
 import { ControllerResponse } from "@/server/dto/response";
 import { errorResolver } from "@/server/dto/error.resolver";
 import {
-  RequestNoticeCreate,
-  RequestNoticeDeleteById,
-  RequestNoticeGetById,
-  RequestNoticeGetListByQuery,
-  RequestNoticeUpdateById,
-} from "@/server/spec/notice/notice.requests";
+  RequestAnnouncementCreate,
+  RequestAnnouncementDeleteById,
+  RequestAnnouncementGetById,
+  RequestAnnouncementGetListByQuery,
+  RequestAnnouncementUpdateById,
+} from "@/server/spec/announcement/announcement.requests";
 
 type ControllerInputs = {
-  noticeService: NoticeService;
-  noticeRequestValidator: INoticeRequestValidator;
+  announcementService: AnnouncementService;
+  announcementRequestValidator: IAnnouncementRequestValidator;
 };
 
-export class NoticeController {
-  static instance: NoticeController | undefined;
+export class AnnouncementController {
+  static instance: AnnouncementController | undefined;
   static getInstance = (inputs: ControllerInputs) => {
     if (this.instance) return this.instance;
-    this.instance = new NoticeController(inputs);
+    this.instance = new AnnouncementController(inputs);
     return this.instance;
   };
 
-  private noticeRequestValidator: INoticeRequestValidator;
-  private noticeService: NoticeService;
+  private announcementRequestValidator: IAnnouncementRequestValidator;
+  private announcementService: AnnouncementService;
 
-  constructor({ noticeRequestValidator, noticeService }: ControllerInputs) {
-    this.noticeRequestValidator = noticeRequestValidator;
-    this.noticeService = noticeService;
+  constructor({
+    announcementRequestValidator,
+    announcementService,
+  }: ControllerInputs) {
+    this.announcementRequestValidator = announcementRequestValidator;
+    this.announcementService = announcementService;
   }
 
-  createNotice = async (req: RequestNoticeCreate) => {
+  createAnnouncement = async (req: RequestAnnouncementCreate) => {
     try {
-      const dto = this.noticeRequestValidator.createNotice(req);
-      await this.noticeService.createNotice(dto);
+      const dto = this.announcementRequestValidator.createAnnouncement(req);
+      await this.announcementService.createAnnouncement(dto);
 
       return new ControllerResponse({
         code: 200,
@@ -56,10 +59,15 @@ export class NoticeController {
     }
   };
 
-  getNoticeListByQuery = async (req: RequestNoticeGetListByQuery) => {
+  getAnnouncementListByQuery = async (
+    req: RequestAnnouncementGetListByQuery
+  ) => {
     try {
-      const dto = this.noticeRequestValidator.getNoticeListByQuery(req);
-      const data = await this.noticeService.getNoticeListByQuery(dto);
+      const dto =
+        this.announcementRequestValidator.getAnnouncementListByQuery(req);
+      const data = await this.announcementService.getAnnouncementListByQuery(
+        dto
+      );
 
       return new ControllerResponse({
         code: 200,
@@ -81,10 +89,10 @@ export class NoticeController {
     }
   };
 
-  getNoticeById = async (req: RequestNoticeGetById) => {
+  getAnnouncementById = async (req: RequestAnnouncementGetById) => {
     try {
-      const dto = this.noticeRequestValidator.getNoticeById(req);
-      const data = await this.noticeService.getNoticeById(dto);
+      const dto = this.announcementRequestValidator.getAnnouncementById(req);
+      const data = await this.announcementService.getAnnouncementById(dto);
 
       return new ControllerResponse({
         code: 200,
@@ -106,10 +114,10 @@ export class NoticeController {
     }
   };
 
-  updateNoticeById = async (req: RequestNoticeUpdateById) => {
+  updateAnnouncementById = async (req: RequestAnnouncementUpdateById) => {
     try {
-      const dto = this.noticeRequestValidator.updateNoticeById(req);
-      await this.noticeService.updateNoticeById(dto);
+      const dto = this.announcementRequestValidator.updateAnnouncementById(req);
+      await this.announcementService.updateAnnouncementById(dto);
 
       return new ControllerResponse({
         code: 200,
@@ -131,10 +139,10 @@ export class NoticeController {
     }
   };
 
-  deleteNoticeById = async (req: RequestNoticeDeleteById) => {
+  deleteAnnouncementById = async (req: RequestAnnouncementDeleteById) => {
     try {
-      const dto = this.noticeRequestValidator.deleteNoticeById(req);
-      await this.noticeService.deleteNoticeById(dto);
+      const dto = this.announcementRequestValidator.deleteAnnouncementById(req);
+      await this.announcementService.deleteAnnouncementById(dto);
 
       return new ControllerResponse({
         code: 200,

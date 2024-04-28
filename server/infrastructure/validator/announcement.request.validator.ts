@@ -1,33 +1,35 @@
 import z from "zod";
 
-import { INoticeRequestValidator } from "@/server/controller/notice/notice.interface";
+import { IAnnouncementRequestValidator } from "@/server/controller/announcement/announcement.interface";
 import {
-  ServiceNoticeCreateDto,
-  ServiceNoticeGetListByQueryDto,
-  ServiceNoticeGetByIdDto,
-  ServiceNoticeUpdateByIdDto,
-} from "@/server/application/service/notice.service";
+  ServiceAnnouncementCreateDto,
+  ServiceAnnouncementGetListByQueryDto,
+  ServiceAnnouncementGetByIdDto,
+  ServiceAnnouncementUpdateByIdDto,
+} from "@/server/application/service/announcement.service";
 import {
-  RequestNoticeCreate,
-  RequestNoticeGetListByQuery,
-  RequestNoticeGetById,
-  RequestNoticeUpdateById,
-  RequestNoticeDeleteById,
-} from "@/server/spec/notice/notice.requests";
+  RequestAnnouncementCreate,
+  RequestAnnouncementGetListByQuery,
+  RequestAnnouncementGetById,
+  RequestAnnouncementUpdateById,
+  RequestAnnouncementDeleteById,
+} from "@/server/spec/announcement/announcement.requests";
 import { zodDateTransform, zodIntTransform } from "./lib/zod.util";
 import { ServerError } from "@/server/dto/error";
 
-export class NoticeRequestValidator implements INoticeRequestValidator {
-  static instance: NoticeRequestValidator | undefined;
+export class AnnouncementRequestValidator
+  implements IAnnouncementRequestValidator
+{
+  static instance: AnnouncementRequestValidator | undefined;
   static getInstance = () => {
     if (this.instance) return this.instance;
-    this.instance = new NoticeRequestValidator();
+    this.instance = new AnnouncementRequestValidator();
     return this.instance;
   };
 
   constructor() {}
 
-  private requestNoticeCreate = z
+  private requestAnnouncementCreate = z
     .object({
       auth: z
         .object({
@@ -46,9 +48,9 @@ export class NoticeRequestValidator implements INoticeRequestValidator {
     })
     .strict();
 
-  createNotice = (req: RequestNoticeCreate) => {
+  createAnnouncement = (req: RequestAnnouncementCreate) => {
     try {
-      const dto = this.requestNoticeCreate.parse(req);
+      const dto = this.requestAnnouncementCreate.parse(req);
       return {
         ...dto.content,
         ...dto.auth,
@@ -61,7 +63,7 @@ export class NoticeRequestValidator implements INoticeRequestValidator {
     }
   };
 
-  private requestNoticeGetListByQuery = z
+  private requestAnnouncementGetListByQuery = z
     .object({
       order: z.union([z.literal("recent"), z.literal("old")]).optional(),
       page: zodIntTransform.optional(),
@@ -69,9 +71,9 @@ export class NoticeRequestValidator implements INoticeRequestValidator {
       adminId: zodIntTransform.optional(),
     })
     .strict();
-  getNoticeListByQuery = (req: RequestNoticeGetListByQuery) => {
+  getAnnouncementListByQuery = (req: RequestAnnouncementGetListByQuery) => {
     try {
-      const dto = this.requestNoticeGetListByQuery.parse(req);
+      const dto = this.requestAnnouncementGetListByQuery.parse(req);
       return dto;
     } catch (error) {
       throw new ServerError({
@@ -81,14 +83,14 @@ export class NoticeRequestValidator implements INoticeRequestValidator {
     }
   };
 
-  private requestNoticeGetById = z
+  private requestAnnouncementGetById = z
     .object({
       id: zodIntTransform,
     })
     .strict();
-  getNoticeById = (req: RequestNoticeGetById) => {
+  getAnnouncementById = (req: RequestAnnouncementGetById) => {
     try {
-      const dto = this.requestNoticeGetById.parse(req);
+      const dto = this.requestAnnouncementGetById.parse(req);
       return dto;
     } catch (error) {
       throw new ServerError({
@@ -98,7 +100,7 @@ export class NoticeRequestValidator implements INoticeRequestValidator {
     }
   };
 
-  private requestNoticeUpdateById = z
+  private requestAnnouncementUpdateById = z
     .object({
       id: zodIntTransform,
       adminId: z.number().optional(),
@@ -109,9 +111,9 @@ export class NoticeRequestValidator implements INoticeRequestValidator {
       displayEndDate: zodDateTransform.optional(),
     })
     .strict();
-  updateNoticeById = (req: RequestNoticeUpdateById) => {
+  updateAnnouncementById = (req: RequestAnnouncementUpdateById) => {
     try {
-      const dto = this.requestNoticeUpdateById.parse(req);
+      const dto = this.requestAnnouncementUpdateById.parse(req);
       return dto;
     } catch (error) {
       throw new ServerError({
@@ -121,14 +123,14 @@ export class NoticeRequestValidator implements INoticeRequestValidator {
     }
   };
 
-  private requestNoticeDeleteById = z
+  private requestAnnouncementDeleteById = z
     .object({
       id: zodIntTransform,
     })
     .strict();
-  deleteNoticeById = (req: RequestNoticeDeleteById) => {
+  deleteAnnouncementById = (req: RequestAnnouncementDeleteById) => {
     try {
-      const dto = this.requestNoticeDeleteById.parse(req);
+      const dto = this.requestAnnouncementDeleteById.parse(req);
       return dto;
     } catch (error) {
       throw new ServerError({

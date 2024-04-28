@@ -1,9 +1,9 @@
 import { PageBreadcrumb } from "@/components/page-breadcrumb";
 import { Metadata } from "next";
-import { NoticeCreateCard } from "../_components/notice-new-card";
+import { AnnouncementCreateCard } from "../_components/announcement-new-card";
 
 export const metadata: Metadata = {
-  title: "Notice",
+  title: "Announcement",
 };
 
 const Page = async ({ params }: { params: any }) => {
@@ -13,13 +13,13 @@ const Page = async ({ params }: { params: any }) => {
         <PageBreadcrumb
           breadcrumbs={[
             { label: "Home", href: "/" },
-            { label: "Notices", href: "/notices" },
+            { label: "Announcements", href: "/announcements" },
             { label: "New" },
           ]}
         />
       </div>
       <div className="grid grid-cols-1">
-        <NoticeCreateCard />
+        <AnnouncementCreateCard />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-export type RequestNoticeCreate = {
+export type RequestAnnouncementCreate = {
   auth: {
     adminId: number;
   };
@@ -11,18 +11,18 @@ export type RequestNoticeCreate = {
   };
 };
 
-export type RequestNoticeGetListByQuery = {
+export type RequestAnnouncementGetListByQuery = {
   order?: "recent" | "old";
   page?: string;
   id?: string;
   adminId?: string;
 };
 
-export type RequestNoticeGetById = {
+export type RequestAnnouncementGetById = {
   id: string;
 };
 
-export type RequestNoticeUpdateById = {
+export type RequestAnnouncementUpdateById = {
   id: string;
   adminId?: number;
   title?: string;
@@ -32,6 +32,6 @@ export type RequestNoticeUpdateById = {
   displayEndDate?: string;
 };
 
-export type RequestNoticeDeleteById = {
+export type RequestAnnouncementDeleteById = {
   id: string;
 };
