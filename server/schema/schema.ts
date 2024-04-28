@@ -422,10 +422,10 @@ export const userCredits = pgTable("UserCredits", {
     .default(0),
   freeCredits: integer("free_credits").notNull().default(0),
   purchasedCredits: integer("purchased_credits").notNull().default(0),
-  freeCreditUpdatedAt: timestamp("free_credit_received_at")
+  freeCreditUpdatedAt: timestamp("free_credit_updated_at")
     .notNull()
     .default(sql`now()`),
-  purchasedCreditUpdatedAt: timestamp("purchased_credit_received_at")
+  purchasedCreditUpdatedAt: timestamp("purchased_credit_updated_at")
     .notNull()
     .default(sql`now()`),
   createdAt: timestamp("created_at")
