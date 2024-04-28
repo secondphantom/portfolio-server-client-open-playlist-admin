@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useSafeRouter } from "@/hooks/use-safe-router";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 import { Modal } from "@/components/ui/modal";
 
 export const ProfileCard: React.FC<{}> = ({}) => {

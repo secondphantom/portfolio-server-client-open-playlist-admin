@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { PlusCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 

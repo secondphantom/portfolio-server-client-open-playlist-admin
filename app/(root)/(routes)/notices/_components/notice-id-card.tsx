@@ -21,7 +21,7 @@ import { cn, delay, getLocalDateTimeInputValue } from "@/lib/utils";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useSafeRouter } from "@/hooks/use-safe-router";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 import { Modal } from "@/components/ui/modal";
 import { ResponseNoticeGetById } from "@/server/spec/notice/notice.responses";
 import { Textarea } from "@/components/ui/textarea";

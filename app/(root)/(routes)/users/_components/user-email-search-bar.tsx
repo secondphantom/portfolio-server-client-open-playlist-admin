@@ -1,6 +1,6 @@
 "use client";
 import z from "zod";
-import { useRouter } from "nextjs13-progress";
+import { useRouter } from "next-nprogress-bar";
 import { SearchIcon } from "lucide-react";
 import toast from "react-hot-toast";
 

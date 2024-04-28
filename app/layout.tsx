@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { LoadingProgressbar } from "@/components/loading-progressbar";
 import { ToastProvider } from "@/components/providers/toast-provider";
 import { ModalProvider } from "@/components/providers/modal-provider";
 import { Toaster } from "@/components/ui/toaster";
+import ProgressBarProviders from "@/components/providers/progress-bar-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,11 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <LoadingProgressbar />
         <ToastProvider />
         <ModalProvider />
         <Toaster />
-        {children}
+        <ProgressBarProviders>{children}</ProgressBarProviders>
       </body>
     </html>
   );

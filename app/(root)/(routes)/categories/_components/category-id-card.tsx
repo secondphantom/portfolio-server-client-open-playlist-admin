@@ -20,7 +20,7 @@ import { delay, getLocalDateTimeInputValue } from "@/lib/utils";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useSafeRouter } from "@/hooks/use-safe-router";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 import { Modal } from "@/components/ui/modal";
 import { ResponseRoleGetById } from "@/server/spec/role/role.responses";
 import { ResponseCategoryGetById } from "@/server/spec/category/category.responses";

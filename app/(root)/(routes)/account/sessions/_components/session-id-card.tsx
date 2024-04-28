@@ -15,7 +15,7 @@ import { cn, getLocalDateTimeInputValue } from "@/lib/utils";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useSafeRouter } from "@/hooks/use-safe-router";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 import { Modal } from "@/components/ui/modal";
 import { ResponseSessionsGetById } from "@/server/spec/session/session.responses";
 import { Label } from "@/components/ui/label";

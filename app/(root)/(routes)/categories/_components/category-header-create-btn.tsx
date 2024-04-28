@@ -3,7 +3,7 @@
 import * as z from "zod";
 import axios from "axios";
 import { PlusCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
