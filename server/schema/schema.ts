@@ -453,6 +453,7 @@ export const announcements = pgTable(
     id: bigint("id", { mode: "number" }).notNull().primaryKey().default(0),
     adminId: bigint("admin_id", { mode: "number" }).notNull(),
     title: varchar("title", { length: 200 }).notNull(),
+    titleTsvector: tsvector("title_tsvector").default(""),
     content: varchar("content", { length: 10000 }).notNull(),
     isDisplayedOn: boolean("is_displayed_on").default(false).notNull(),
     displayStartDate: timestamp("display_start_date")
