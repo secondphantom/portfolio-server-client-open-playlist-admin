@@ -46,7 +46,7 @@ export interface IAnnouncementRepo {
     }
   ) => Promise<
     | (Pick<AnnouncementEntitySelect, T> & {
-        credit: Pick<AdminEntitySelect, W1>;
+        admin: Pick<AdminEntitySelect, W1>;
       })
     | undefined
   >;

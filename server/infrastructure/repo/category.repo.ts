@@ -69,7 +69,7 @@ export class CategoryRepo implements ICategoryRepo {
         }
       | { [key in keyof CategoryEntitySelect]?: boolean }
   ) => {
-    const category = this.db.query.categories.findFirst({
+    const category = await this.db.query.categories.findFirst({
       where: (value, { eq }) => {
         return eq(value.id, id);
       },

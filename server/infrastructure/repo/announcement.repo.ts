@@ -77,7 +77,7 @@ export class AnnouncementRepo implements IAnnouncementRepo {
         }
       | { [key in keyof AnnouncementEntitySelect]?: boolean }
   ) => {
-    const announcement = this.db.query.announcements.findFirst({
+    const announcement = await this.db.query.announcements.findFirst({
       where: (value, { eq }) => {
         return eq(value.id, id);
       },
@@ -106,7 +106,7 @@ export class AnnouncementRepo implements IAnnouncementRepo {
         | { [key in keyof AdminEntitySelect]?: boolean };
     }
   ) => {
-    const announcement = this.db.query.announcements.findFirst({
+    const announcement = await this.db.query.announcements.findFirst({
       where: (value, { eq }) => {
         return eq(value.id, id);
       },

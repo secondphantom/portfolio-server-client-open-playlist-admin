@@ -57,7 +57,7 @@ export class RoleRepo implements IRoleRepo {
         }
       | { [key in keyof RoleEntitySelect]?: boolean }
   ) => {
-    const role = this.db.query.roles.findFirst({
+    const role = await this.db.query.roles.findFirst({
       where: (value, { eq }) => {
         return eq(value.id, id);
       },

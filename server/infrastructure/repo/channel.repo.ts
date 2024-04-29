@@ -61,7 +61,7 @@ export class ChannelRepo implements IChannelRepo {
         }
       | { [key in keyof ChannelEntitySelect]?: boolean }
   ) => {
-    const channel = this.db.query.channels.findFirst({
+    const channel = await this.db.query.channels.findFirst({
       where: (value, { eq }) => {
         return eq(value.channelId, channelId);
       },

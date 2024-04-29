@@ -73,7 +73,7 @@ export class CourseRepo implements ICourseRepo {
         }
       | { [key in keyof CourseEntitySelect]?: boolean }
   ) => {
-    const course = this.db.query.courses.findFirst({
+    const course = await this.db.query.courses.findFirst({
       where: (value, { eq }) => {
         return eq(value.id, id);
       },
@@ -102,7 +102,7 @@ export class CourseRepo implements ICourseRepo {
         | { [key in keyof ChannelEntitySelect]?: boolean };
     }
   ) => {
-    const course = this.db.query.courses.findFirst({
+    const course = await this.db.query.courses.findFirst({
       where: (value, { eq }) => {
         return eq(value.id, id);
       },

@@ -55,7 +55,7 @@ export class UserRepo implements IUserRepo {
         }
       | { [key in keyof UserEntitySelect]?: boolean }
   ) => {
-    const user = this.db.query.users.findFirst({
+    const user = await this.db.query.users.findFirst({
       where: (value, { eq }) => {
         return eq(value.id, id);
       },
@@ -84,7 +84,7 @@ export class UserRepo implements IUserRepo {
         | { [key in keyof UserCreditEntitySelect]?: boolean };
     }
   ) => {
-    const user = this.db.query.users.findFirst({
+    const user = await this.db.query.users.findFirst({
       where: (value, { eq }) => {
         return eq(value.id, id);
       },
