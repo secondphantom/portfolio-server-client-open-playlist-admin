@@ -1,0 +1,71 @@
+---
+title: "History-admin"
+dateCreated: "2024-03-31"
+dateModified: "2024-04-23"
+---
+## server
+- `20240331`
+	- feat: add auth sign-in service and infra
+	- feat: add auth sign-in api
+	- feat: add auth verify otp service and infra
+	- feat: add auth verify otp api
+	- feat: add sign out api
+- `20240401`
+	- feat: add health service and test
+	- feat: add auth verify session api
+	- feat: add health api
+	- feat: add session service and test
+	- feat: add session api
+	- fix: exposing session key by changing schema
+	- fix: session api
+- `20240402`
+	- feat: add admin service and test
+	- feat: add admin ap
+- `20240404`
+	- feat: adding seeding script enroll and user
+	- feat: adding user stats service and test
+- `20240406`
+	- feat: user, user credit service and test
+	- feat: add user, user credit api
+- `20240407`
+	- refactor: renaming user repo methods
+- `20240408`
+	- feat: add courser service and test
+	- feat: adding course api
+	- feat: adding channels service and test
+	- feat: adding channel api
+	- feat: adding notice service and test
+	- feat: adding notice apis
+	- feat: adding notcie delete service and api
+- `20240409`
+	- feat: adding role service and test
+	- feat: adding role apis
+	- feat: adding category service and test
+	- feat: adding category apis
+	- feat: add admin property when getting notices
+- `20240410`
+	- feat: adding admins's response spec
+	- feat: add updating admin api
+## client
+- `20240409`
+	- feat: adding sign-in page
+- `20240410`
+	- feat: add home sidebar
+	- feat: adding sign-in page
+	- feat: adding healths list page
+	- feat: adding amdin list page 
+- `20240411`
+	- feat: adding admin edit page
+- `20240412`
+	- feat: adding user and user id page
+- `20240420`
+	- feat: adding course and course id page
+	- feat: adding channels and channel id page
+	- feat: adding roles and role id page
+	- feat: adding category and id pages
+- `20240422`
+	- feat: add notice pages
+- `20240423`
+	- feat: adding create user stats btn
+	- feat: adding account session pages
+	- feat: adding profile page

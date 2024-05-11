@@ -150,6 +150,7 @@ export const enrolls = pgTable(
   {
     userId: bigint("user_id", { mode: "number" }).notNull(),
     courseId: bigint("course_id", { mode: "number" }).notNull(),
+    videoId: varchar("video_id", { length: 50 }).notNull(),
     version: integer("version").notNull(),
     chapterProgress: jsonb("chapter_progress")
       .notNull()
@@ -169,6 +170,10 @@ export const enrolls = pgTable(
     return {
       pk: primaryKey({ columns: [table.userId, table.courseId] }),
       idxCourseId: index("idx_course_id").on(table.courseId),
+      idxUserIdVideoId: index("idx_user_id_video_id").on(
+        table.userId,
+        table.videoId
+      ),
       idxUserIdCreatedAt: index("idx_user_id_created_at").on(
         table.userId,
         table.createdAt // desc
@@ -312,6 +317,7 @@ export const admins = pgTable(
 
 export const adminsRelation = relations(admins, ({ many }) => {
   return {
+    sessions: many(sessions),
     announcements: many(announcements),
   };
 });
@@ -345,12 +351,6 @@ export const sessions = pgTable(
     };
   }
 );
-
-export const adminRelation = relations(admins, ({ many }) => {
-  return {
-    sessions: many(sessions),
-  };
-});
 
 export const sessionRelation = relations(sessions, ({ one }) => {
   return {
@@ -411,15 +411,13 @@ export const userStats = pgTable(
   (table) => {
     return {
       pk: primaryKey({ columns: [table.version, table.eventAt] }),
+      idxCreatedAt: index("idx_user_stats_created_at").on(table.createdAt), // DESC
     };
   }
 );
 
 export const userCredits = pgTable("UserCredits", {
-  userId: bigint("user_id", { mode: "number" })
-    .notNull()
-    .primaryKey()
-    .default(0),
+  userId: bigint("user_id", { mode: "number" }).notNull().primaryKey(),
   freeCredits: integer("free_credits").notNull().default(0),
   purchasedCredits: integer("purchased_credits").notNull().default(0),
   freeCreditUpdatedAt: timestamp("free_credit_updated_at")

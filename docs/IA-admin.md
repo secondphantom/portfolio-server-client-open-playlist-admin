@@ -1,0 +1,132 @@
+---
+title: "IA-admin"
+dateCreated: "2024-04-09"
+dateModified: "2024-04-09"
+---
+## Admin
+- /dashboard
+	- view
+		- tab
+			- dashboard
+			- health
+			- users
+			- courses
+			- channels
+			- categorys
+			- roles
+		- dashboard
+			- users
+				- active user
+				- total register
+			- total channels
+			- total courses
+			- health
+				- database
+				- external
+-  /health
+	- view
+		- /stats
+			- database
+				- get course
+				- get channel
+				- get user
+			- external
+				- youtube api
+- /sessions
+	- view
+		- list
+			- ip
+			- device
+			- current session
+- /sessions/:id
+	- view
+		- ip, device, current session
+		- logout
+- /admins
+	- view
+		- create
+		- list
+			- id
+			- email
+			- profileName
+			- profileImage
+			- role
+			- delete
+- /users
+	- view
+		- tab
+			- /stats
+				- total
+				- mau
+				- dau
+				- cumulative month, day
+			- /list
+				- id
+				- role
+				- order
+					- recent
+				- edit
+- /users/:id
+	- view
+		- edit
+- /courses 
+	- view
+		- tab
+			- /stats
+				- total
+				- cumulative month, day
+				- by category
+			- /list
+				- query
+					- id
+					- title
+					- category
+					- channelId
+					- createdAt
+					- ganerated_ai
+					- edit
+- /courses/:id
+	- view
+		- edit
+- /channels
+	- view 
+		- tab
+			- /stats
+				- total
+				- cumulative month, day
+			- /list
+				- query
+					- channelId
+					- createdAt
+- /categorys
+	- view
+		- tab
+			- /list
+				- edit, create, delete
+				- query
+					- name
+- /roles
+	- view
+		- tab
+			- /list
+				- create, edit, delete
+- /email
+	- view
+		- tab
+			- /send
+				- from
+				- to
+				- message
+			- /recieve
+				- from
+				- to
+				- message
+
+- /notifications
+	- view
+		- /list
+			- title, description, createdAt, updatedAt
+		- /create
+			- title, description, mark down viewer
+		- /:id
+			- edit

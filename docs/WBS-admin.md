@@ -1,0 +1,403 @@
+---
+title: "WBS-admin"
+dateCreated: "2024-04-09"
+dateModified: "2024-04-12"
+---
+## Server
+- [ ] /auth
+	- [x] sign in
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] otp generator
+			- [x] repo admin get by email
+			- [x] repo update otp and otp expiration date
+		- [x] schema
+			- [x] admins table
+				- id
+				- email
+				- role_id
+				- otp
+				- otp_expiration_at
+				- profile_name
+				- profile_image
+				- created_at
+				- updated_at
+	- [x] verify otp
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo create session 
+		- [x] schema
+			- [x] session table
+				- id
+				- admin_id
+				- created_at
+				- updated_at
+				- data
+					- ip
+					- device
+	- [x] verify session
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo get seesion with admin
+	- [x] sign out
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo delete session
+- [x] /health
+	- [x] create health
+		- [x] service
+			- [x] apis
+			- [ ] external apis
+		- [x] controller
+		- [x] infra
+			- [x] repo health create
+		- [x] schema
+			- id
+			- version
+			- data
+			- createdAt
+	- [x] get health list
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo health get list
+	- [x] get health by id
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo health get
+- [x] /sessions
+	- [x] get list by query
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo session
+			- [x] repo session get list
+	- [x] get session
+		- [x] service
+		- [x] controller
+	- [x] delete 
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo session delete by id
+- [x] /admins
+	- [x] create admin users
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] admin user repo
+			- [x] admin repo create
+
+	- [x] get admin user list by query
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] admin repo get list query
+	- [x] get admin by id
+	- [x] delete user by id
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] session repo delete by user id
+			- [x] amdin user repo delete by user id
+- [x] /users/stats
+	- [x] create stats by version and event at
+		- [x] service
+			- [x] create total, mau, dau, wau
+		- [x] controller
+		- [x] infra
+			- [x] repo create user stats 
+			- [x] repo user get total user by period
+			- [x] repo enroll get active user by period
+		- [x] shcmea
+			- [x] user stats
+				- version | pk
+				- event at | pk
+				- data
+					- total
+					- mau
+					- dau
+					- wau
+				- createdAt index desc
+				- updatedAt
+	- [x] get stats by version and event at
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo get user stats
+	- [x] get stat list by query
+		- [x] serivce
+		- [x] controller
+		- [x] infra
+			- [x] repo get user stats by query
+				- startDate , endDate
+				- version
+- [x] /users/:id/credits
+	- [x] UserCredits schema
+		- user_id
+		- free_credits
+		- purchased_credits
+		- free_credit_received_at
+		- updated_at
+		- created_at
+	- [x] change credits
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] credit repo
+				- [x] update
+- [x] /users?
+	- [x] update user by id
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo user update user
+	- [x] get user list by query
+		- [x] service
+		- [x] controller
+		- [x] infa
+			- [x] repo user get list
+	- [x] get user by id
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo user get by id with credit
+- [ ] /users/:id/enrolls
+- [ ] /courses/stats
+	- [ ] create stats
+		- [ ] service
+		- [ ] controller
+		- [ ] infra
+			- [ ] create daily 
+			- [ ] repo course
+	- [ ] get stats
+		- [ ] service
+		- [ ] controller
+- [x] /courses?
+	- [x] get list by query
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo course get list
+	- [x] get course by id
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo courser get by id
+	- [x] update course by id
+		- [x] service
+		- [x] contorller
+		- [x] infra
+			- [x] repo course update
+- [x]  /channels?
+	- [x] get list by query
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo channel
+			- [x] repo get channel list
+	- [x] get channel by id
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo channel get by id
+	- [x] update channel by id
+		- [x] service
+		- [x] controller
+			- [x] repo update channel
+- [x] /announcements
+	- [x] get list
+		- [x] servcie
+		- [x] controller
+		- [x] schema
+			- [x] create announcements table
+				- id
+				- admin_id
+				- title
+				- description
+				- config
+				- created_at
+				- updated_at
+		- [x] infra
+			- [x] repo get list announcements
+	- [x] create
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] notification repo create 
+	- [x] update
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] notification repo update 
+	- [x] delete
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] notification repo delete
+- [x] /roles?
+	- [x] get list
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo get role list
+	- [x] create
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo create role
+	- [x] update
+		- [x] service
+		- [x] controller
+			- [x] repo update role
+- [x] /category?
+	- [x] get list
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo get list query
+	- [x] create
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo category create
+	- [x] update
+		- [x] service
+		- [x] controller
+		- [x] infra
+			- [x] repo update category
+- [ ] /email
+	- [ ] sending email
+		- [ ] service
+		- [ ] controller
+		- [ ] infra
+			- [ ] email sender
+		- [ ] schema
+			- [ ] AdminEmails
+				- from
+				- to
+				- status
+	- [ ] recevied email
+		- [ ] service
+		- [ ] controller
+		- [ ] infra
+			- [ ] get emmail list by google api
+
+## Client
+
+- [ ] layout
+	- [x] sidebar
+		- dashboard
+		- health
+		- stats
+			- user
+		- notice
+		- admin
+		- user
+		- course
+		- channel
+		- role
+		- category
+		- account
+			- sessions
+	- [ ] main
+- [x] /auth
+	- [x] /sign-in
+		- email
+		- verify otp code
+		- resend email
+- [x] /health
+	- [x] /
+		- [x] health list
+			- [x] order, page, version
+		- [x] create
+	- [x] /:id
+		- [x] health by id
+- [x] /stats
+	- [x] /users
+		- [x] query
+			- version, startDate, end Date
+		- [x] graph
+			- total, mau, dau, wau
+		- [x] create
+			- [x]  version, eventAt
+	- [ ] /users/:id
+		- [ ] total, amu, dau, wau
+- [x] /notice
+	- [x] /
+		- [x] notice list
+			- [x] query
+				- order, page,email
+			- [x] table
+	- [x] /create
+		- [x] edit / preview
+	- [x] /:id
+		- [x] edit / preview
+- [x] /admin
+	- [x] /
+		- [x] amdin list
+			- [x] query
+				- page, order, roleId, email
+			- [x] table
+		- [x] create modal
+	- [x] /:id
+		- [x] edit / update / delete
+- [x] /user
+	- [x] /
+		- [x] user list
+			- [x] query
+				- order, page, roleId, email
+			- [x] table
+	- [x] /:id
+		- [x] edit / update
+		- [x] crdit update
+- [x] /course
+	- [x] /
+		- [x] course list
+			- [x] query
+				- order, page, id, videoId, channelId
+			- [x] table
+	- [x] /:id
+		- [x] edit / update
+- [x] /channel
+	- [x] /
+		- [x] channel list
+			- [x] query
+				- order, page, channelId
+			- [x] table
+	- [x] /:id
+		- [x] edit / update
+- [x] /role
+	- [x] /
+		- [x] role list
+			- [x] query
+				- order ,page ,id
+		- [x] table
+	- [x] /create
+	- [x] /:id
+		- [x] edit /update /delete
+- [x] /category
+	- [x] /
+		- [x] category list
+			- [x] query
+				- oder, page, id, parentId
+			- [x] table
+	- [x] /create
+	- [x] /:id
+		- [x] edit / update / delete
+- [x] /account
+	- [x] /profile
+		- [x] sign-out
+	- [x] /sessions
+		- [x] /
+			- [x] session list
+				- [x] query
+					- page, order
+				- [x] table
+		- [x] /:id
+			- [x] delete
