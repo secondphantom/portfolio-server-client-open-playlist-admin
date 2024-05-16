@@ -492,3 +492,57 @@ export const announcementRelation = relations(announcements, ({ one }) => {
     }),
   };
 });
+
+export const databaseBackupSchedules = pgTable(
+  "DatabaseBackupSchedules",
+  {
+    id: bigint("id", { mode: "number" }).notNull().primaryKey().default(0),
+    title: varchar("title", { length: 100 }).notNull(),
+    interval: integer("interval").notNull(),
+    startAt: timestamp("start_at").notNull(),
+    type: varchar("type", { length: 100 }).notNull(),
+    isActive: boolean("is_active").notNull().default(false),
+    isLocked: boolean("is_locked").notNull().default(false),
+    createdAt: timestamp("created_at")
+      .default(sql`now()`)
+      .notNull(),
+    updatedAt: timestamp("updated_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => {
+    return {
+      idxIsActive: index("idx_database_backup_schedules_is_active").on(
+        table.isLocked
+      ),
+      idxIsLocked: index("idx_database_backup_schedules_is_locked").on(
+        table.isLocked
+      ),
+      idxCreatedAt: index("idx_database_backup_schedules_created_at").on(
+        table.createdAt
+      ),
+    };
+  }
+);
+
+export const databaseBackupJobs = pgTable(
+  "DatabaseBackupJobs",
+  {
+    id: bigint("id", { mode: "number" }).notNull().primaryKey().default(0),
+    uuid: varchar("uuid", { length: 50 }).notNull(),
+    title: varchar("title", { length: 100 }).notNull(),
+    status: varchar("status", { length: 100 }).notNull(),
+    createdAt: timestamp("created_at")
+      .default(sql`now()`)
+      .notNull(),
+  },
+  (table) => {
+    return {
+      uqUuid: uniqueIndex("idx_database_backup_jobs_uuid").on(table.uuid),
+      idxStatus: index("idx_database_backup_jobs_status").on(table.status),
+      idxCreatedAt: index("idx_database_backup_jobs_created_at").on(
+        table.createdAt
+      ),
+    };
+  }
+);
