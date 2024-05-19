@@ -535,6 +535,9 @@ export const databaseBackupJobs = pgTable(
     createdAt: timestamp("created_at")
       .default(sql`now()`)
       .notNull(),
+    updatedAt: timestamp("updated_at")
+      .default(sql`now()`)
+      .notNull(),
   },
   (table) => {
     return {
