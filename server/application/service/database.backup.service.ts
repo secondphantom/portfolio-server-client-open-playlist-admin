@@ -9,6 +9,7 @@ import {
 import { IUtils } from "../interfaces/utils";
 import { DatabaseBackupServiceUtil } from "./database.backup.service.util";
 import { ENV } from "@/server/env";
+import { IDiscordUtil } from "../interfaces/discord.util";
 
 export type ServiceDatabaseBackupScheduleCreateDto = {
   title: string;

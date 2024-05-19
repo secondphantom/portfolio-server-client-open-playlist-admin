@@ -5,4 +5,5 @@ export type ENV = {
   YOUTUBE_DATA_API_KEY: string;
   DATABASE_BACKUP_FOLDER_PATH: string;
   DOMAIN_URL: string;
+  DISCORD_WEBHOOK_URL: string;
 };

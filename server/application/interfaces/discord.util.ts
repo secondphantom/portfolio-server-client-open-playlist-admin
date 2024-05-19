@@ -1,6 +1,8 @@
-interface IDiscordUtil {
+export type DiscordNotifyLevel = "error" | "info" | "warn";
+
+export interface IDiscordUtil {
   notify: (
     content: { title: string; description?: string },
-    options?: { level?: "error" | "info" }
+    options?: { level?: DiscordNotifyLevel }
   ) => Promise<void>;
 }

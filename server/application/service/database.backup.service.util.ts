@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
 import { exec, execSync } from "child_process";
-import { ICronJob } from "../interfaces/cron.jobs";
 import {
   DatabaseBackupJobsEntityInsert,
   IDatabaseBackupJobRepo,
@@ -9,6 +8,7 @@ import { IDatabaseBackupScheduleRepo } from "../interfaces/database.backup.sched
 import { IUtils } from "../interfaces/utils";
 import path from "path";
 import { ENV } from "@/server/env";
+import { IDiscordUtil } from "../interfaces/discord.util";
 
 type ServiceConstructorInputs = {
   databaseBackupScheduleRepo: IDatabaseBackupScheduleRepo;
