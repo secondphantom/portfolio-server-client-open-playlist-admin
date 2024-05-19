@@ -1,6 +1,6 @@
 import { ServerError } from "@/server/dto/error";
 import { IDatabaseBackupScheduleRepo } from "../interfaces/database.backup.schedule.repo";
-import { ICronJobs } from "../interfaces/cron.jobs";
+import { ICronJob } from "../interfaces/cron.jobs";
 import {
   DatabaseBackupJobsEntityInsert,
   IDatabaseBackupJobRepo,
@@ -50,7 +50,7 @@ type ServiceConstructorInputs = {
   databaseBackupScheduleRepo: IDatabaseBackupScheduleRepo;
   databaseBackupJobRepo: IDatabaseBackupJobRepo;
   discordUtil: IDiscordUtil;
-  cronJobs: ICronJobs;
+  cronJobs: ICronJob;
   utils: IUtils;
   env: ENV;
 };
@@ -63,8 +63,10 @@ export class DatabaseBackupService {
     return this.instance;
   };
 
+  private CRON_JOB_ID_PREFIX = "database-backup-";
+
   private databaseBackupScheduleRepo: IDatabaseBackupScheduleRepo;
-  private cronJobs: ICronJobs;
+  private cronJobs: ICronJob;
   private databaseBackupJobRepo: IDatabaseBackupJobRepo;
   private serviceUtil: DatabaseBackupServiceUtil;
 
@@ -187,10 +189,10 @@ export class DatabaseBackupService {
       ...dto,
     };
 
-    await this.cronJobs.deleteById(newSchedule.id);
+    this.cronJobs.deleteById(this.CRON_JOB_ID_PREFIX + newSchedule.id);
     if (newSchedule.isActive) {
-      await this.cronJobs.register(
-        dto.id,
+      this.cronJobs.register(
+        this.CRON_JOB_ID_PREFIX + dto.id,
         () => this.serviceUtil.backup(newSchedule.id),
         {
           interval: newSchedule.interval,

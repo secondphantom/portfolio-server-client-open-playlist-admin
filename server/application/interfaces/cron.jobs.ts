@@ -1,12 +1,12 @@
-export interface ICronJobs {
+export interface ICronJob {
   register: (
-    id: number,
-    fn: (...args: any[]) => Promise<any>,
+    id: string,
+    fn: (...args: any[]) => any,
     options: {
       interval: number;
-      startAt: Date;
+      startAt?: Date;
     }
-  ) => Promise<void>;
-  deleteById: (id: number) => Promise<void>;
-  getById: (id: number) => Promise<any>;
+  ) => void;
+  deleteById: (id: string) => void;
+  getById: (id: string) => any;
 }

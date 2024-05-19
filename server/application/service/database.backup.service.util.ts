@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { exec, execSync } from "child_process";
-import { ICronJobs } from "../interfaces/cron.jobs";
+import { ICronJob } from "../interfaces/cron.jobs";
 import {
   DatabaseBackupJobsEntityInsert,
   IDatabaseBackupJobRepo,
