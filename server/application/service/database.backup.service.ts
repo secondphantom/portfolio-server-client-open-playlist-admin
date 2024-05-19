@@ -2,7 +2,7 @@ import { ServerError } from "@/server/dto/error";
 import { IDatabaseBackupScheduleRepo } from "../interfaces/database.backup.schedule.repo";
 import { ICronJobs } from "../interfaces/cron.jobs";
 import {
-  DatabaseBackupJobsInsert,
+  DatabaseBackupJobsEntityInsert,
   IDatabaseBackupJobRepo,
 } from "../interfaces/database.backup.job.repo";
 

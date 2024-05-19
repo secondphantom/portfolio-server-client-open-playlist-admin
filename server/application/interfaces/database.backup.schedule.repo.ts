@@ -1,8 +1,8 @@
 import { databaseBackupSchedules } from "@/server/schema/schema";
 
-export type DatabaseBackupScheduleSelect =
+export type DatabaseBackupScheduleEntitySelect =
   typeof databaseBackupSchedules.$inferSelect;
-export type DatabaseBackupScheduleInsert =
+export type DatabaseBackupScheduleEntityInsert =
   typeof databaseBackupSchedules.$inferInsert;
 
 export type QueryDatabaseBackupScheduleListDto = {
@@ -14,25 +14,25 @@ export type QueryDatabaseBackupScheduleListDto = {
 };
 
 export interface IDatabaseBackupScheduleRepo {
-  create: (dto: DatabaseBackupScheduleInsert) => Promise<void>;
-  getById: <T extends keyof DatabaseBackupScheduleSelect>(
+  create: (dto: DatabaseBackupScheduleEntityInsert) => Promise<void>;
+  getById: <T extends keyof DatabaseBackupScheduleEntitySelect>(
     id: number,
     columns?:
       | {
           [key in T]?: boolean;
         }
-      | { [key in keyof DatabaseBackupScheduleSelect]?: boolean }
-  ) => Promise<Pick<DatabaseBackupScheduleSelect, T> | undefined>;
+      | { [key in keyof DatabaseBackupScheduleEntitySelect]?: boolean }
+  ) => Promise<Pick<DatabaseBackupScheduleEntitySelect, T> | undefined>;
   getListByQuery: (
     query: QueryDatabaseBackupScheduleListDto
-  ) => Promise<DatabaseBackupScheduleSelect[]>;
+  ) => Promise<DatabaseBackupScheduleEntitySelect[]>;
   deleteById: (id: number) => Promise<void>;
   updateById: (
     id: number,
-    value: Partial<DatabaseBackupScheduleSelect>
+    value: Partial<DatabaseBackupScheduleEntitySelect>
   ) => Promise<void>;
   updateByIdWithLock: (
     id: number,
-    value: Partial<DatabaseBackupScheduleSelect>
+    value: Partial<DatabaseBackupScheduleEntitySelect>
   ) => Promise<void>;
 }

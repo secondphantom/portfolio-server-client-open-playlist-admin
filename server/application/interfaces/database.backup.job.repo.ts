@@ -1,7 +1,9 @@
 import { databaseBackupJobs } from "@/server/schema/schema";
 
-export type DatabaseBackupJobsSelect = typeof databaseBackupJobs.$inferSelect;
-export type DatabaseBackupJobsInsert = typeof databaseBackupJobs.$inferInsert;
+export type DatabaseBackupJobsEntitySelect =
+  typeof databaseBackupJobs.$inferSelect;
+export type DatabaseBackupJobsEntityInsert =
+  typeof databaseBackupJobs.$inferInsert;
 
 export type QueryDatabaseBackupJobListDto = {
   page: number;
@@ -10,33 +12,33 @@ export type QueryDatabaseBackupJobListDto = {
 };
 
 export interface IDatabaseBackupJobRepo {
-  create: (dto: DatabaseBackupJobsInsert) => Promise<void>;
+  create: (dto: DatabaseBackupJobsEntityInsert) => Promise<void>;
   updateById: (
     id: number,
-    value: Partial<DatabaseBackupJobsSelect>
+    value: Partial<DatabaseBackupJobsEntitySelect>
   ) => Promise<void>;
   updateByUuid: (
     uuid: string,
-    value: Partial<DatabaseBackupJobsSelect>
+    value: Partial<DatabaseBackupJobsEntitySelect>
   ) => Promise<void>;
-  getById: <T extends keyof DatabaseBackupJobsSelect>(
+  getById: <T extends keyof DatabaseBackupJobsEntitySelect>(
     id: number,
     columns?:
       | {
           [key in T]?: boolean;
         }
-      | { [key in keyof DatabaseBackupJobsSelect]?: boolean }
-  ) => Promise<Pick<DatabaseBackupJobsSelect, T> | undefined>;
-  getByUuid: <T extends keyof DatabaseBackupJobsSelect>(
+      | { [key in keyof DatabaseBackupJobsEntitySelect]?: boolean }
+  ) => Promise<Pick<DatabaseBackupJobsEntitySelect, T> | undefined>;
+  getByUuid: <T extends keyof DatabaseBackupJobsEntitySelect>(
     uuid: string,
     columns?:
       | {
           [key in T]?: boolean;
         }
-      | { [key in keyof DatabaseBackupJobsSelect]?: boolean }
-  ) => Promise<Pick<DatabaseBackupJobsSelect, T> | undefined>;
+      | { [key in keyof DatabaseBackupJobsEntitySelect]?: boolean }
+  ) => Promise<Pick<DatabaseBackupJobsEntitySelect, T> | undefined>;
   getListByQuery: (
     query: QueryDatabaseBackupJobListDto
-  ) => Promise<DatabaseBackupJobsSelect[]>;
+  ) => Promise<DatabaseBackupJobsEntitySelect[]>;
   deleteById: (id: number) => Promise<void>;
 }

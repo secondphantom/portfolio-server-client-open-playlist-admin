@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { exec, execSync } from "child_process";
 import { ICronJobs } from "../interfaces/cron.jobs";
 import {
-  DatabaseBackupJobsInsert,
+  DatabaseBackupJobsEntityInsert,
   IDatabaseBackupJobRepo,
 } from "../interfaces/database.backup.job.repo";
 import { IDatabaseBackupScheduleRepo } from "../interfaces/database.backup.schedule.repo";
@@ -93,7 +93,7 @@ export class DatabaseBackupServiceUtil {
       createdAt: now,
       status: "running",
       uuid: uuidv4(),
-    } satisfies DatabaseBackupJobsInsert;
+    } satisfies DatabaseBackupJobsEntityInsert;
 
     return job;
   };
