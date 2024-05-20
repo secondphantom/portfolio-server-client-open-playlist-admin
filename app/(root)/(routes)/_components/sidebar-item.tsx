@@ -38,7 +38,7 @@ export const SidebarItem = (props: Props) => {
         )}
       </Button>
       {children && (isOpen || active) && (
-        <div className="w-full border my-1 rounded-sm">{children}</div>
+        <div className="w-full border p-1 rounded-sm">{children}</div>
       )}
     </div>
   );
