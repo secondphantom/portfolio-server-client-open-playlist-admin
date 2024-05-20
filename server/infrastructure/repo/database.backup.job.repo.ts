@@ -124,7 +124,7 @@ export class DatabaseBackupJobRepo implements IDatabaseBackupJobRepo {
 
   deleteById = async (id: number) => {
     await this.db
-      .delete(schema.databaseBackupSchedules)
-      .where(eq(schema.databaseBackupSchedules.id, id));
+      .delete(schema.databaseBackupJobs)
+      .where(eq(schema.databaseBackupJobs.id, id));
   };
 }

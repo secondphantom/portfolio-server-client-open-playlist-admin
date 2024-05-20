@@ -10,12 +10,17 @@ import path from "path";
 import { ENV } from "@/server/env";
 import { IDiscordUtil } from "../interfaces/discord.util";
 
+type C_ENV = Pick<
+  ENV,
+  "DATABASE_BACKUP_FOLDER_PATH" | "DOMAIN_URL" | "DATABASE_URL"
+>;
+
 type ServiceConstructorInputs = {
   databaseBackupScheduleRepo: IDatabaseBackupScheduleRepo;
   databaseBackupJobRepo: IDatabaseBackupJobRepo;
   discordUtil: IDiscordUtil;
   utils: IUtils;
-  env: ENV;
+  env: C_ENV;
 };
 
 export class DatabaseBackupServiceUtil {
@@ -29,7 +34,7 @@ export class DatabaseBackupServiceUtil {
   private databaseBackupScheduleRepo: IDatabaseBackupScheduleRepo;
   private databaseBackupJobRepo: IDatabaseBackupJobRepo;
   private utils: IUtils;
-  private env: ENV;
+  private env: C_ENV;
   private discordUtil: IDiscordUtil;
 
   constructor({
@@ -46,16 +51,21 @@ export class DatabaseBackupServiceUtil {
     this.discordUtil = discordUtil;
   }
 
-  backup = async (scheduleId: number) => {
-    const schedule = await this.databaseBackupScheduleRepo.getById(scheduleId, {
-      isLocked: true,
-    });
-
-    if (!schedule || schedule.isLocked) {
-      return;
-    }
+  backupDatabase = async (scheduleId: number) => {
     const job = await this.createJob();
     try {
+      const schedule = await this.databaseBackupScheduleRepo.getById(
+        scheduleId,
+        {
+          isLocked: true,
+          isActive: true,
+        }
+      );
+
+      if (!schedule || schedule.isLocked || !schedule.isActive) {
+        return;
+      }
+
       await this.databaseBackupScheduleRepo.updateByIdWithLock(scheduleId, {
         isLocked: true,
       });
@@ -101,10 +111,11 @@ export class DatabaseBackupServiceUtil {
   private dumpToFile = async (job: {
     title: string;
     createdAt: Date;
-    status: string;
     uuid: string;
   }) => {
-    const fileName = `backup_${this.utils.getTimeStamp(job.createdAt)}.tar.gz`;
+    const fileName = `backup_${this.utils.getTimeStamp(job.createdAt)}_${
+      job.uuid
+    }.tar.gz`;
     const filePath = path.join(this.env.DATABASE_BACKUP_FOLDER_PATH, fileName);
 
     await new Promise((resolve, reject) => {

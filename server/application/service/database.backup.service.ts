@@ -48,12 +48,10 @@ export type ServiceDatabaseBackupJobGetByIdDto = {
 };
 
 type ServiceConstructorInputs = {
+  databaseBackupServiceUtil: DatabaseBackupServiceUtil;
   databaseBackupScheduleRepo: IDatabaseBackupScheduleRepo;
   databaseBackupJobRepo: IDatabaseBackupJobRepo;
-  discordUtil: IDiscordUtil;
   cronJobs: ICronJob;
-  utils: IUtils;
-  env: ENV;
 };
 
 export class DatabaseBackupService {
@@ -72,23 +70,15 @@ export class DatabaseBackupService {
   private serviceUtil: DatabaseBackupServiceUtil;
 
   constructor({
+    databaseBackupServiceUtil,
     databaseBackupScheduleRepo,
     databaseBackupJobRepo,
-    discordUtil,
     cronJobs,
-    utils,
-    env,
   }: ServiceConstructorInputs) {
     this.databaseBackupScheduleRepo = databaseBackupScheduleRepo;
     this.databaseBackupJobRepo = databaseBackupJobRepo;
     this.cronJobs = cronJobs;
-    this.serviceUtil = DatabaseBackupServiceUtil.getInstance({
-      databaseBackupJobRepo,
-      databaseBackupScheduleRepo,
-      discordUtil,
-      utils,
-      env,
-    });
+    this.serviceUtil = databaseBackupServiceUtil;
   }
 
   // POST /database/backup/schedules?
@@ -194,7 +184,7 @@ export class DatabaseBackupService {
     if (newSchedule.isActive) {
       this.cronJobs.register(
         this.CRON_JOB_ID_PREFIX + dto.id,
-        () => this.serviceUtil.backup(newSchedule.id),
+        () => this.serviceUtil.backupDatabase(newSchedule.id),
         {
           interval: newSchedule.interval,
           startAt: newSchedule.startAt,
