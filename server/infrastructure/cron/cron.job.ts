@@ -45,7 +45,7 @@ export class CronJob implements ICronJob {
 
   deleteById = (id: string) => {
     if (!this.jobs.get(id)) {
-      throw new Error("Id is not existed");
+      return;
     }
 
     const scheduledTasks = this.jobs.get(id)!;
