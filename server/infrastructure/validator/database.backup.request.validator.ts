@@ -1,14 +1,5 @@
 import z from "zod";
 
-import {
-  ServiceDatabaseBackupScheduleCreateDto,
-  ServiceDatabaseBackupScheduleGetByIdDto,
-  ServiceDatabaseBackupScheduleGetListByQueryDto,
-  ServiceDatabaseBackupScheduleUpdateByIdDto,
-  ServiceDatabaseBackupJobCreateDto,
-  ServiceDatabaseBackupJobGetListByQueryDto,
-  ServiceDatabaseBackupJobGetByIdDto,
-} from "@/server/application/service/database.backup.service";
 import { IDatabaseBackupRequestValidator } from "@/server/controller/databseBackup/database.backup.interface";
 import { ServerError } from "@/server/dto/error";
 import {
@@ -19,6 +10,7 @@ import {
   RequestDatabaseBackupJobCreate,
   RequestDatabaseBackupJobGetListByQuery,
   RequestDatabaseBackupJobGetById,
+  RequestDatabaseBackupScheduleDeleteById,
 } from "@/server/spec/databaseBackup/database.backup.requests";
 import {
   zodBooleanTransform,
@@ -100,7 +92,7 @@ export class DatabaseBackupRequestValidator
 
   private requestDatabaseBackupScheduleUpdateById = z
     .object({
-      id: z.number(),
+      id: zodIntTransform,
       title: z.string().optional(),
       interval: z.number().optional(),
       startAt: zodDateTransform.optional(),
@@ -112,6 +104,24 @@ export class DatabaseBackupRequestValidator
   updateScheduleById = (req: RequestDatabaseBackupScheduleUpdateById) => {
     try {
       const dto = this.requestDatabaseBackupScheduleUpdateById.parse(req);
+      return dto;
+    } catch (error) {
+      throw new ServerError({
+        code: 400,
+        message: "Invalid Input",
+      });
+    }
+  };
+
+  private requestDatabaseBackupScheduleDeleteById = z
+    .object({
+      id: zodIntTransform,
+    })
+    .strict();
+
+  deleteScheduleById = (req: RequestDatabaseBackupScheduleDeleteById) => {
+    try {
+      const dto = this.requestDatabaseBackupScheduleDeleteById.parse(req);
       return dto;
     } catch (error) {
       throw new ServerError({

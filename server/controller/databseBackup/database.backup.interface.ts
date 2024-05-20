@@ -3,6 +3,7 @@ import {
   ServiceDatabaseBackupJobGetByIdDto,
   ServiceDatabaseBackupJobGetListByQueryDto,
   ServiceDatabaseBackupScheduleCreateDto,
+  ServiceDatabaseBackupScheduleDeleteByIdDto,
   ServiceDatabaseBackupScheduleGetByIdDto,
   ServiceDatabaseBackupScheduleGetListByQueryDto,
   ServiceDatabaseBackupScheduleUpdateByIdDto,
@@ -12,6 +13,7 @@ import {
   RequestDatabaseBackupJobGetById,
   RequestDatabaseBackupJobGetListByQuery,
   RequestDatabaseBackupScheduleCreate,
+  RequestDatabaseBackupScheduleDeleteById,
   RequestDatabaseBackupScheduleGetById,
   RequestDatabaseBackupScheduleGetListByQuery,
   RequestDatabaseBackupScheduleUpdateById,
@@ -30,6 +32,9 @@ export interface IDatabaseBackupRequestValidator {
   updateScheduleById: (
     req: RequestDatabaseBackupScheduleUpdateById
   ) => ServiceDatabaseBackupScheduleUpdateByIdDto;
+  deleteScheduleById: (
+    req: RequestDatabaseBackupScheduleDeleteById
+  ) => ServiceDatabaseBackupScheduleDeleteByIdDto;
   createJob: (
     req: RequestDatabaseBackupJobCreate
   ) => ServiceDatabaseBackupJobCreateDto;

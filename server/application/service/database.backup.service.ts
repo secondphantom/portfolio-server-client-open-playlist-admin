@@ -32,6 +32,10 @@ export type ServiceDatabaseBackupScheduleUpdateByIdDto = {
   isLocked?: boolean;
 };
 
+export type ServiceDatabaseBackupScheduleDeleteByIdDto = {
+  id: number;
+};
+
 export type ServiceDatabaseBackupJobGetListByQueryDto = {
   page?: number;
   order?: "recent" | "old";
@@ -196,6 +200,26 @@ export class DatabaseBackupService {
       ...dto,
       id: undefined,
     });
+  };
+
+  //DELETE /database/backup/schedules/:id
+  deleteScheduleById = async (
+    dto: ServiceDatabaseBackupScheduleDeleteByIdDto
+  ) => {
+    const schedule = await this.databaseBackupScheduleRepo.getById(dto.id, {
+      id: true,
+    });
+
+    if (!schedule) {
+      throw new ServerError({
+        code: 404,
+        message: "Not Found",
+      });
+    }
+
+    await this.databaseBackupScheduleRepo.deleteById(schedule.id);
+
+    this.cronJob.deleteById(this.CRON_JOB_ID_PREFIX + schedule.id);
   };
 
   //POST /database/backup/jobs?

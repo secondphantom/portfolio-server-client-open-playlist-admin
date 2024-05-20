@@ -25,6 +25,10 @@ export type RequestDatabaseBackupScheduleUpdateById = {
   isLocked?: boolean;
 };
 
+export type RequestDatabaseBackupScheduleDeleteById = {
+  id: number;
+};
+
 export type RequestDatabaseBackupJobGetListByQuery = {
   page?: number;
   order?: "recent" | "old";

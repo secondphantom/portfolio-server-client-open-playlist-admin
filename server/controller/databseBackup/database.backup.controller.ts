@@ -5,6 +5,7 @@ import {
   RequestDatabaseBackupJobGetById,
   RequestDatabaseBackupJobGetListByQuery,
   RequestDatabaseBackupScheduleCreate,
+  RequestDatabaseBackupScheduleDeleteById,
   RequestDatabaseBackupScheduleGetById,
   RequestDatabaseBackupScheduleGetListByQuery,
   RequestDatabaseBackupScheduleUpdateById,
@@ -124,6 +125,31 @@ export class DatabaseBackupController {
         payload: {
           success: true,
           message: "Success Updated",
+        },
+      });
+    } catch (error) {
+      const { code, message, data } = errorResolver(error);
+      return new ControllerResponse({
+        code,
+        payload: {
+          success: false,
+          message,
+          data,
+        },
+      });
+    }
+  };
+
+  deleteScheduleById = async (req: RequestDatabaseBackupScheduleDeleteById) => {
+    try {
+      const dto = this.databaseBackupRequestValidator.deleteScheduleById(req);
+      await this.databaseBackupService.deleteScheduleById(dto);
+
+      return new ControllerResponse({
+        code: 200,
+        payload: {
+          success: true,
+          message: "Success Deleted",
         },
       });
     } catch (error) {
