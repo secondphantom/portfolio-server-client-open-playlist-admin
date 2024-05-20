@@ -2,7 +2,7 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
-  testMatch: ["<rootDir>/server/tests/**/database.backup.service.util.test.ts"],
+  testMatch: ["<rootDir>/server/tests/**/database.backup.service.test.ts"],
   verbose: true,
   forceExit: true,
   clearMocks: true,

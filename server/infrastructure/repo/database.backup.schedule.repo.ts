@@ -79,14 +79,6 @@ export class DatabaseBackupScheduleRepo implements IDatabaseBackupScheduleRepo {
         orderBy: orderBy,
         offset: (page - 1) * pageSize,
         limit: pageSize,
-        with: {
-          admin: {
-            columns: {
-              id: true,
-              profileName: true,
-            },
-          },
-        },
       });
 
     return databaseBackupSchedules;

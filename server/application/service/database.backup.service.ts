@@ -239,6 +239,7 @@ export class DatabaseBackupService {
       createdAt: true,
       uuid: true,
       status: true,
+      updatedAt: true,
     });
 
     if (!job) {
