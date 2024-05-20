@@ -50,7 +50,7 @@ describe("database backup service", () => {
     databaseBackupJobRepo = DatabaseBackupJobRepo.getInstance(dbClient);
 
     databaseBackupService = DatabaseBackupService.getInstance({
-      cronJobs: CronJob.getInstance(),
+      cronJob: CronJob.getInstance(),
       databaseBackupJobRepo,
       databaseBackupScheduleRepo,
       databaseBackupServiceUtil,

@@ -56,6 +56,14 @@ import { CategoryRepo } from "./infrastructure/repo/category.repo";
 import { CategoryRequestValidator } from "./infrastructure/validator/category.request.validator";
 import { CategoryService } from "./application/service/category.service";
 import { CategoryController } from "./controller/category/category.controller";
+import { DatabaseBackupScheduleRepo } from "./infrastructure/repo/database.backup.schedule.repo";
+import { DatabaseBackupJobRepo } from "./infrastructure/repo/database.backup.job.repo";
+import { DatabaseBackupRequestValidator } from "./infrastructure/validator/database.backup.request.validator";
+import { DatabaseBackupServiceUtil } from "./application/service/database.backup.service.util";
+import { CronJob } from "./infrastructure/cron/cron.job";
+import { DiscordUtil } from "./infrastructure/discord/discord.util";
+import { DatabaseBackupService } from "./application/service/database.backup.service";
+import { DatabaseBackupController } from "./controller/databseBackup/database.backup.controller";
 
 export class RouterIndex {
   static instance: RouterIndex | undefined;
@@ -80,6 +88,7 @@ export class RouterIndex {
   announcementController: AnnouncementController;
   roleController: RoleController;
   categoryController: CategoryController;
+  databaseBackupController: DatabaseBackupController;
 
   constructor() {
     this.env = {
@@ -87,11 +96,16 @@ export class RouterIndex {
       LOG_LEVEL: "dev",
       API_BASE_URL: process.env.API_BASE_URL!,
       YOUTUBE_DATA_API_KEY: process.env.YOUTUBE_DATA_API_KEY!,
+      DATABASE_BACKUP_FOLDER_PATH: process.env.DATABASE_BACKUP_FOLDER_PATH!,
+      DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL!,
+      DOMAIN_URL: process.env.DOMAIN_URL!,
     } satisfies ENV;
     this.dbClient = DrizzleClient.getInstance(this.env);
 
     const emailUtil = EmailUtil.getInstance();
     const utils = Utils.getInstance();
+    const cronJob = CronJob.getInstance();
+    const discordUtil = DiscordUtil.getInstance(this.env);
 
     const adminRepo = AdminRepo.getInstance(this.dbClient);
     const sessionRepo = SessionRepo.getInstance(this.dbClient);
@@ -105,6 +119,12 @@ export class RouterIndex {
     const announcementRepo = AnnouncementRepo.getInstance(this.dbClient);
     const roleRepo = RoleRepo.getInstance(this.dbClient);
     const categoryRepo = CategoryRepo.getInstance(this.dbClient);
+    const databaseBackupScheduleRepo = DatabaseBackupScheduleRepo.getInstance(
+      this.dbClient
+    );
+    const databaseBackupJobRepo = DatabaseBackupJobRepo.getInstance(
+      this.dbClient
+    );
 
     const authRequestValidator = AuthRequestValidator.getInstance();
     const healthRequestValidator = HealthRequestValidator.getInstance();
@@ -119,6 +139,8 @@ export class RouterIndex {
       AnnouncementRequestValidator.getInstance();
     const roleRequestValidator = RoleRequestValidator.getInstance();
     const categoryRequestValidator = CategoryRequestValidator.getInstance();
+    const databaseBackupRequestValidator =
+      DatabaseBackupRequestValidator.getInstance();
 
     const authService = AuthService.getInstance({
       adminRepo,
@@ -162,6 +184,19 @@ export class RouterIndex {
     });
     const categoryService = CategoryService.getInstance({
       categoryRepo,
+    });
+    const databaseBackupServiceUtil = DatabaseBackupServiceUtil.getInstance({
+      databaseBackupJobRepo,
+      databaseBackupScheduleRepo,
+      discordUtil,
+      env: this.env,
+      utils,
+    });
+    const databaseBackupService = DatabaseBackupService.getInstance({
+      cronJob,
+      databaseBackupJobRepo,
+      databaseBackupScheduleRepo,
+      databaseBackupServiceUtil,
     });
 
     this.authController = AuthController.getInstance({
@@ -211,6 +246,10 @@ export class RouterIndex {
     this.categoryController = CategoryController.getInstance({
       categoryRequestValidator,
       categoryService,
+    });
+    this.databaseBackupController = DatabaseBackupController.getInstance({
+      databaseBackupRequestValidator,
+      databaseBackupService,
     });
   }
 

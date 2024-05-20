@@ -23,7 +23,7 @@ export type ServiceDatabaseBackupScheduleGetListByQueryDto = {
   isLocked?: boolean;
 };
 
-export type ServiceDatabaseBackupScheduleUpdateDto = {
+export type ServiceDatabaseBackupScheduleUpdateByIdDto = {
   id: number;
   title?: string;
   interval?: number;
@@ -49,7 +49,7 @@ type ServiceConstructorInputs = {
   databaseBackupServiceUtil: DatabaseBackupServiceUtil;
   databaseBackupScheduleRepo: IDatabaseBackupScheduleRepo;
   databaseBackupJobRepo: IDatabaseBackupJobRepo;
-  cronJobs: ICronJob;
+  cronJob: ICronJob;
 };
 
 export class DatabaseBackupService {
@@ -63,7 +63,7 @@ export class DatabaseBackupService {
   private CRON_JOB_ID_PREFIX = "database-backup-";
 
   private databaseBackupScheduleRepo: IDatabaseBackupScheduleRepo;
-  private cronJobs: ICronJob;
+  private cronJob: ICronJob;
   private databaseBackupJobRepo: IDatabaseBackupJobRepo;
   private serviceUtil: DatabaseBackupServiceUtil;
 
@@ -71,11 +71,11 @@ export class DatabaseBackupService {
     databaseBackupServiceUtil,
     databaseBackupScheduleRepo,
     databaseBackupJobRepo,
-    cronJobs,
+    cronJob,
   }: ServiceConstructorInputs) {
     this.databaseBackupScheduleRepo = databaseBackupScheduleRepo;
     this.databaseBackupJobRepo = databaseBackupJobRepo;
-    this.cronJobs = cronJobs;
+    this.cronJob = cronJob;
     this.serviceUtil = databaseBackupServiceUtil;
   }
 
@@ -146,7 +146,9 @@ export class DatabaseBackupService {
   };
 
   // PATCH /database/backup/schedules/:id
-  updateScheduleById = async (dto: ServiceDatabaseBackupScheduleUpdateDto) => {
+  updateScheduleById = async (
+    dto: ServiceDatabaseBackupScheduleUpdateByIdDto
+  ) => {
     const schedule = await this.databaseBackupScheduleRepo.getById(dto.id, {
       id: true,
       title: true,
@@ -178,9 +180,9 @@ export class DatabaseBackupService {
       ...dto,
     };
 
-    this.cronJobs.deleteById(this.CRON_JOB_ID_PREFIX + newSchedule.id);
+    this.cronJob.deleteById(this.CRON_JOB_ID_PREFIX + newSchedule.id);
     if (newSchedule.isActive) {
-      this.cronJobs.register(
+      this.cronJob.register(
         this.CRON_JOB_ID_PREFIX + dto.id,
         () => this.serviceUtil.backupDatabaseBySchedule(newSchedule.id),
         {
