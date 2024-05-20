@@ -51,14 +51,15 @@ export class DatabaseBackupServiceUtil {
     this.discordUtil = discordUtil;
   }
 
-  backupDatabase = async (scheduleId: number) => {
-    const job = await this.createJob();
+  backupDatabaseBySchedule = async (scheduleId: number) => {
+    let job: undefined | Awaited<ReturnType<typeof this.createJob>>;
     try {
       const schedule = await this.databaseBackupScheduleRepo.getById(
         scheduleId,
         {
           isLocked: true,
           isActive: true,
+          type: true,
         }
       );
 
@@ -66,11 +67,44 @@ export class DatabaseBackupServiceUtil {
         return;
       }
 
+      job = await this.createJob(`${schedule.type}-scheduled`);
+
       await this.databaseBackupScheduleRepo.updateByIdWithLock(scheduleId, {
         isLocked: true,
       });
 
-      await this.databaseBackupJobRepo.create(job);
+      await this.dumpToFile(job);
+      await this.databaseBackupJobRepo.updateByUuid(job.uuid, {
+        status: "success",
+      });
+    } catch (error) {
+      await this.databaseBackupJobRepo.updateByUuid(job!.uuid, {
+        status: "fail",
+      });
+      const currentJob = await this.databaseBackupJobRepo.getByUuid(job!.uuid, {
+        id: true,
+      });
+      await this.discordUtil.notify(
+        {
+          title: `Fail to run backup job_id:${currentJob?.id}`,
+          description: `link: ${this.env.DOMAIN_URL}/database/backup/jobs/${currentJob?.id}`,
+        },
+        { level: "error" }
+      );
+    } finally {
+      await this.databaseBackupScheduleRepo.updateById(scheduleId, {
+        isLocked: false,
+      });
+    }
+  };
+
+  backupDatabase = async (job: {
+    title: string;
+    createdAt: Date;
+    status: string;
+    uuid: string;
+  }) => {
+    try {
       await this.dumpToFile(job);
       await this.databaseBackupJobRepo.updateByUuid(job.uuid, {
         status: "success",
@@ -89,22 +123,18 @@ export class DatabaseBackupServiceUtil {
         },
         { level: "error" }
       );
-    } finally {
-      await this.databaseBackupScheduleRepo.updateById(scheduleId, {
-        isLocked: false,
-      });
     }
   };
 
-  private createJob = async () => {
+  createJob = async (title: string) => {
     const now = new Date();
     const job = {
-      title: `${now}-db-backup`,
+      title,
       createdAt: now,
       status: "running",
       uuid: uuidv4(),
     } satisfies DatabaseBackupJobsEntityInsert;
-
+    await this.databaseBackupJobRepo.create(job);
     return job;
   };
 

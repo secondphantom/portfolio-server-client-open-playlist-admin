@@ -68,7 +68,9 @@ describe("Database Backup Service Util", () => {
 
   describe.skip("backup", () => {
     test("success", async () => {
-      await databaseBackupServiceUtil.backupDatabase(TEST_SCHEDULE.id);
+      await databaseBackupServiceUtil.backupDatabaseBySchedule(
+        TEST_SCHEDULE.id
+      );
     }, 30000);
   });
 });

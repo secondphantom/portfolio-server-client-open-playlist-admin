@@ -1,15 +1,9 @@
 import { ServerError } from "@/server/dto/error";
 import { IDatabaseBackupScheduleRepo } from "../interfaces/database.backup.schedule.repo";
 import { ICronJob } from "../interfaces/cron.jobs";
-import {
-  DatabaseBackupJobsEntityInsert,
-  IDatabaseBackupJobRepo,
-} from "../interfaces/database.backup.job.repo";
+import { IDatabaseBackupJobRepo } from "../interfaces/database.backup.job.repo";
 
-import { IUtils } from "../interfaces/utils";
 import { DatabaseBackupServiceUtil } from "./database.backup.service.util";
-import { ENV } from "@/server/env";
-import { IDiscordUtil } from "../interfaces/discord.util";
 
 export type ServiceDatabaseBackupScheduleCreateDto = {
   title: string;
@@ -45,6 +39,10 @@ export type ServiceDatabaseBackupJobGetListByQueryDto = {
 
 export type ServiceDatabaseBackupJobGetByIdDto = {
   id: number;
+};
+
+export type ServiceDatabaseBackupJobCreateDto = {
+  title?: string;
 };
 
 type ServiceConstructorInputs = {
@@ -184,7 +182,7 @@ export class DatabaseBackupService {
     if (newSchedule.isActive) {
       this.cronJobs.register(
         this.CRON_JOB_ID_PREFIX + dto.id,
-        () => this.serviceUtil.backupDatabase(newSchedule.id),
+        () => this.serviceUtil.backupDatabaseBySchedule(newSchedule.id),
         {
           interval: newSchedule.interval,
           startAt: newSchedule.startAt,
@@ -196,6 +194,14 @@ export class DatabaseBackupService {
       ...dto,
       id: undefined,
     });
+  };
+
+  //POST /database/backup/jobs?
+  createJob = async ({ title }: ServiceDatabaseBackupJobCreateDto) => {
+    const job = await this.serviceUtil.createJob(
+      title ? title : `manual created`
+    );
+    this.serviceUtil.backupDatabase(job);
   };
 
   // GET /database/backup/jobs?
