@@ -94,6 +94,8 @@ export class DatabaseBackupService {
   };
 
   private initSchedule = async () => {
+    console.log("init schedule");
+
     const schedules = await this.databaseBackupScheduleRepo.getAllListByQuery(
       {
         isActive: true,

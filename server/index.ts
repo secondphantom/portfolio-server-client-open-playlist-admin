@@ -69,6 +69,7 @@ export class RouterIndex {
   static instance: RouterIndex | undefined;
   static getInstance = () => {
     if (this.instance) return this.instance;
+    console.log("init server router");
     this.instance = new RouterIndex();
     return this.instance;
   };
