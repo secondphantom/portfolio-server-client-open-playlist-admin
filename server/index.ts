@@ -100,7 +100,6 @@ export class RouterIndex {
       DISCORD_WEBHOOK_URL: process.env.DISCORD_WEBHOOK_URL!,
       DOMAIN_URL: process.env.DOMAIN_URL!,
     } satisfies ENV;
-    // console.log(this.env);
 
     this.dbClient = DrizzleClient.getInstance(this.env);
 

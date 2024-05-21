@@ -110,6 +110,8 @@ export class DatabaseBackupServiceUtil {
         status: "success",
       });
     } catch (error) {
+      console.log(error);
+
       await this.databaseBackupJobRepo.updateByUuid(job.uuid, {
         status: "fail",
       });
@@ -153,35 +155,8 @@ export class DatabaseBackupServiceUtil {
         `pg_dump --dbname=${this.env.DATABASE_URL} --format=tar | gzip > ${filePath}`,
         (error, stdout, stderr) => {
           if (error) {
-            reject({ error: error, stderr: stderr.trimEnd() });
+            reject({ error: JSON.stringify(error), stderr });
             return;
-          }
-
-          // check if archive is valid and contains data
-          const isValidArchive =
-            execSync(`gzip -cd ${filePath} | head -c1`).length == 1
-              ? true
-              : false;
-          if (isValidArchive == false) {
-            reject({
-              error:
-                "Backup archive file is invalid or empty; check for errors above",
-            });
-            return;
-          }
-
-          // not all text in stderr will be a critical error, print the error / warning
-          if (stderr != "") {
-            console.log({ stderr: stderr.trimEnd() });
-          }
-
-          // if stderr contains text, let the user know that it was potently just a warning message
-          if (stderr != "") {
-            console.log(
-              `Potential warnings detected; Please ensure the backup file "${path.basename(
-                filePath
-              )}" contains all needed data`
-            );
           }
 
           resolve(undefined);

@@ -72,7 +72,6 @@ export const UserIdCreditCard: React.FC<Props> = ({
     try {
       const body = { credit: { ...form.getValues() } };
       setIsLoading(true);
-      console.log(body);
 
       const data = (await axios
         .patch(`/api/users/${id}/credits`, body)
