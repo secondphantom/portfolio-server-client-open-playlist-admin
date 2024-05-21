@@ -239,4 +239,29 @@ export class DatabaseBackupController {
       });
     }
   };
+
+  deleteJobById = async (req: RequestDatabaseBackupJobDeleteById) => {
+    try {
+      const dto = this.databaseBackupRequestValidator.deleteJobById(req);
+      await this.databaseBackupService.deleteJobById(dto);
+
+      return new ControllerResponse({
+        code: 200,
+        payload: {
+          success: true,
+          message: "Success Deleted",
+        },
+      });
+    } catch (error) {
+      const { code, message, data } = errorResolver(error);
+      return new ControllerResponse({
+        code,
+        payload: {
+          success: false,
+          message,
+          data,
+        },
+      });
+    }
+  };
 }

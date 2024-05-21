@@ -11,6 +11,7 @@ import {
   RequestDatabaseBackupJobGetListByQuery,
   RequestDatabaseBackupJobGetById,
   RequestDatabaseBackupScheduleDeleteById,
+  RequestDatabaseBackupJobDeleteById,
 } from "@/server/spec/databaseBackup/database.backup.requests";
 import {
   zodBooleanTransform,
@@ -178,6 +179,24 @@ export class DatabaseBackupRequestValidator
   getJobById = (req: RequestDatabaseBackupJobGetById) => {
     try {
       const dto = this.requestDatabaseBackupJobGetById.parse(req);
+      return dto;
+    } catch (error) {
+      throw new ServerError({
+        code: 400,
+        message: "Invalid Input",
+      });
+    }
+  };
+
+  private requestDatabaseBackupJobDeleteById = z
+    .object({
+      id: zodIntTransform,
+    })
+    .strict();
+
+  deleteJobById = (req: RequestDatabaseBackupJobDeleteById) => {
+    try {
+      const dto = this.requestDatabaseBackupJobDeleteById.parse(req);
       return dto;
     } catch (error) {
       throw new ServerError({

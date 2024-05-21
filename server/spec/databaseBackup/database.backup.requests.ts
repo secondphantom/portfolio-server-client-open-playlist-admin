@@ -42,3 +42,7 @@ export type RequestDatabaseBackupJobGetById = {
 export type RequestDatabaseBackupJobCreate = {
   title?: string;
 };
+
+export type RequestDatabaseBackupJobDeleteById = {
+  id: number;
+};

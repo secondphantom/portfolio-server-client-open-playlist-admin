@@ -50,6 +50,10 @@ export type ServiceDatabaseBackupJobCreateDto = {
   title?: string;
 };
 
+export type ServiceDatabaseBackupJobDeleteByIdDto = {
+  id: number;
+};
+
 type ServiceConstructorInputs = {
   databaseBackupServiceUtil: DatabaseBackupServiceUtil;
   databaseBackupScheduleRepo: IDatabaseBackupScheduleRepo;
@@ -283,5 +287,21 @@ export class DatabaseBackupService {
     }
 
     return job;
+  };
+
+  //DELETE /cron/database-backup/jobs/:id
+  deleteJobById = async (dto: ServiceDatabaseBackupJobDeleteByIdDto) => {
+    const job = await this.databaseBackupJobRepo.getById(dto.id, {
+      id: true,
+    });
+
+    if (!job) {
+      throw new ServerError({
+        code: 404,
+        message: "Not Found",
+      });
+    }
+
+    await this.databaseBackupJobRepo.deleteById(job.id);
   };
 }
