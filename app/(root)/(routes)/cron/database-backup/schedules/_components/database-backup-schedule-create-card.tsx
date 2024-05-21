@@ -58,17 +58,20 @@ export const DatabaseBackupScheduleCreateCard: React.FC = () => {
     let interval = 0;
 
     switch (intervalType) {
+      case "hour":
+        interval = 60 * 60;
+        break;
       case "day":
-        interval = 24 * 60;
+        interval = 24 * 60 * 60;
         break;
       case "week":
-        interval = 24 * 60 * 7;
+        interval = 24 * 60 * 60 * 7;
         break;
       case "month":
-        interval = 24 * 60 * 7 * 30;
+        interval = 24 * 60 * 60 * 7 * 30;
         break;
       case "year":
-        interval = 24 * 60 * 7 * 30 * 365;
+        interval = 24 * 60 * 60 * 7 * 30 * 365;
         break;
 
       default:

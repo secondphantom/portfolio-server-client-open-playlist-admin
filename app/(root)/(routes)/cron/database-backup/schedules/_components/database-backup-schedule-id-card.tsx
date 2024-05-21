@@ -78,16 +78,19 @@ export const DatabaseBackupScheduleIdCard: React.FC<Props> = ({
   useEffect(() => {
     let intervalType = "";
     switch (interval) {
-      case 24 * 60:
+      case 60 * 60:
+        intervalType = "hour";
+        break;
+      case 24 * 60 * 60:
         intervalType = "day";
         break;
-      case 24 * 60 * 7:
+      case 24 * 60 * 60 * 7:
         intervalType = "week";
         break;
-      case 24 * 60 * 7 * 30:
+      case 24 * 60 * 60 * 7 * 30:
         intervalType = "month";
         break;
-      case 24 * 60 * 7 * 30 * 365:
+      case 24 * 60 * 60 * 7 * 30 * 365:
         intervalType = "year";
         break;
 
@@ -102,17 +105,20 @@ export const DatabaseBackupScheduleIdCard: React.FC<Props> = ({
     let interval = 0;
 
     switch (intervalType) {
+      case "hour":
+        interval = 60 * 60;
+        break;
       case "day":
-        interval = 24 * 60;
+        interval = 24 * 60 * 60;
         break;
       case "week":
-        interval = 24 * 60 * 7;
+        interval = 24 * 60 * 60 * 7;
         break;
       case "month":
-        interval = 24 * 60 * 7 * 30;
+        interval = 24 * 60 * 60 * 7 * 30;
         break;
       case "year":
-        interval = 24 * 60 * 7 * 30 * 365;
+        interval = 24 * 60 * 60 * 7 * 30 * 365;
         break;
 
       default:
@@ -131,8 +137,6 @@ export const DatabaseBackupScheduleIdCard: React.FC<Props> = ({
     try {
       const body = { ...form.getValues() };
       setIsLoading(true);
-
-      console.log(body);
 
       const data = (await axios
         .patch(`/api/cron/database-backup/schedules/${id}`, body)
@@ -251,21 +255,23 @@ export const DatabaseBackupScheduleIdCard: React.FC<Props> = ({
                     <FormItem>
                       <FormLabel>Interval (sec.)</FormLabel>
                       <div className="p-1 bg-secondary w-fit rounded-sm">
-                        {["day", "week", "month", "year"].map((type, index) => {
-                          return (
-                            <Button
-                              key={type}
-                              variant={
-                                intervalType === type ? "default" : "ghost"
-                              }
-                              size={"sm"}
-                              type="button"
-                              onClick={() => setIntervalType(type)}
-                            >
-                              {type}
-                            </Button>
-                          );
-                        })}
+                        {["hour", "day", "week", "month", "year"].map(
+                          (type, index) => {
+                            return (
+                              <Button
+                                key={type}
+                                variant={
+                                  intervalType === type ? "default" : "ghost"
+                                }
+                                size={"sm"}
+                                type="button"
+                                onClick={() => setIntervalType(type)}
+                              >
+                                {type}
+                              </Button>
+                            );
+                          }
+                        )}
                       </div>
                       <FormControl>
                         <Input

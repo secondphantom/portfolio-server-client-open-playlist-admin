@@ -122,7 +122,6 @@ export const DatabaseBackupJobHeaderCreateBtn = () => {
         </Form>
       </Modal>
       <Button
-        size="sm"
         className=" gap-1"
         onClick={() => {
           form.reset();
