@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLoadingModalStore } from "@/hooks/use-loading-modal-store";
@@ -13,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { getLocalDateTimeInputValue } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import toast from "react-hot-toast";
 
 type Props = {
   data: ResponseDatabaseBackupJobGetById;
@@ -32,6 +34,29 @@ export const DatabaseBackupJobIdCard: React.FC<Props> = ({
     setLoading(isLoading);
   }, [isLoading]);
 
+  const deleteItem = async () => {
+    try {
+      setIsLoading(true);
+      const data = (await axios
+        .delete(`/api/cron/database-backup/jobs/${id}`)
+        .then((res) => res.data)) as { success: boolean; message: string };
+      if (data.success) {
+        router.push("/cron/database-backup/jobs");
+      }
+    } catch (error: any) {
+      let message = "Something went wrong";
+      if (axios.isAxiosError(error)) {
+        const data = error.response?.data;
+        if (data && data.message) {
+          message = data.message;
+        }
+      }
+      toast.error(message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   let statusBadgeType = "default";
 
   switch (status) {
@@ -45,6 +70,24 @@ export const DatabaseBackupJobIdCard: React.FC<Props> = ({
 
   return (
     <>
+      <Modal
+        title={`Are you sure you want to delete this?`}
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+      >
+        <div className="w-full flex justify-end space-x-2">
+          <Button
+            variant={"destructive"}
+            onClick={async () => {
+              await deleteItem();
+              setIsDeleteModalOpen(false);
+            }}
+          >
+            Confirm
+          </Button>
+          <Button onClick={() => setIsDeleteModalOpen(false)}>Close</Button>
+        </div>
+      </Modal>
       <Card>
         <CardHeader>
           <CardTitle>Job</CardTitle>
@@ -103,38 +146,19 @@ export const DatabaseBackupJobIdCard: React.FC<Props> = ({
                   className="disabled:opacity-100"
                 />
               </div>
-
-              {/* <FormItem>
-                <FormLabel>Id</FormLabel>
-                <FormControl>
-                  <Input disabled={true} type="text" defaultValue={id} />
-                </FormControl>
-              </FormItem>
-
-              <FormItem>
-                <FormLabel>Updated At</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={true}
-                    type="datetime-local"
-                    defaultValue={getLocalDateTimeInputValue(
-                      new Date(createdAt)
-                    )}
-                  />
-                </FormControl>
-              </FormItem>
-              <FormItem>
-                <FormLabel>Created At</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={true}
-                    type="datetime-local"
-                    defaultValue={getLocalDateTimeInputValue(
-                      new Date(updatedAt)
-                    )}
-                  />
-                </FormControl>
-              </FormItem> */}
+              <div className="flex space-x-1">
+                <Button
+                  disabled={isLoading}
+                  className="w-full"
+                  variant={"destructive"}
+                  type="button"
+                  onClick={() => {
+                    setIsDeleteModalOpen(true);
+                  }}
+                >
+                  Delete
+                </Button>
+              </div>
             </div>
           </div>
         </CardContent>

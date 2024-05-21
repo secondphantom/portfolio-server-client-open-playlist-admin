@@ -2,6 +2,7 @@ import { DatabaseBackupService } from "@/server/application/service/database.bac
 import { IDatabaseBackupRequestValidator } from "./database.backup.interface";
 import {
   RequestDatabaseBackupJobCreate,
+  RequestDatabaseBackupJobDeleteById,
   RequestDatabaseBackupJobGetById,
   RequestDatabaseBackupJobGetListByQuery,
   RequestDatabaseBackupScheduleCreate,
