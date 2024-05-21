@@ -26,19 +26,19 @@ import {
 } from "@/components/ui/table";
 import { ListPagination } from "@/components/list-pagination";
 import { Badge } from "@/components/ui/badge";
-import { ResponseDatabaseBackupScheduleGetListByQuery } from "@/server/spec/databaseBackup/database.backup.responses";
+import { ResponseDatabaseBackupJobGetListByQuery } from "@/server/spec/databaseBackup/database.backup.responses";
 
-const DatabaseBackupScheduleTable = ({
+const DatabaseBackupJobTable = ({
   listData,
   searchParams,
 }: {
-  listData: ResponseDatabaseBackupScheduleGetListByQuery;
+  listData: ResponseDatabaseBackupJobGetListByQuery;
   searchParams: any;
 }) => {
   return (
     <Card>
       <CardHeader className="flex">
-        <CardTitle>Schedules</CardTitle>
+        <CardTitle>Jobs</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
@@ -48,29 +48,27 @@ const DatabaseBackupScheduleTable = ({
                 <span className="sr-only">Actions</span>
               </TableHead>
               <TableHead>id</TableHead>
+              <TableHead>uuid</TableHead>
               <TableHead>title</TableHead>
-              <TableHead>interval</TableHead>
-              <TableHead>start at</TableHead>
-              <TableHead>type</TableHead>
-              <TableHead>isActive</TableHead>
-              <TableHead>isLocked</TableHead>
+              <TableHead>status</TableHead>
               <TableHead>created at</TableHead>
               <TableHead>updated at</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {listData.schedules.map(
-              ({
-                id,
-                title,
-                interval,
-                startAt,
-                type,
-                isActive,
-                isLocked,
-                createdAt,
-                updatedAt,
-              }) => {
+            {listData.jobs.map(
+              ({ id, uuid, title, status, createdAt, updatedAt }) => {
+                let statusBadgeType = "default";
+
+                switch (status) {
+                  case "success":
+                    statusBadgeType = "success";
+                    break;
+                  case "fail":
+                    statusBadgeType = "fail";
+                    break;
+                }
+
                 return (
                   <TableRow key={id}>
                     <TableCell className="font-medium">
@@ -88,9 +86,7 @@ const DatabaseBackupScheduleTable = ({
                         <DropdownMenuContent align="start">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuItem asChild>
-                            <Link
-                              href={`/cron/database-backup/schedules/${id}`}
-                            >
+                            <Link href={`/cron/database-backup/jobs/${id}`}>
                               Edit
                             </Link>
                           </DropdownMenuItem>
@@ -98,21 +94,10 @@ const DatabaseBackupScheduleTable = ({
                       </DropdownMenu>
                     </TableCell>
                     <TableCell>{id}</TableCell>
+                    <TableCell>{uuid}</TableCell>
                     <TableCell>{title}</TableCell>
-                    <TableCell>{interval}</TableCell>
-                    <TableCell>{type}</TableCell>
-                    <TableCell className="text-sm">
-                      {new Date(startAt).toLocaleString("en-US")}
-                    </TableCell>
                     <TableCell>
-                      <Badge variant={isActive ? "success" : "destructive"}>
-                        {isActive ? "On" : "Off"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={isLocked ? "success" : "destructive"}>
-                        {isLocked ? "On" : "Off"}
-                      </Badge>
+                      <Badge variant={statusBadgeType as any}>{status}</Badge>
                     </TableCell>
 
                     <TableCell className="text-sm">
@@ -132,14 +117,14 @@ const DatabaseBackupScheduleTable = ({
       <CardFooter>
         <div className="flex flex-col mx-auto space-y-2">
           <div className="text-xs text-muted-foreground mx-auto">
-            Showing <strong>{listData.schedules.length}</strong> of schedules
+            Showing <strong>{listData.jobs.length}</strong> of jobs
           </div>
           <ListPagination
             pagination={listData.pagination}
             searchParams={searchParams}
-            routePath="/cron/database-backup/schedules"
+            routePath="/cron/database-backup/jobs"
             renderNextPage={
-              listData.schedules.length === listData.pagination.pageSize
+              listData.jobs.length === listData.pagination.pageSize
             }
           />
         </div>
@@ -148,4 +133,4 @@ const DatabaseBackupScheduleTable = ({
   );
 };
 
-export default DatabaseBackupScheduleTable;
+export default DatabaseBackupJobTable;

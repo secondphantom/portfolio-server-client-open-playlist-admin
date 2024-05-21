@@ -18,6 +18,7 @@ const getData = () => {
       recentProgress: {} as any,
       totalProgress: 0,
       updatedAt: faker.date.recent({ days: 100 }),
+      videoId: faker.string.sample(5),
     });
   }
   return data;
