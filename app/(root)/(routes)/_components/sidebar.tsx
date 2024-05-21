@@ -103,12 +103,12 @@ export const Sidebar = ({ className }: Props) => {
           href="/cron"
           icon={<Repeat className="w-5 h-5 mr-2" />}
         >
-          <SidebarItem label="Database Backup" href="/cron/database/backup">
+          <SidebarItem label="Database Backup" href="/cron/database-backup">
             <SidebarItem
               label="Schedules"
-              href="/cron/database/backup/schedules"
+              href="/cron/database-backup/schedules"
             />
-            <SidebarItem label="Jobs" href="/cron/database/backup/jobs" />
+            <SidebarItem label="Jobs" href="/cron/database-backup/jobs" />
           </SidebarItem>
         </SidebarItem>
       </div>

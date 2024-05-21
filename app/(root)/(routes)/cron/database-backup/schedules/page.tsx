@@ -20,7 +20,7 @@ const getPageData = async (searchParams: any) => {
   const databaseBackupScheduleListData = await fetch(
     `${
       process.env.API_SERVER_HOST
-    }/api/database/backup/schedules?${urlSearchParams.toString()}`,
+    }/api/cron/database-backup/schedules?${urlSearchParams.toString()}`,
     {
       method: "GET",
       headers: {
@@ -54,7 +54,7 @@ const Page = async ({ searchParams }: { searchParams: any }) => {
             { label: "Home", href: "/" },
             { label: "Cron Job" },
             { label: "Database Backup" },
-            { label: "Schedules", href: "/cron/database/backup/schedules" },
+            { label: "Schedules", href: "/cron/database-backup/schedules" },
           ]}
         />
       </div>

@@ -50,7 +50,7 @@ export const DatabaseBackupScheduleHeaderOrderCombobox: React.FC<
     }
 
     router.safePush(
-      `/cron/database/backup/schedules?${newSearchParams.toString()}`
+      `/cron/database-backup/schedules?${newSearchParams.toString()}`
     );
   }, [value]);
   return (

@@ -23,6 +23,7 @@ export type RequestDatabaseBackupScheduleUpdateById = {
   startAt?: Date;
   isActive?: boolean;
   isLocked?: boolean;
+  type?: string;
 };
 
 export type RequestDatabaseBackupScheduleDeleteById = {

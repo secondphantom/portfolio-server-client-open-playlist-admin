@@ -87,7 +87,7 @@ export class DatabaseBackupServiceUtil {
       await this.discordUtil.notify(
         {
           title: `Fail to run backup job_id:${currentJob?.id}`,
-          description: `link: ${this.env.DOMAIN_URL}/database/backup/jobs/${currentJob?.id}`,
+          description: `link: ${this.env.DOMAIN_URL}/cron/database-backup/jobs/${currentJob?.id}`,
         },
         { level: "error" }
       );
@@ -119,7 +119,7 @@ export class DatabaseBackupServiceUtil {
       await this.discordUtil.notify(
         {
           title: `Fail to run backup job_id:${currentJob?.id}`,
-          description: `link: ${this.env.DOMAIN_URL}/database/backup/jobs/${currentJob?.id}`,
+          description: `link: ${this.env.DOMAIN_URL}/cron/database-backup/jobs/${currentJob?.id}`,
         },
         { level: "error" }
       );

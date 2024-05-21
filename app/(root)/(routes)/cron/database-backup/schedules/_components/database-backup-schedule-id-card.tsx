@@ -22,23 +22,42 @@ import toast from "react-hot-toast";
 import { useSafeRouter } from "@/hooks/use-safe-router";
 import { useRouter } from "next-nprogress-bar";
 import { Modal } from "@/components/ui/modal";
+import { ResponseDatabaseBackupScheduleGetById } from "@/server/spec/databaseBackup/database.backup.responses";
 
 const formSchema = z.object({
   title: z.string(),
   interval: z.number(),
   startAt: z.string(),
+  isActive: z.boolean(),
+  isLocked: z.boolean(),
   type: z.string(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-export const DatabaseBackupScheduleCreateCard: React.FC = () => {
+type Props = {
+  data: ResponseDatabaseBackupScheduleGetById;
+};
+
+export const DatabaseBackupScheduleIdCard: React.FC<Props> = ({
+  data: {
+    id,
+    title,
+    interval,
+    startAt,
+    type,
+    isActive,
+    isLocked,
+    createdAt,
+    updatedAt,
+  },
+}) => {
   const router = useSafeRouter(useRouter);
   const setLoading = useLoadingModalStore((state) => state.setLoading);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [intervalType, setIntervalType] = useState<string | undefined>("day");
+  const [intervalType, setIntervalType] = useState<string | undefined>();
 
   useEffect(() => {
     setLoading(isLoading);
@@ -47,12 +66,37 @@ export const DatabaseBackupScheduleCreateCard: React.FC = () => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      interval: 24 * 60,
-      startAt: new Date().toISOString(),
-      type: "full",
+      title,
+      interval,
+      startAt: startAt as any as string,
+      isActive,
+      isLocked,
+      type,
     },
   });
+
+  useEffect(() => {
+    let intervalType = "";
+    switch (interval) {
+      case 24 * 60:
+        intervalType = "day";
+        break;
+      case 24 * 60 * 7:
+        intervalType = "week";
+        break;
+      case 24 * 60 * 7 * 30:
+        intervalType = "month";
+        break;
+      case 24 * 60 * 7 * 30 * 365:
+        intervalType = "year";
+        break;
+
+      default:
+        break;
+    }
+
+    setIntervalType(intervalType);
+  }, []);
 
   useEffect(() => {
     let interval = 0;
@@ -83,17 +127,42 @@ export const DatabaseBackupScheduleCreateCard: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const createItem = async () => {
+  const updateItem = async () => {
     try {
       const body = { ...form.getValues() };
       setIsLoading(true);
 
+      console.log(body);
+
       const data = (await axios
-        .post(`/api/database/backup/schedules`, body)
+        .patch(`/api/cron/database-backup/schedules/${id}`, body)
         .then((res) => res.data)) as { success: boolean; message: string };
       if (data.success) {
         toast.success("success updated");
-        router.safePush("/cron/database/backup/schedules");
+        router.refresh();
+      }
+    } catch (error: any) {
+      let message = "Something went wrong";
+      if (axios.isAxiosError(error)) {
+        const data = error.response?.data;
+        if (data && data.message) {
+          message = data.message;
+        }
+      }
+      toast.error(message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const deleteItem = async () => {
+    try {
+      setIsLoading(true);
+      const data = (await axios
+        .delete(`/api/cron/database-backup/schedules/${id}`)
+        .then((res) => res.data)) as { success: boolean; message: string };
+      if (data.success) {
+        router.push("/cron/database-backup/schedules");
       }
     } catch (error: any) {
       let message = "Something went wrong";
@@ -112,7 +181,7 @@ export const DatabaseBackupScheduleCreateCard: React.FC = () => {
   return (
     <>
       <Modal
-        title={`Are you sure you want to crete this?`}
+        title={`Are you sure you want to update this?`}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       >
@@ -120,13 +189,31 @@ export const DatabaseBackupScheduleCreateCard: React.FC = () => {
           <Button
             variant={"ghost"}
             onClick={async () => {
-              await createItem();
+              await updateItem();
               setIsModalOpen(false);
             }}
           >
             Confirm
           </Button>
           <Button onClick={() => setIsModalOpen(false)}>Close</Button>
+        </div>
+      </Modal>
+      <Modal
+        title={`Are you sure you want to delete this?`}
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+      >
+        <div className="w-full flex justify-end space-x-2">
+          <Button
+            variant={"destructive"}
+            onClick={async () => {
+              await deleteItem();
+              setIsDeleteModalOpen(false);
+            }}
+          >
+            Confirm
+          </Button>
+          <Button onClick={() => setIsDeleteModalOpen(false)}>Close</Button>
         </div>
       </Modal>
       <Card>
@@ -137,6 +224,13 @@ export const DatabaseBackupScheduleCreateCard: React.FC = () => {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-4">
+                <FormItem>
+                  <FormLabel>Id</FormLabel>
+                  <FormControl>
+                    <Input disabled={true} type="text" defaultValue={id} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
                 <FormField
                   control={form.control}
                   name="title"
@@ -198,7 +292,9 @@ export const DatabaseBackupScheduleCreateCard: React.FC = () => {
                         <Input
                           disabled={isLoading}
                           type="datetime-local"
-                          defaultValue={getLocalDateTimeInputValue(new Date())}
+                          defaultValue={getLocalDateTimeInputValue(
+                            new Date(startAt)
+                          )}
                           onChange={(e) => {
                             form.setValue(
                               "startAt",
@@ -213,21 +309,114 @@ export const DatabaseBackupScheduleCreateCard: React.FC = () => {
                 />
                 <FormField
                   control={form.control}
-                  name="type"
+                  name="isActive"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Type</FormLabel>
+                      <FormLabel>Is Active</FormLabel>
                       <FormControl>
-                        <Input {...field} disabled={true} type="text" />
+                        <Input
+                          className={cn(
+                            "capitalize",
+                            field.value ? "bg-green-200" : "bg-red-200"
+                          )}
+                          onChange={(e) => {}}
+                          onClick={(e) => {
+                            form.setValue(
+                              "isActive",
+                              e.currentTarget.value.toLocaleLowerCase() ===
+                                "true"
+                                ? false
+                                : true
+                            );
+                          }}
+                          value={`${field.value}`}
+                          disabled={isLoading}
+                          type="button"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="isLocked"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Is Locked</FormLabel>
+                      <FormControl>
+                        <Input
+                          className={cn(
+                            "capitalize",
+                            field.value ? "bg-green-200" : "bg-red-200"
+                          )}
+                          onChange={(e) => {}}
+                          onClick={(e) => {
+                            form.setValue(
+                              "isLocked",
+                              e.currentTarget.value.toLocaleLowerCase() ===
+                                "true"
+                                ? false
+                                : true
+                            );
+                          }}
+                          value={`${field.value}`}
+                          disabled={isLoading}
+                          type="button"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormItem>
+                  <FormLabel>Type</FormLabel>
+                  <FormControl>
+                    <Input disabled={true} type="text" defaultValue={type} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+                <FormItem>
+                  <FormLabel>Updated At</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={true}
+                      type="datetime-local"
+                      defaultValue={getLocalDateTimeInputValue(
+                        new Date(createdAt)
+                      )}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+                <FormItem>
+                  <FormLabel>Created At</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={true}
+                      type="datetime-local"
+                      defaultValue={getLocalDateTimeInputValue(
+                        new Date(updatedAt)
+                      )}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               </div>
               <div className="flex space-x-1">
                 <Button disabled={isLoading} type="submit" className="w-full">
-                  Create
+                  Update
+                </Button>
+                <Button
+                  disabled={isLoading}
+                  className="w-full"
+                  variant={"destructive"}
+                  type="button"
+                  onClick={() => {
+                    setIsDeleteModalOpen(true);
+                  }}
+                >
+                  Delete
                 </Button>
               </div>
             </form>

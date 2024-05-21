@@ -89,7 +89,7 @@ const DatabaseBackupScheduleTable = ({
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuItem asChild>
                             <Link
-                              href={`/cron/database/backup/schedules/${id}`}
+                              href={`/cron/database-backup/schedules/${id}`}
                             >
                               Edit
                             </Link>
@@ -137,7 +137,7 @@ const DatabaseBackupScheduleTable = ({
           <ListPagination
             pagination={listData.pagination}
             searchParams={searchParams}
-            routePath="/cron/database/backup/schedules"
+            routePath="/cron/database-backup/schedules"
             renderNextPage={
               listData.schedules.length === listData.pagination.pageSize
             }

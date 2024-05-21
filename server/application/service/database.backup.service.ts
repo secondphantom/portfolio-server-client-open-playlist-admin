@@ -30,6 +30,7 @@ export type ServiceDatabaseBackupScheduleUpdateByIdDto = {
   startAt?: Date;
   isActive?: boolean;
   isLocked?: boolean;
+  type?: string;
 };
 
 export type ServiceDatabaseBackupScheduleDeleteByIdDto = {
@@ -83,12 +84,12 @@ export class DatabaseBackupService {
     this.serviceUtil = databaseBackupServiceUtil;
   }
 
-  // POST /database/backup/schedules?
+  // POST /cron/database-backup/schedules?
   createSchedule = async (dto: ServiceDatabaseBackupScheduleCreateDto) => {
     await this.databaseBackupScheduleRepo.create(dto);
   };
 
-  // GET /database/backup/schedules/:id
+  // GET /cron/database-backup/schedules/:id
   getScheduleById = async (dto: ServiceDatabaseBackupScheduleGetByIdDto) => {
     const schedule = await this.databaseBackupScheduleRepo.getById(dto.id, {
       id: true,
@@ -112,7 +113,7 @@ export class DatabaseBackupService {
     return schedule;
   };
 
-  // GET /database/backup/schedules?
+  // GET /cron/database-backup/schedules?
   getScheduleListByQuery = async ({
     page,
     order,
@@ -149,7 +150,7 @@ export class DatabaseBackupService {
     };
   };
 
-  // PATCH /database/backup/schedules/:id
+  // PATCH /cron/database-backup/schedules/:id
   updateScheduleById = async (
     dto: ServiceDatabaseBackupScheduleUpdateByIdDto
   ) => {
@@ -202,7 +203,7 @@ export class DatabaseBackupService {
     });
   };
 
-  //DELETE /database/backup/schedules/:id
+  //DELETE /cron/database-backup/schedules/:id
   deleteScheduleById = async (
     dto: ServiceDatabaseBackupScheduleDeleteByIdDto
   ) => {
@@ -222,7 +223,7 @@ export class DatabaseBackupService {
     this.cronJob.deleteById(this.CRON_JOB_ID_PREFIX + schedule.id);
   };
 
-  //POST /database/backup/jobs?
+  //POST /cron/database-backup/jobs?
   createJob = async ({ title }: ServiceDatabaseBackupJobCreateDto) => {
     const job = await this.serviceUtil.createJob(
       title ? title : `manual created`
@@ -230,7 +231,7 @@ export class DatabaseBackupService {
     this.serviceUtil.backupDatabase(job);
   };
 
-  // GET /database/backup/jobs?
+  // GET /cron/database-backup/jobs?
   getJobListByQuery = async ({
     page,
     order,
@@ -263,7 +264,7 @@ export class DatabaseBackupService {
     };
   };
 
-  // GET /database/backup/jobs/:id
+  // GET /cron/database-backup/jobs/:id
   getJobById = async (dto: ServiceDatabaseBackupJobGetByIdDto) => {
     const job = await this.databaseBackupJobRepo.getById(dto.id, {
       id: true,

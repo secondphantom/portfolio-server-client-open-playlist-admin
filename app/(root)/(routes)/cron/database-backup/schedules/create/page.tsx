@@ -15,7 +15,7 @@ const Page = async ({ params }: { params: any }) => {
             { label: "Home", href: "/" },
             { label: "Cron Job" },
             { label: "Database Backup" },
-            { label: "Schedules", href: "/cron/database/backup/schedules" },
+            { label: "Schedules", href: "/cron/database-backup/schedules" },
             { label: "Create" },
           ]}
         />

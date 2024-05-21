@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 const getPageData = async (params: any) => {
   const databaseBackupScheduleData = await fetch(
-    `${process.env.API_SERVER_HOST}/api/database/backup/schedules/${params.id}`,
+    `${process.env.API_SERVER_HOST}/api/cron/database-backup/schedules/${params.id}`,
     {
       method: "GET",
       headers: {
@@ -46,7 +46,7 @@ const Page = async ({ params }: { params: any }) => {
             { label: "Home", href: "/" },
             { label: "Cron Job" },
             { label: "Database Backup" },
-            { label: "Schedules", href: "/cron/database/backup/schedules" },
+            { label: "Schedules", href: "/cron/database-backup/schedules" },
             { label: params.id },
           ]}
         />

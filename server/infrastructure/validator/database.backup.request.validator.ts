@@ -98,6 +98,7 @@ export class DatabaseBackupRequestValidator
       startAt: zodDateTransform.optional(),
       isActive: z.boolean().optional(),
       isLocked: z.boolean().optional(),
+      type: z.string().optional(),
     })
     .strict();
 
