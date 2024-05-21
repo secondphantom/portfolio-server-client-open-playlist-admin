@@ -6,7 +6,7 @@ export const ToastProvider = () => {
   return (
     <>
       <Toaster
-        position="bottom-center"
+        position="top-center"
         toastOptions={{
           duration: 1200,
         }}
