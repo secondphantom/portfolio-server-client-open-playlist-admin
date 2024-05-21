@@ -66,6 +66,7 @@ export class DatabaseBackupService {
   static getInstance = (inputs: ServiceConstructorInputs) => {
     if (this.instance) return this.instance;
     this.instance = new DatabaseBackupService(inputs);
+    this.instance.init();
     return this.instance;
   };
 
@@ -87,6 +88,36 @@ export class DatabaseBackupService {
     this.cronJob = cronJob;
     this.serviceUtil = databaseBackupServiceUtil;
   }
+
+  init = async () => {
+    await this.initSchedule();
+  };
+
+  private initSchedule = async () => {
+    const schedules = await this.databaseBackupScheduleRepo.getAllListByQuery(
+      {
+        isActive: true,
+        isLocked: false,
+      },
+      {
+        id: true,
+        interval: true,
+        startAt: true,
+      }
+    );
+
+    for (const { id, interval, startAt } of schedules) {
+      this.cronJob.deleteById(this.CRON_JOB_ID_PREFIX + id);
+      this.cronJob.register(
+        this.CRON_JOB_ID_PREFIX + id,
+        () => this.serviceUtil.backupDatabaseBySchedule(id),
+        {
+          interval: interval,
+          startAt: startAt,
+        }
+      );
+    }
+  };
 
   // POST /cron/database-backup/schedules?
   createSchedule = async (dto: ServiceDatabaseBackupScheduleCreateDto) => {
@@ -174,13 +205,6 @@ export class DatabaseBackupService {
       throw new ServerError({
         code: 404,
         message: "Not Found",
-      });
-    }
-
-    if (schedule.isLocked) {
-      throw new ServerError({
-        code: 423,
-        message: "Is Locked",
       });
     }
 

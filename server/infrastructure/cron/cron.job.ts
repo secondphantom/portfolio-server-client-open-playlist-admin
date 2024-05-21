@@ -47,7 +47,6 @@ export class CronJob implements ICronJob {
     if (!this.jobs.get(id)) {
       return;
     }
-
     const scheduledTasks = this.jobs.get(id)!;
 
     scheduledTasks.forEach((task) => task.stop());

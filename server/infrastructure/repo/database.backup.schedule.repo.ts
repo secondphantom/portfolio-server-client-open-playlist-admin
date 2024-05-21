@@ -3,6 +3,7 @@ import {
   DatabaseBackupScheduleEntityInsert,
   DatabaseBackupScheduleEntitySelect,
   IDatabaseBackupScheduleRepo,
+  QueryDatabaseBackupScheduleAllListDto,
   QueryDatabaseBackupScheduleListDto,
 } from "@/server/application/interfaces/database.backup.schedule.repo";
 import { Db, DrizzleClient } from "../db/drizzle.client";
@@ -79,6 +80,25 @@ export class DatabaseBackupScheduleRepo implements IDatabaseBackupScheduleRepo {
         orderBy: orderBy,
         offset: (page - 1) * pageSize,
         limit: pageSize,
+      });
+
+    return databaseBackupSchedules;
+  };
+
+  getAllListByQuery = async ({
+    isActive,
+    isLocked,
+  }: QueryDatabaseBackupScheduleAllListDto) => {
+    const databaseBackupSchedules =
+      await this.db.query.databaseBackupSchedules.findMany({
+        where: (value, { eq, and }) => {
+          return and(
+            ...[
+              isActive !== undefined ? eq(value.isActive, isActive) : undefined,
+              isLocked !== undefined ? eq(value.isLocked, isLocked) : undefined,
+            ].filter((v) => !!v)
+          );
+        },
       });
 
     return databaseBackupSchedules;

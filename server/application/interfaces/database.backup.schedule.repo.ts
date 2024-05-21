@@ -13,6 +13,11 @@ export type QueryDatabaseBackupScheduleListDto = {
   isLocked?: boolean;
 };
 
+export type QueryDatabaseBackupScheduleAllListDto = {
+  isActive?: boolean;
+  isLocked?: boolean;
+};
+
 export interface IDatabaseBackupScheduleRepo {
   create: (dto: DatabaseBackupScheduleEntityInsert) => Promise<void>;
   getById: <T extends keyof DatabaseBackupScheduleEntitySelect>(
@@ -25,6 +30,14 @@ export interface IDatabaseBackupScheduleRepo {
   ) => Promise<Pick<DatabaseBackupScheduleEntitySelect, T> | undefined>;
   getListByQuery: (
     query: QueryDatabaseBackupScheduleListDto
+  ) => Promise<DatabaseBackupScheduleEntitySelect[]>;
+  getAllListByQuery: <T extends keyof DatabaseBackupScheduleEntitySelect>(
+    query: QueryDatabaseBackupScheduleAllListDto,
+    columns?:
+      | {
+          [key in T]?: boolean;
+        }
+      | { [key in keyof DatabaseBackupScheduleEntitySelect]?: boolean }
   ) => Promise<DatabaseBackupScheduleEntitySelect[]>;
   deleteById: (id: number) => Promise<void>;
   updateById: (
