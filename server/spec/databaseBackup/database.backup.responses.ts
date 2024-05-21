@@ -29,7 +29,7 @@ export type ResponseDatabaseBackupScheduleGetListByQuery = {
 };
 
 export type ResponseDatabaseBackupJobGetListByQuery = {
-  schedules: {
+  jobs: {
     id: number;
     uuid: string;
     title: string;

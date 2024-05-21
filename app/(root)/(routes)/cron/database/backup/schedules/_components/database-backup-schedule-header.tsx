@@ -12,7 +12,7 @@ export const DatabaseBackupScheduleHeader: React.FC<{}> = () => {
       <div className="flex space-x-2">
         <Button asChild>
           <Link
-            href={"/announcements/create"}
+            href={"/cron/database/backup/schedules/create"}
             className="flex items-center space-x-1"
           >
             <PlusCircle className="h-3.5 w-3.5" />
