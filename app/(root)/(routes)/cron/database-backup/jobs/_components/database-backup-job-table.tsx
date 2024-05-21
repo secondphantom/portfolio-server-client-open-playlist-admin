@@ -87,7 +87,7 @@ const DatabaseBackupJobTable = ({
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuItem asChild>
                             <Link href={`/cron/database-backup/jobs/${id}`}>
-                              Edit
+                              Detail
                             </Link>
                           </DropdownMenuItem>
                         </DropdownMenuContent>
