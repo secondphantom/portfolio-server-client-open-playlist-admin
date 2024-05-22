@@ -1,7 +1,7 @@
 ---
 title: "WBS-admin"
 dateCreated: "2024-04-09"
-dateModified: "2024-04-12"
+dateModified: "2024-05-16"
 ---
 ## Server
 - [ ] /auth
@@ -271,6 +271,70 @@ dateModified: "2024-04-12"
 		- [x] controller
 		- [x] infra
 			- [x] repo update category
+- [x] /databse/backup
+	- [x] /schedules
+		- [x] get list
+			- [x] service
+			- [x] controller
+			- [x] infra
+				- [x] databasebackupschedule repo
+					- [x] get list by query
+			- [x] schema
+				- [x] create DatabaseBackupSchedules table
+					- id 
+					- name
+					- interval
+					- start_at
+					- type
+					- status
+					- locked
+
+		- [x] get by id
+			- [x] service
+			- [x] controller
+			- [x] infra
+				- [x] databasebackupschedule repo
+					- [x] get by id
+		- [x] create schedule
+			- [x] service
+			- [x] controller
+			- [x] infra
+				- [x] databasebackupschedule repo
+					- [x] create
+		- [x] update by id
+			- [x] service
+			- [x] controller
+			- [x] infra
+				- [x] cron job
+		- [x] backup
+			- [x] service
+				- [x] get lock
+				- [x] abort
+				- [x] create job
+			- [x] infra
+				- [x] databasebackupschedule repo
+					- [x] transaction lock
+				- [x] databasebackupjobs repo
+					- [x] create job
+					- [x] update job
+					- [x] get by id
+			- [x] schema
+				- [x] create DatabaseBackupJobs
+					- id
+					- uuid
+					- title
+					- status
+					- created_at
+	- [x] /jobs
+		- [x] get list
+			- [x] service
+			- [x] controller
+			- [x] infra
+				- [x] databasebackupjobs repo
+					- [x] get list by query
+		- [x] get by id
+			- [x] service
+			- [x] controller
 - [ ] /email
 	- [ ] sending email
 		- [ ] service

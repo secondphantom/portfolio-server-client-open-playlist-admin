@@ -1,7 +1,7 @@
 ---
 title: "History-admin"
 dateCreated: "2024-03-31"
-dateModified: "2024-04-23"
+dateModified: "2024-05-21"
 ---
 ## server
 - `20240331`
@@ -46,6 +46,31 @@ dateModified: "2024-04-23"
 - `20240410`
 	- feat: adding admins's response spec
 	- feat: add updating admin api
+- `20240429`
+	- refactor: change the table name from notice to announcements
+	- feat: add a title_tsvector filed at announcements table
+- `20240510`
+	- fix: await call db
+- `20240516`
+	- feat: adding database backup service and interfaces for service
+- `20240519`
+	- feat: adding migration sql file
+	- refactor: change database backup schedule, jobs type name
+	- feat: adding database backup schedule repo
+	- feat: adding database backup job repo
+	- feat: adding cron job class
+	- feat: adding discord util
+- `20240529`
+	- feat: adding database backup service util test
+	- feat: adding database backup service
+	- feat: adding create backup database job at service
+- `20240520`
+	- feat: adding database backup controller and validator
+	- feat: adding to delete backup schedule service and controller
+	- feat: adding database backup api
+- `20240521`
+	- fix: dumpToFile at database backup
+	- feat: adding to delete job api
 ## client
 - `20240409`
 	- feat: adding sign-in page
@@ -69,3 +94,13 @@ dateModified: "2024-04-23"
 	- feat: adding create user stats btn
 	- feat: adding account session pages
 	- feat: adding profile page
+- `20240520`
+	- feat: adding database backup schedule page
+- `20240521`
+	- feat: adding database backup schedule id page
+	- feat: adding create schedule page
+	- refactor: api route about database backup api and pages
+	- feat: adding database backup job page
+	- feat: adding job id page
+	- feat: adding delete btn at job's page
+	- fix: interval sec at schedule pages
